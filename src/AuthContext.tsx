@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 interface AuthContextType {
   isAuthenticated: boolean;
+  loading: boolean;
   login: (token: string) => void;
   logout: () => void;
 }
@@ -15,14 +16,16 @@ interface AuthProviderProps {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('authToken');
     if (token) {
-      // TODO: Validate token (e.g., via API call)
+      // TODO: Validate token (e.g., via API call or decoding JWT)
       setIsAuthenticated(true); // Assume valid for now
     }
+    setLoading(false); // Mark loading as complete
   }, []);
 
   const login = (token: string) => {
@@ -38,7 +41,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
