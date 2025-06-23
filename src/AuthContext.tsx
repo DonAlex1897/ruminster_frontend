@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { validateToken } from './services/AuthService';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -19,14 +21,26 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  const token = localStorage.getItem('authToken');
+
+  const {
+    data: user,
+    isLoading: isLoadingUser,
+    isError: isErrorUser,
+  } = useQuery({
+    queryKey: ['validateToken', token],
+    queryFn: () => token ? validateToken(token) : Promise.resolve(null),
+    enabled: !!token, // Only run if token exists
+  });
+
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      // TODO: Validate token (e.g., via API call or decoding JWT)
-      setIsAuthenticated(true); // Assume valid for now
+    if (isLoadingUser) {
+      setLoading(true);
+      return;
     }
-    setLoading(false); // Mark loading as complete
-  }, []);
+    setIsAuthenticated(!!user && !isErrorUser);
+    setLoading(false);
+  }, [user, isLoadingUser, isErrorUser]);
 
   const login = (token: string) => {
     localStorage.setItem('authToken', token);
