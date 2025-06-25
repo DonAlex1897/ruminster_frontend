@@ -107,24 +107,24 @@ const LoginPage: React.FC = () => {
 
   if (loading || isAuthenticated) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-dark to-primary">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-dark to-primary py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-background py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        <div className="card">
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-text-primary">
             {isLogin ? 'Sign in to your account' : 'Create your account'}
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
+          <p className="mt-2 text-center text-sm text-text-secondary">
             {isLogin ? "Don't have an account? " : "Already have an account? "}
             <button
               onClick={toggleMode}
-              className="font-medium text-indigo-600 hover:text-indigo-500"
+              className="font-medium text-accent hover:text-primary transition-colors"
             >
               {isLogin ? 'Sign up' : 'Sign in'}
             </button>
@@ -132,9 +132,9 @@ const LoginPage: React.FC = () => {
         </div>
         
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm -space-y-px">
+          <div className="space-y-4">
             <div>
-              <label htmlFor="username" className="sr-only">
+              <label htmlFor="username" className="block text-sm font-medium text-text-secondary mb-1">
                 Username
               </label>
               <input
@@ -142,21 +142,21 @@ const LoginPage: React.FC = () => {
                 name="username"
                 type="text"
                 required
-                className={`appearance-none rounded-none relative block w-full px-3 py-2 border ${
-                  errors.username ? 'border-red-300' : 'border-gray-300'
-                } placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
-                placeholder="Username"
+                className={`form-input w-full ${
+                  errors.username ? 'border-border-error' : ''
+                }`}
+                placeholder="Enter your username"
                 value={formData.username}
                 onChange={handleInputChange}
               />
               {errors.username && (
-                <p className="mt-1 text-sm text-red-600">{errors.username}</p>
+                <p className="mt-1 text-sm text-error">{errors.username}</p>
               )}
             </div>
             
             {!isLogin && (
               <div>
-                <label htmlFor="email" className="sr-only">
+                <label htmlFor="email" className="block text-sm font-medium text-text-secondary mb-1">
                   Email address
                 </label>
                 <input
@@ -164,21 +164,21 @@ const LoginPage: React.FC = () => {
                   name="email"
                   type="email"
                   required
-                  className={`appearance-none rounded-none relative block w-full px-3 py-2 border ${
-                    errors.email ? 'border-red-300' : 'border-gray-300'
-                  } placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
-                  placeholder="Email address"
+                  className={`form-input w-full ${
+                    errors.email ? 'border-border-error' : ''
+                  }`}
+                  placeholder="Enter your email"
                   value={formData.email}
                   onChange={handleInputChange}
                 />
                 {errors.email && (
-                  <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+                  <p className="mt-1 text-sm text-error">{errors.email}</p>
                 )}
               </div>
             )}
             
             <div>
-              <label htmlFor="password" className="sr-only">
+              <label htmlFor="password" className="block text-sm font-medium text-text-secondary mb-1">
                 Password
               </label>
               <input
@@ -186,23 +186,21 @@ const LoginPage: React.FC = () => {
                 name="password"
                 type="password"
                 required
-                className={`appearance-none rounded-none relative block w-full px-3 py-2 border ${
-                  errors.password ? 'border-red-300' : 'border-gray-300'
-                } placeholder-gray-500 text-gray-900 ${
-                  isLogin ? 'rounded-b-md' : ''
-                } focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
-                placeholder="Password"
+                className={`form-input w-full ${
+                  errors.password ? 'border-border-error' : ''
+                }`}
+                placeholder="Enter your password"
                 value={formData.password}
                 onChange={handleInputChange}
               />
               {errors.password && (
-                <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+                <p className="mt-1 text-sm text-error">{errors.password}</p>
               )}
             </div>
             
             {!isLogin && (
               <div>
-                <label htmlFor="confirmPassword" className="sr-only">
+                <label htmlFor="confirmPassword" className="block text-sm font-medium text-text-secondary mb-1">
                   Confirm Password
                 </label>
                 <input
@@ -210,21 +208,23 @@ const LoginPage: React.FC = () => {
                   name="confirmPassword"
                   type="password"
                   required
-                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                  placeholder="Confirm Password"
+                  className={`form-input w-full ${
+                    errors.confirmPassword ? 'border-border-error' : ''
+                  }`}
+                  placeholder="Confirm your password"
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
                 />
                 {errors.confirmPassword && (
-                  <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>
+                  <p className="mt-1 text-sm text-error">{errors.confirmPassword}</p>
                 )}
               </div>
             )}
           </div>
 
           {errors.general && (
-            <div className="rounded-md bg-red-50 p-4">
-              <div className="text-sm text-red-700">{errors.general}</div>
+            <div className="rounded-md bg-error/10 border border-error/20 p-4">
+              <div className="text-sm text-error">{errors.general}</div>
             </div>
           )}
 
@@ -232,10 +232,10 @@ const LoginPage: React.FC = () => {
             <button
               type="submit"
               disabled={loginMutation.isPending || signupMutation.isPending}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent disabled:opacity-50 disabled:cursor-not-allowed"
+              className="btn-primary w-full flex justify-center py-3"
             >
               {(loginMutation.isPending || signupMutation.isPending) ? (
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-current"></div>
               ) : (
                 isLogin ? 'Sign in' : 'Sign up'
               )}

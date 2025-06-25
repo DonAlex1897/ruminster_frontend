@@ -7,23 +7,90 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        // CSS Variables integration
         primary: {
-          DEFAULT: '#14532d', // dark green
-          light: '#166534',
-          dark: '#0c2e15',
+          DEFAULT: 'var(--color-primary)',
+          hover: 'var(--color-primary-hover)',
+          light: 'var(--color-primary-light)',
         },
-        accent: '#22c55e', // a nice green accent
+        secondary: 'var(--color-secondary)',
+        accent: 'var(--color-accent)',
+        
+        // Backgrounds
         background: {
-          light: '#f5f5f4',
-          dark: '#0c2e15',
+          DEFAULT: 'var(--color-background)',
+          secondary: 'var(--color-background-secondary)',
         },
+        surface: 'var(--color-surface)',
+        card: 'var(--color-card)',
+        
+        // Text colors
         text: {
-          light: '#1a1a1a',
-          dark: '#e5e5e5',
+          primary: 'var(--color-text-primary)',
+          secondary: 'var(--color-text-secondary)',
+          muted: 'var(--color-text-muted)',
+          inverse: 'var(--color-text-inverse)',
         },
+        
+        // Borders
+        border: {
+          DEFAULT: 'var(--color-border)',
+          focus: 'var(--color-border-focus)',
+          error: 'var(--color-border-error)',
+        },
+        
+        // State colors
+        success: 'var(--color-success)',
+        warning: 'var(--color-warning)',
+        error: 'var(--color-error)',
+        info: 'var(--color-info)',
       },
+      
       fontFamily: {
-        sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+        sans: 'var(--font-family-sans)',
+        mono: 'var(--font-family-mono)',
+      },
+      
+      fontSize: {
+        xs: 'var(--font-size-xs)',
+        sm: 'var(--font-size-sm)',
+        base: 'var(--font-size-base)',
+        lg: 'var(--font-size-lg)',
+        xl: 'var(--font-size-xl)',
+        '2xl': 'var(--font-size-2xl)',
+        '3xl': 'var(--font-size-3xl)',
+        '4xl': 'var(--font-size-4xl)',
+      },
+      
+      fontWeight: {
+        normal: 'var(--font-weight-normal)',
+        medium: 'var(--font-weight-medium)',
+        semibold: 'var(--font-weight-semibold)',
+        bold: 'var(--font-weight-bold)',
+      },
+      
+      spacing: {
+        xs: 'var(--spacing-xs)',
+        sm: 'var(--spacing-sm)',
+        md: 'var(--spacing-md)',
+        lg: 'var(--spacing-lg)',
+        xl: 'var(--spacing-xl)',
+        '2xl': 'var(--spacing-2xl)',
+      },
+      
+      borderRadius: {
+        sm: 'var(--radius-sm)',
+        DEFAULT: 'var(--radius-md)',
+        md: 'var(--radius-md)',
+        lg: 'var(--radius-lg)',
+        xl: 'var(--radius-xl)',
+      },
+      
+      boxShadow: {
+        sm: 'var(--shadow-sm)',
+        DEFAULT: 'var(--shadow-md)',
+        md: 'var(--shadow-md)',
+        lg: 'var(--shadow-lg)',
       },
     },
   },
