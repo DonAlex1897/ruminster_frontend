@@ -7,6 +7,10 @@ export enum UserRelationType {
   Therapist = 5,
 }
 
+export interface MyRuminationsQueryParams {
+  isPublic?: boolean;
+}
+
 export interface PostRuminationDto {
   content: string;
   publish: boolean;

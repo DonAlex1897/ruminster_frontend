@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../AuthContext';
 
 interface NavbarProps {
   onNewRumination: () => void;
@@ -7,6 +8,7 @@ interface NavbarProps {
 
 export default function Navbar({ onNewRumination }: NavbarProps) {
   const location = useLocation();
+  const { isAuthenticated, logout } = useAuth();
 
   const isActive = (path: string) => {
     return location.pathname === path;
@@ -22,27 +24,31 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
             </Link>
             
             <div className="flex space-x-6">
-              <Link
-                to="/my-ruminations"
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  isActive('/my-ruminations')
-                    ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
-                    : 'text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'
-                }`}
-              >
-                My Ruminations
-              </Link>
-              
-              <Link
-                to="/my-feed"
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  isActive('/my-feed')
-                    ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
-                    : 'text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'
-                }`}
-              >
-                My Feed
-              </Link>
+              {isAuthenticated && (
+                <>
+                  <Link
+                    to="/my-ruminations"
+                    className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                      isActive('/my-ruminations')
+                        ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
+                        : 'text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'
+                    }`}
+                  >
+                    My Ruminations
+                  </Link>
+                  
+                  <Link
+                    to="/my-feed"
+                    className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                      isActive('/my-feed')
+                        ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
+                        : 'text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'
+                    }`}
+                  >
+                    My Feed
+                  </Link>
+                </>
+              )}
               
               <Link
                 to="/public"
@@ -57,12 +63,31 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
             </div>
           </div>
 
-          <button
-            onClick={onNewRumination}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
-          >
-            New Rumination
-          </button>
+          <div className="flex items-center space-x-4">
+            {isAuthenticated ? (
+              <>
+                <button
+                  onClick={onNewRumination}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  New Rumination
+                </button>
+                <button
+                  onClick={logout}
+                  className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white px-3 py-2 text-sm font-medium transition-colors"
+                >
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <Link
+                to="/login"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+              >
+                Sign In
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </nav>

@@ -1,8 +1,20 @@
-import { RuminationResponse, PostRuminationDto } from '../types/rumination';
+import { RuminationResponse, PostRuminationDto, MyRuminationsQueryParams } from '../types/rumination';
 import { buildApiUrl, API_CONFIG } from '../config/api';
 
-export async function getMyRuminations(token: string): Promise<RuminationResponse[]> {
-  const response = await fetch(buildApiUrl(API_CONFIG.ENDPOINTS.RUMINATIONS.MY_RUMINATIONS), {
+export async function getMyRuminations(token: string, queryParams?: MyRuminationsQueryParams): Promise<RuminationResponse[]> {
+  let url = buildApiUrl(API_CONFIG.ENDPOINTS.RUMINATIONS.MY_RUMINATIONS);
+  
+  if (queryParams) {
+    const params = new URLSearchParams();
+    if (queryParams.isPublic !== undefined) {
+      params.append('isPublic', queryParams.isPublic.toString());
+    }
+    if (params.toString()) {
+      url += `?${params.toString()}`;
+    }
+  }
+
+  const response = await fetch(url, {
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -16,8 +28,20 @@ export async function getMyRuminations(token: string): Promise<RuminationRespons
   return await response.json();
 }
 
-export async function getAllRuminations(token: string): Promise<RuminationResponse[]> {
-  const response = await fetch(buildApiUrl(API_CONFIG.ENDPOINTS.RUMINATIONS.LIST), {
+export async function getAllRuminations(token: string, queryParams?: MyRuminationsQueryParams): Promise<RuminationResponse[]> {
+  let url = buildApiUrl(API_CONFIG.ENDPOINTS.RUMINATIONS.LIST);
+
+  if (queryParams) {
+    const params = new URLSearchParams();
+    if (queryParams.isPublic !== undefined) {
+      params.append('isPublic', queryParams.isPublic.toString());
+    }
+    if (params.toString()) {
+      url += `?${params.toString()}`;
+    }
+  }
+
+  const response = await fetch(url, {
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -26,21 +50,6 @@ export async function getAllRuminations(token: string): Promise<RuminationRespon
 
   if (!response.ok) {
     throw new Error('Failed to fetch all ruminations');
-  }
-
-  return await response.json();
-}
-
-export async function getOthersRuminations(token: string): Promise<RuminationResponse[]> {
-  const response = await fetch(buildApiUrl(API_CONFIG.ENDPOINTS.RUMINATIONS.OTHERS_RUMINATIONS), {
-    method: 'GET',
-    headers: {
-      'Authorization': `Bearer ${token}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch others ruminations');
   }
 
   return await response.json();

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../AuthContext';
-import { getOthersRuminations } from '../services/RuminationsService';
+import { getAllRuminations } from '../services/RuminationsService';
 import { RuminationResponse, UserRelationType } from '../types/rumination';
 
 export default function MyFeedPage() {
@@ -15,7 +15,7 @@ export default function MyFeedPage() {
       
       try {
         setLoading(true);
-        const data = await getOthersRuminations(token);
+        const data = await getAllRuminations(token, { isPublic: false });
         setRuminations(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to fetch feed');

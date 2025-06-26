@@ -15,7 +15,7 @@ export default function PublicPage() {
       
       try {
         setLoading(true);
-        const data = await getAllRuminations(token);
+        const data = await getAllRuminations(token, { isPublic: true });
         setRuminations(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to fetch public ruminations');

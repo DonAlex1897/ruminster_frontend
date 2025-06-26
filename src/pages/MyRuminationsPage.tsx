@@ -8,6 +8,7 @@ export default function MyRuminationsPage() {
   const [ruminations, setRuminations] = useState<RuminationResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showPublished, setShowPublished] = useState(true);
 
   useEffect(() => {
     const fetchRuminations = async () => {
@@ -15,7 +16,7 @@ export default function MyRuminationsPage() {
       
       try {
         setLoading(true);
-        const data = await getMyRuminations(token);
+        const data = await getMyRuminations(token, { isPublic: showPublished });
         setRuminations(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to fetch ruminations');
@@ -25,7 +26,7 @@ export default function MyRuminationsPage() {
     };
 
     fetchRuminations();
-  }, [token]);
+  }, [token, showPublished]);
 
   const getAudienceLabels = (audiences: { userRelationType: UserRelationType }[]) => {
     const labels = audiences.map(a => {
@@ -68,21 +69,51 @@ export default function MyRuminationsPage() {
     );
   }
 
+  const filteredRuminations = ruminations;
+
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-        My Ruminations
-      </h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+          My Ruminations
+        </h1>
+        
+        <div className="flex items-center space-x-2 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+          <button
+            onClick={() => setShowPublished(true)}
+            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+              showPublished
+                ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
+                : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
+            }`}
+          >
+            Published
+          </button>
+          <button
+            onClick={() => setShowPublished(false)}
+            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+              !showPublished
+                ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
+                : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
+            }`}
+          >
+            Drafts
+          </button>
+        </div>
+      </div>
 
-      {ruminations.length === 0 ? (
+      {filteredRuminations.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-gray-500 dark:text-gray-400">
-            You haven't created any ruminations yet.
+            {showPublished 
+              ? "You haven't published any ruminations yet."
+              : "You don't have any draft ruminations."
+            }
           </p>
         </div>
       ) : (
         <div className="space-y-6">
-          {ruminations.map((rumination) => (
+          {filteredRuminations.map((rumination) => (
             <div
               key={rumination.id}
               className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6"
