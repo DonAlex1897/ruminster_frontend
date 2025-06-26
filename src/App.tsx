@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { AuthProvider } from './AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import ProtectedRoute from './ProtectedRoute';
@@ -17,6 +17,8 @@ import React, { useState } from 'react';
 
 function AppContent() {
   const { token } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isNewRuminationOpen, setIsNewRuminationOpen] = useState(false);
 
   const handleNewRumination = async (content: string, audiences: UserRelationType[], publish: boolean) => {
@@ -28,8 +30,8 @@ function AppContent() {
       publish
     });
     
-    // Refresh the current page by reloading
-    window.location.reload();
+    // Refresh the current page component
+    navigate(location.pathname, { replace: true });
   };
 
   return (
