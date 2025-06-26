@@ -6,6 +6,8 @@ import { validateToken } from './services/AuthService';
 interface AuthContextType {
   isAuthenticated: boolean;
   loading: boolean;
+  user: any;
+  token: string | null;
   login: (token: string) => void;
   logout: () => void;
 }
@@ -55,7 +57,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, loading, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, loading, user, token, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
