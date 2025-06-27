@@ -20,7 +20,7 @@ const LoginPage: React.FC = () => {
 
   useEffect(() => {
     if (isAuthenticated && !loading) {
-      navigate('/');
+      navigate('/my-ruminations');
     }
   }, [isAuthenticated, loading, navigate]);
 

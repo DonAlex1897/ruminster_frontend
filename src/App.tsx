@@ -3,7 +3,6 @@ import { AuthProvider } from './AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import ProtectedRoute from './ProtectedRoute';
 import LoginPage from './LoginPage';
-import HomePage from './HomePage';
 import MyRuminationsPage from './pages/MyRuminationsPage';
 import MyFeedPage from './pages/MyFeedPage';
 import PublicPage from './pages/PublicPage';
@@ -41,14 +40,6 @@ function AppContent() {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <HomePage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
           path="/my-ruminations"
           element={
             <ProtectedRoute>
@@ -67,9 +58,7 @@ function AppContent() {
         <Route
           path="/public"
           element={
-            <ProtectedRoute>
-              <PublicPage />
-            </ProtectedRoute>
+            <PublicPage />
           }
         />
       </Routes>

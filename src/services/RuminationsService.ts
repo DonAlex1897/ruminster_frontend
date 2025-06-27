@@ -28,8 +28,8 @@ export async function getMyRuminations(token: string, queryParams?: MyRumination
   return await response.json();
 }
 
-export async function getAllRuminations(token: string, queryParams?: MyRuminationsQueryParams): Promise<RuminationResponse[]> {
-  let url = buildApiUrl(API_CONFIG.ENDPOINTS.RUMINATIONS.LIST);
+export async function getFeedRuminations(token: string, queryParams?: MyRuminationsQueryParams): Promise<RuminationResponse[]> {
+  let url = buildApiUrl(API_CONFIG.ENDPOINTS.RUMINATIONS.FEED);
 
   if (queryParams) {
     const params = new URLSearchParams();
@@ -55,8 +55,32 @@ export async function getAllRuminations(token: string, queryParams?: MyRuminatio
   return await response.json();
 }
 
+export async function getPublicRuminations(queryParams?: MyRuminationsQueryParams): Promise<RuminationResponse[]> {
+  let url = buildApiUrl(API_CONFIG.ENDPOINTS.RUMINATIONS.PUBLIC);
+
+  if (queryParams) {
+    const params = new URLSearchParams();
+    if (queryParams.isPublic !== undefined) {
+      params.append('isPublic', queryParams.isPublic.toString());
+    }
+    if (params.toString()) {
+      url += `?${params.toString()}`;
+    }
+  }
+
+  const response = await fetch(url, {
+    method: 'GET',
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch all ruminations');
+  }
+
+  return await response.json();
+}
+
 export async function createRumination(token: string, rumination: PostRuminationDto): Promise<RuminationResponse> {
-  const response = await fetch(buildApiUrl(API_CONFIG.ENDPOINTS.RUMINATIONS.LIST), {
+  const response = await fetch(buildApiUrl(API_CONFIG.ENDPOINTS.RUMINATIONS.BASE), {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,

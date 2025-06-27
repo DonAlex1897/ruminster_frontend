@@ -6,19 +6,22 @@ export const API_CONFIG = {
   // API endpoints
   ENDPOINTS: {
     AUTH: {
+      BASE: '/api/auth',
       LOGIN: '/api/auth/login',
       SIGNUP: '/api/auth/signup',
       REFRESH_TOKEN: '/api/auth/refresh-token',
       ME: '/api/auth/me',
     },
     USERS: {
+      BASE: '/api/users',
       CURRENT: '/api/users/current',
       LIST: '/api/users',
     },
     RUMINATIONS: {
-      LIST: '/api/ruminations',
+      BASE: '/api/ruminations',
+      FEED: '/api/ruminations/feed',
+      PUBLIC: '/api/ruminations/public',
       MY_RUMINATIONS: '/api/ruminations/my',
-      OTHERS_RUMINATIONS: '/api/ruminations/others',
     },
   },
 } as const;

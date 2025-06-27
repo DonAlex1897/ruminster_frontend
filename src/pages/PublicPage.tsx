@@ -1,21 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../AuthContext';
-import { getAllRuminations } from '../services/RuminationsService';
+import { getPublicRuminations } from '../services/RuminationsService';
 import { RuminationResponse, UserRelationType } from '../types/rumination';
 
 export default function PublicPage() {
-  const { token } = useAuth();
   const [ruminations, setRuminations] = useState<RuminationResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchRuminations = async () => {
-      if (!token) return;
-      
       try {
         setLoading(true);
-        const data = await getAllRuminations(token, { isPublic: true });
+        const data = await getPublicRuminations();
         setRuminations(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to fetch public ruminations');
@@ -25,7 +21,7 @@ export default function PublicPage() {
     };
 
     fetchRuminations();
-  }, [token]);
+  }, []);
 
   const getAudienceLabels = (audiences: { userRelationType: UserRelationType }[]) => {
     const labels = audiences.map(a => {
