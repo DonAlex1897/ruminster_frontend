@@ -10,7 +10,7 @@ interface NavbarProps {
 
 export default function Navbar({ onNewRumination }: NavbarProps) {
   const location = useLocation();
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, requiresTosAcceptance } = useAuth();
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   const isActive = (path: string) => {
@@ -77,8 +77,13 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
                 {/* Desktop/Tablet buttons */}
                 <div className="hidden sm:flex items-center space-x-2 lg:space-x-4">
                   <button
-                    onClick={onNewRumination}
-                    className="flex items-center gap-1 lg:gap-2 bg-blue-600 hover:bg-blue-700 text-white px-2 lg:px-4 py-2 rounded-md text-xs lg:text-sm font-medium transition-colors"
+                    onClick={requiresTosAcceptance ? undefined : onNewRumination}
+                    disabled={requiresTosAcceptance}
+                    className={`flex items-center gap-1 lg:gap-2 px-2 lg:px-4 py-2 rounded-md text-xs lg:text-sm font-medium transition-colors ${
+                      requiresTosAcceptance 
+                        ? 'bg-gray-400 text-gray-600 cursor-not-allowed' 
+                        : 'bg-blue-600 hover:bg-blue-700 text-white'
+                    }`}
                   >
                     <PlusIcon className="h-4 lg:h-5 w-4 lg:w-5" />
                     <span className="hidden lg:inline">New Rumination</span>
@@ -111,11 +116,16 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
                       <div className="absolute right-0 top-full mt-1 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 z-20">
                         <div className="py-1">
                           <button
-                            onClick={() => {
+                            onClick={requiresTosAcceptance ? undefined : () => {
                               onNewRumination();
                               setShowMobileMenu(false);
                             }}
-                            className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                            disabled={requiresTosAcceptance}
+                            className={`flex items-center gap-2 w-full px-4 py-2 text-sm transition-colors ${
+                              requiresTosAcceptance 
+                                ? 'text-gray-400 cursor-not-allowed' 
+                                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                            }`}
                           >
                             <PlusIcon className="h-4 w-4" />
                             New Rumination

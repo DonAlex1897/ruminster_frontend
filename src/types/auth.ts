@@ -5,6 +5,8 @@ export interface LoginResponse {
   refreshToken: string;
   expiresIn: number;
   user: import('./user').UserResponse;
+  requiresTosAcceptance: boolean;
+  latestTosVersion: string | null;
 }
 
 export interface TokenResponse {
@@ -21,4 +23,5 @@ export interface PostSignUpDto {
   username: string;
   email: string;
   password: string;
+  acceptedTosVersion: string;
 }

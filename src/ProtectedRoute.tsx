@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, requiresTosAcceptance } = useAuth();
 
   if (loading) {
     return <div>Loading...</div>;
@@ -11,6 +11,10 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
 
   if (!isAuthenticated) {
     return <Navigate to="/login" />;
+  }
+
+  if (requiresTosAcceptance) {
+    return <Navigate to="/terms-acceptance" />;
   }
 
   return <>{children}</>;

@@ -9,9 +9,12 @@ import PublicPage from './pages/PublicPage';
 import ActivateAccountPage from './pages/ActivateAccountPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import TermsOfService from './pages/TermsOfService';
+import TermsAcceptance from './pages/TermsAcceptance';
 import ThemeToggle from './components/ThemeToggle';
 import Navbar from './components/Navbar';
 import NewRuminationDialog from './components/NewRuminationDialog';
+import TosNotification from './components/TosNotification';
 import { useAuth } from './AuthContext';
 import { useCreateRumination } from './hooks/useRuminations';
 import { UserRelationType } from './types/rumination';
@@ -24,6 +27,7 @@ function AppContent() {
 
   return (
     <>
+      <TosNotification />
       <ThemeToggle />
       <Navbar onNewRumination={() => setIsNewRuminationOpen(true)} />
       <Routes>
@@ -32,6 +36,8 @@ function AppContent() {
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/activate" element={<ActivateAccountPage />} />
+        <Route path="/terms-of-service" element={<TermsOfService />} />
+        <Route path="/terms-acceptance" element={<TermsAcceptance />} />
         <Route
           path="/my-ruminations"
           element={

@@ -9,7 +9,8 @@ const LoginPage: React.FC = () => {
     username: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    acceptedTos: false
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showActivationMessage, setShowActivationMessage] = useState(false);
@@ -29,7 +30,11 @@ const LoginPage: React.FC = () => {
   // Handle login success/error
   React.useEffect(() => {
     if (loginMutation.isSuccess && loginMutation.data) {
-      authLogin(loginMutation.data.accessToken);
+      authLogin(
+        loginMutation.data.accessToken, 
+        loginMutation.data.requiresTosAcceptance,
+        loginMutation.data.latestTosVersion
+      );
     }
     if (loginMutation.isError) {
       setErrors({ general: loginMutation.error.message });
@@ -69,6 +74,10 @@ const LoginPage: React.FC = () => {
       newErrors.confirmPassword = 'Passwords do not match';
     }
     
+    if (!isLogin && !formData.acceptedTos) {
+      newErrors.acceptedTos = 'You must accept the Terms of Service to continue';
+    }
+    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -88,14 +97,16 @@ const LoginPage: React.FC = () => {
       signupMutation.mutate({
         username: formData.username,
         email: formData.email,
-        password: formData.password
+        password: formData.password,
+        acceptedTosVersion: "1.0"
       });
     }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    const inputValue = type === 'checkbox' ? checked : value;
+    setFormData(prev => ({ ...prev, [name]: inputValue }));
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
     }
@@ -103,7 +114,7 @@ const LoginPage: React.FC = () => {
 
   const toggleMode = () => {
     setIsLogin(!isLogin);
-    setFormData({ username: '', email: '', password: '', confirmPassword: '' });
+    setFormData({ username: '', email: '', password: '', confirmPassword: '', acceptedTos: false });
     setErrors({});
     setShowActivationMessage(false);
   };
@@ -253,10 +264,42 @@ const LoginPage: React.FC = () => {
                   <p className="mt-1 text-sm text-error">{errors.confirmPassword}</p>
                 )}
               </div>
-            )}
-          </div>
+              )}
+                
+              {!isLogin && (
+                  <div>
+                  <div className="flex items-start">
+                    <input
+                      id="acceptedTos"
+                      name="acceptedTos"
+                      type="checkbox"
+                      required
+                      className={`mt-1 mr-3 h-4 w-4 text-primary focus:ring-primary border-border rounded ${
+                        errors.acceptedTos ? 'border-border-error' : ''
+                      }`}
+                      checked={formData.acceptedTos}
+                      onChange={handleInputChange}
+                    />
+                    <label htmlFor="acceptedTos" className="text-sm text-text-secondary">
+                      I agree to the{' '}
+                      <a
+                        href="/terms-of-service"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-accent hover:text-primary transition-colors underline"
+                      >
+                        Terms of Service
+                      </a>
+                    </label>
+                  </div>
+                  {errors.acceptedTos && (
+                    <p className="mt-1 text-sm text-error">{errors.acceptedTos}</p>
+                  )}
+                </div>
+              )}
+            </div>
 
-          {errors.general && (
+            {errors.general && (
             <div className="rounded-md bg-error/10 border border-error/20 p-4">
               <div className="text-sm text-error">{errors.general}</div>
             </div>

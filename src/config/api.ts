@@ -26,6 +26,13 @@ export const API_CONFIG = {
       PUBLIC: '/api/ruminations/public',
       MY_RUMINATIONS: '/api/ruminations/my',
     },
+    TERMS_OF_SERVICE: {
+      BASE: '/api/TermsOfService',
+      CURRENT: '/api/TermsOfService/current',
+      ACCEPT: '/api/TermsOfService/accept',
+      ACCEPTANCE_STATUS: '/api/TermsOfService/acceptance-status',
+      CREATE: '/api/TermsOfService/create',
+    },
   },
 } as const;
 

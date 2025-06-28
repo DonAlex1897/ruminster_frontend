@@ -7,8 +7,11 @@ interface AuthContextType {
   loading: boolean;
   user: any;
   token: string | null;
-  login: (token: string) => void;
+  requiresTosAcceptance: boolean;
+  latestTosVersion: string | null;
+  login: (token: string, requiresTos?: boolean, tosVersion?: string | null) => void;
   logout: () => void;
+  updateTosAcceptance: (accepted: boolean) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -20,6 +23,8 @@ interface AuthProviderProps {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [requiresTosAcceptance, setRequiresTosAcceptance] = useState(false);
+  const [latestTosVersion, setLatestTosVersion] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const token = localStorage.getItem('authToken');
@@ -39,20 +44,46 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setLoading(false);
   }, [user, isLoadingUser, isErrorUser]);
 
-  const login = (token: string) => {
+  const login = (token: string, requiresTos: boolean = false, tosVersion: string | null = null) => {
     localStorage.setItem('authToken', token);
     setIsAuthenticated(true);
-    navigate('/my-ruminations');
+    setRequiresTosAcceptance(requiresTos);
+    setLatestTosVersion(tosVersion);
+    
+    if (requiresTos) {
+      navigate('/terms-acceptance');
+    } else {
+      navigate('/my-ruminations');
+    }
   };
 
   const logout = () => {
     localStorage.removeItem('authToken');
     setIsAuthenticated(false);
+    setRequiresTosAcceptance(false);
+    setLatestTosVersion(null);
     navigate('/login');
   };
 
+  const updateTosAcceptance = (accepted: boolean) => {
+    setRequiresTosAcceptance(!accepted);
+    if (accepted) {
+      navigate('/my-ruminations');
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ isAuthenticated, loading, user, token, login, logout }}>
+    <AuthContext.Provider value={{ 
+      isAuthenticated, 
+      loading, 
+      user, 
+      token, 
+      requiresTosAcceptance,
+      latestTosVersion,
+      login, 
+      logout,
+      updateTosAcceptance 
+    }}>
       {children}
     </AuthContext.Provider>
   );
