@@ -20,17 +20,17 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
     <nav className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div className="flex items-center space-x-8">
-            <Link to="/public" className="text-xl font-bold text-gray-900 dark:text-white">
+          <div className="flex items-center space-x-2 sm:space-x-8">
+            <Link to="/public" className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
               Ruminster
             </Link>
             
-            <div className="flex space-x-6">
+            <div className="flex space-x-1 sm:space-x-6">
               {isAuthenticated && (
                 <>
                   <Link
                     to="/my-ruminations"
-                    className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    className={`flex items-center gap-1 sm:gap-2 px-1 sm:px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                       isActive('/my-ruminations')
                         ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
                         : 'text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'
@@ -42,7 +42,7 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
                   
                   <Link
                     to="/my-feed"
-                    className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    className={`flex items-center gap-1 sm:gap-2 px-1 sm:px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                       isActive('/my-feed')
                         ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
                         : 'text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'
@@ -56,7 +56,7 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
               
               <Link
                 to="/public"
-                className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                className={`flex items-center gap-1 sm:gap-2 px-1 sm:px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   isActive('/public')
                     ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
                     : 'text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'
@@ -68,7 +68,7 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
             </div>
           </div>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-1 sm:space-x-4">
             {isAuthenticated ? (
               <>
                 {/* Desktop buttons */}
@@ -93,7 +93,7 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
                 <div className="relative md:hidden">
                   <button
                     onClick={() => setShowMobileMenu(!showMobileMenu)}
-                    className="flex items-center gap-2 text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white px-3 py-2 text-sm font-medium transition-colors"
+                    className="flex items-center gap-1 text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white px-2 py-2 text-sm font-medium transition-colors"
                   >
                     <EllipsisVerticalIcon className="h-5 w-5" />
                   </button>
