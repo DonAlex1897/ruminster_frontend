@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { BookOpenIcon, RssIcon, GlobeAltIcon, PlusIcon, ArrowLeftEndOnRectangleIcon, EllipsisVerticalIcon } from '@heroicons/react/24/outline';
+import logo from '../assets/ruminster_logo.png';
 
 interface NavbarProps {
   onNewRumination: () => void;
@@ -21,8 +22,8 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-2 sm:space-x-8">
-            <Link to="/public" className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
-              Ruminster
+            <Link to="/public" className="flex items-center space-x-2">
+              <img src={logo} alt="Ruminster" className="h-12 w-auto" />
             </Link>
             
             <div className="flex space-x-1 sm:space-x-6">
