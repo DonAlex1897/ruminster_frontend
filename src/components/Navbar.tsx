@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
+import { BookOpenIcon, RssIcon, GlobeAltIcon, PlusIcon, ArrowLeftEndOnRectangleIcon, EllipsisVerticalIcon } from '@heroicons/react/24/outline';
 
 interface NavbarProps {
   onNewRumination: () => void;
@@ -9,6 +10,7 @@ interface NavbarProps {
 export default function Navbar({ onNewRumination }: NavbarProps) {
   const location = useLocation();
   const { isAuthenticated, logout } = useAuth();
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   const isActive = (path: string) => {
     return location.pathname === path;
@@ -28,37 +30,40 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
                 <>
                   <Link
                     to="/my-ruminations"
-                    className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                       isActive('/my-ruminations')
                         ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
                         : 'text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'
                     }`}
                   >
-                    My Ruminations
+                    <BookOpenIcon className="h-5 w-5" />
+                    <span className="hidden md:inline">My Ruminations</span>
                   </Link>
                   
                   <Link
                     to="/my-feed"
-                    className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                       isActive('/my-feed')
                         ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
                         : 'text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'
                     }`}
                   >
-                    My Feed
+                    <RssIcon className="h-5 w-5" />
+                    <span className="hidden md:inline">My Feed</span>
                   </Link>
                 </>
               )}
               
               <Link
                 to="/public"
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   isActive('/public')
                     ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
                     : 'text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'
                 }`}
               >
-                Public
+                <GlobeAltIcon className="h-5 w-5" />
+                <span className="hidden md:inline">Public</span>
               </Link>
             </div>
           </div>
@@ -66,18 +71,66 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
           <div className="flex items-center space-x-4">
             {isAuthenticated ? (
               <>
-                <button
-                  onClick={onNewRumination}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
-                >
-                  New Rumination
-                </button>
-                <button
-                  onClick={logout}
-                  className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white px-3 py-2 text-sm font-medium transition-colors"
-                >
-                  Sign Out
-                </button>
+                {/* Desktop buttons */}
+                <div className="hidden md:flex items-center space-x-4">
+                  <button
+                    onClick={onNewRumination}
+                    className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                  >
+                    <PlusIcon className="h-5 w-5" />
+                    New Rumination
+                  </button>
+                  <button
+                    onClick={logout}
+                    className="flex items-center gap-2 text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white px-3 py-2 text-sm font-medium transition-colors"
+                  >
+                    <ArrowLeftEndOnRectangleIcon className="h-5 w-5" />
+                    Sign Out
+                  </button>
+                </div>
+
+                {/* Mobile menu */}
+                <div className="relative md:hidden">
+                  <button
+                    onClick={() => setShowMobileMenu(!showMobileMenu)}
+                    className="flex items-center gap-2 text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white px-3 py-2 text-sm font-medium transition-colors"
+                  >
+                    <EllipsisVerticalIcon className="h-5 w-5" />
+                  </button>
+                  
+                  {showMobileMenu && (
+                    <>
+                      <div 
+                        className="fixed inset-0 z-10" 
+                        onClick={() => setShowMobileMenu(false)}
+                      />
+                      <div className="absolute right-0 top-full mt-1 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 z-20">
+                        <div className="py-1">
+                          <button
+                            onClick={() => {
+                              onNewRumination();
+                              setShowMobileMenu(false);
+                            }}
+                            className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                          >
+                            <PlusIcon className="h-4 w-4" />
+                            New Rumination
+                          </button>
+                          <button
+                            onClick={() => {
+                              logout();
+                              setShowMobileMenu(false);
+                            }}
+                            className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                          >
+                            <ArrowLeftEndOnRectangleIcon className="h-4 w-4" />
+                            Sign Out
+                          </button>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
               </>
             ) : (
               <Link
