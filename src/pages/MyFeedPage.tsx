@@ -1,5 +1,6 @@
 import { UserRelationType } from '../types/rumination';
 import { useFeedRuminations } from '../hooks/useRuminations';
+import UserAvatar from '../components/UserAvatar';
 
 export default function MyFeedPage() {
   const { 
@@ -72,9 +73,12 @@ export default function MyFeedPage() {
             >
               <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center space-x-3">
-                  <span className="font-medium text-gray-900 dark:text-white">
-                    @{rumination.createdBy.username}
-                  </span>
+                  <UserAvatar
+                    userId={rumination.createdBy.id}
+                    username={rumination.createdBy.username}
+                    size="sm"
+                    showUsername={true}
+                  />
                   {rumination.audiences.length > 0 && (
                     <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
                       {getAudienceLabels(rumination.audiences)}

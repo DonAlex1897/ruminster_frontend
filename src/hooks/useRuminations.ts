@@ -3,6 +3,7 @@ import {
   getMyRuminations, 
   getFeedRuminations, 
   getPublicRuminations, 
+  getUserRuminations,
   createRumination,
   updateRumination,
   deleteRumination 
@@ -34,6 +35,14 @@ export const usePublicRuminations = (queryParams?: MyRuminationsQueryParams) => 
   return useQuery({
     queryKey: ['publicRuminations', queryParams],
     queryFn: () => getPublicRuminations(queryParams),
+  });
+};
+
+export const useUserRuminations = (userId: string, queryParams?: MyRuminationsQueryParams) => {
+  return useQuery({
+    queryKey: ['userRuminations', userId, queryParams],
+    queryFn: () => getUserRuminations(userId, queryParams),
+    enabled: !!userId,
   });
 };
 

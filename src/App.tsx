@@ -6,6 +6,7 @@ import LoginPage from './LoginPage';
 import MyRuminationsPage from './pages/MyRuminationsPage';
 import MyFeedPage from './pages/MyFeedPage';
 import PublicPage from './pages/PublicPage';
+import UserPage from './pages/UserPage';
 import ActivateAccountPage from './pages/ActivateAccountPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
@@ -56,6 +57,12 @@ function AppContent() {
           path="/public"
           element={
             <PublicPage />
+          }
+        />
+        <Route
+          path="/user/:userId"
+          element={
+            <UserPage />
           }
         />
         </Routes>

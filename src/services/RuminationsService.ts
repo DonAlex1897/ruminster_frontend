@@ -156,3 +156,28 @@ export async function deleteRumination(token: string, ruminationId: string): Pro
     throw new Error(errorMessage);
   }
 }
+
+export async function getUserRuminations(userId: string, queryParams?: MyRuminationsQueryParams): Promise<RuminationResponse[]> {
+  let url = buildApiUrl(API_CONFIG.ENDPOINTS.RUMINATIONS.PUBLIC);
+  
+  const params = new URLSearchParams();
+  params.append('UserId', userId);
+  
+  if (queryParams?.isPublic !== undefined) {
+    params.append('isPublic', queryParams.isPublic.toString());
+  }
+  
+  if (params.toString()) {
+    url += `?${params.toString()}`;
+  }
+
+  const response = await fetch(url, {
+    method: 'GET',
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch user ruminations');
+  }
+
+  return await response.json();
+}
