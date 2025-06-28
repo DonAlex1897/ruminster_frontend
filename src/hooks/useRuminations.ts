@@ -3,9 +3,10 @@ import {
   getMyRuminations, 
   getFeedRuminations, 
   getPublicRuminations, 
-  createRumination 
+  createRumination,
+  updateRumination 
 } from '../services/RuminationsService';
-import { MyRuminationsQueryParams, PostRuminationDto } from '../types/rumination';
+import { MyRuminationsQueryParams, PostRuminationDto, UpdateRuminationDto } from '../types/rumination';
 import { useAuth } from '../AuthContext';
 
 export const useMyRuminations = (queryParams?: MyRuminationsQueryParams) => {
@@ -43,6 +44,24 @@ export const useCreateRumination = () => {
     mutationFn: (rumination: PostRuminationDto) => {
       if (!token) throw new Error('No authentication token available');
       return createRumination(token, rumination);
+    },
+    onSuccess: () => {
+      // Invalidate and refetch relevant queries
+      queryClient.invalidateQueries({ queryKey: ['myRuminations'] });
+      queryClient.invalidateQueries({ queryKey: ['feedRuminations'] });
+      queryClient.invalidateQueries({ queryKey: ['publicRuminations'] });
+    },
+  });
+};
+
+export const useUpdateRumination = () => {
+  const queryClient = useQueryClient();
+  const { token } = useAuth();
+  
+  return useMutation({
+    mutationFn: (rumination: UpdateRuminationDto) => {
+      if (!token) throw new Error('No authentication token available');
+      return updateRumination(token, rumination);
     },
     onSuccess: () => {
       // Invalidate and refetch relevant queries

@@ -17,9 +17,16 @@ export interface PostRuminationDto {
   audiences?: UserRelationType[];
 }
 
+export interface UpdateRuminationDto {
+  id: number;
+  content: string;
+  publish: boolean;
+  audiences?: UserRelationType[];
+}
+
 export interface RuminationAudienceResponse {
   id: number;
-  userRelationType: UserRelationType;
+  relationType: UserRelationType;
 }
 
 export interface RuminationResponse {

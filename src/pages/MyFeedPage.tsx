@@ -8,9 +8,9 @@ export default function MyFeedPage() {
     error 
   } = useFeedRuminations();
 
-  const getAudienceLabels = (audiences: { userRelationType: UserRelationType }[]) => {
+  const getAudienceLabels = (audiences: { relationType: UserRelationType }[]) => {
     const labels = audiences.map(a => {
-      switch (a.userRelationType) {
+      switch (a.relationType) {
         case UserRelationType.Acquaintance: return 'Acquaintance';
         case UserRelationType.Family: return 'Family';
         case UserRelationType.Friend: return 'Friend';

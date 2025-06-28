@@ -1,4 +1,4 @@
-import { RuminationResponse, PostRuminationDto, MyRuminationsQueryParams } from '../types/rumination';
+import { RuminationResponse, PostRuminationDto, MyRuminationsQueryParams, UpdateRuminationDto } from '../types/rumination';
 import { buildApiUrl, API_CONFIG } from '../config/api';
 
 export async function getMyRuminations(token: string, queryParams?: MyRuminationsQueryParams): Promise<RuminationResponse[]> {
@@ -91,6 +91,36 @@ export async function createRumination(token: string, rumination: PostRumination
 
   if (!response.ok) {
     let errorMessage = 'Failed to create rumination';
+    
+    try {
+      const errorData = await response.json();
+      errorMessage = errorData.message || errorData.title || errorMessage;
+    } catch {
+      errorMessage = response.statusText || `HTTP ${response.status}`;
+    }
+    
+    throw new Error(errorMessage);
+  }
+
+  return await response.json();
+}
+
+export async function updateRumination(token: string, rumination: UpdateRuminationDto): Promise<RuminationResponse> {
+  const response = await fetch(buildApiUrl(`${API_CONFIG.ENDPOINTS.RUMINATIONS.BASE}/${rumination.id}`), {
+    method: 'PUT',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      content: rumination.content,
+      audiences: rumination.audiences,
+      publish: rumination.publish
+    }),
+  });
+
+  if (!response.ok) {
+    let errorMessage = 'Failed to update rumination';
     
     try {
       const errorData = await response.json();

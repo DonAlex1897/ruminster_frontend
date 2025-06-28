@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import { useMyRuminations } from '../hooks/useRuminations';
-import { UserRelationType } from '../types/rumination';
+import { UserRelationType, RuminationResponse } from '../types/rumination';
+import EditRuminationDialog from '../components/EditRuminationDialog';
 
 export default function MyRuminationsPage() {
   const [showPublished, setShowPublished] = useState(true);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [selectedRumination, setSelectedRumination] = useState<RuminationResponse | null>(null);
 
   const { 
     data: ruminations = [], 
@@ -11,9 +14,9 @@ export default function MyRuminationsPage() {
     error 
   } = useMyRuminations({ isPublic: showPublished });
 
-  const getAudienceLabels = (audiences: { userRelationType: UserRelationType }[]) => {
+  const getAudienceLabels = (audiences: { relationType: UserRelationType }[]) => {
     const labels = audiences.map(a => {
-      switch (a.userRelationType) {
+      switch (a.relationType) {
         case UserRelationType.Acquaintance: return 'Acquaintance';
         case UserRelationType.Family: return 'Family';
         case UserRelationType.Friend: return 'Friend';
@@ -34,6 +37,21 @@ export default function MyRuminationsPage() {
       hour: '2-digit',
       minute: '2-digit'
     });
+  };
+
+  const handleEditRumination = (rumination: RuminationResponse) => {
+    setSelectedRumination(rumination);
+    setEditDialogOpen(true);
+  };
+
+  const handleCloseEditDialog = () => {
+    setEditDialogOpen(false);
+    setSelectedRumination(null);
+  };
+
+  const handleEditSuccess = () => {
+    handleCloseEditDialog();
+    // Refetch will happen automatically due to query invalidation
   };
 
   if (loading) {
@@ -101,7 +119,8 @@ export default function MyRuminationsPage() {
           {filteredRuminations.map((rumination) => (
             <div
               key={rumination.id}
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6"
+              onClick={() => handleEditRumination(rumination)}
+              className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 cursor-pointer hover:shadow-md transition-shadow"
             >
               <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center space-x-2">
@@ -130,6 +149,13 @@ export default function MyRuminationsPage() {
           ))}
         </div>
       )}
+      
+      <EditRuminationDialog
+        isOpen={editDialogOpen}
+        onClose={handleCloseEditDialog}
+        onSuccess={handleEditSuccess}
+        rumination={selectedRumination}
+      />
     </div>
   );
 }
