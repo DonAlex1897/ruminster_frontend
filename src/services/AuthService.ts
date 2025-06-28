@@ -1,6 +1,5 @@
 import { UserResponse } from '../types/user';
 import { LoginResponse, PostLoginDto, PostSignUpDto } from '../types/auth';
-import { PostForgotPasswordDto, PostResetPasswordDto, GetActivateDto, ApiResponse } from '../types/authExtended';
 import { buildApiUrl, API_CONFIG } from '../config/api';
 
 export async function validateToken(token: string): Promise<UserResponse | null> {

@@ -1,5 +1,3 @@
-import React from 'react';
-import { useAuth } from '../AuthContext';
 import { UserRelationType } from '../types/rumination';
 import { useFeedRuminations } from '../hooks/useRuminations';
 

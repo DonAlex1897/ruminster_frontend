@@ -8,7 +8,7 @@ const ActivateAccountPage: React.FC = () => {
   const navigate = useNavigate();
   const token = searchParams.get('token');
   
-  const { data, error, isLoading, isError, isSuccess } = useQuery({
+  const { data, error, isLoading, isSuccess } = useQuery({
     queryKey: ['activateAccount', token],
     queryFn: () => activateAccount(token!),
     enabled: !!token,

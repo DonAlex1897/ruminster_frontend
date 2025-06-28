@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { useAuth } from '../AuthContext';
+import { useState } from 'react';
 import { useMyRuminations } from '../hooks/useRuminations';
 import { UserRelationType } from '../types/rumination';
 

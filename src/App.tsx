@@ -15,10 +15,7 @@ import ThemeToggle from './components/ThemeToggle';
 import Navbar from './components/Navbar';
 import NewRuminationDialog from './components/NewRuminationDialog';
 import TosNotification from './components/TosNotification';
-import { useAuth } from './AuthContext';
-import { useCreateRumination } from './hooks/useRuminations';
-import { UserRelationType } from './types/rumination';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 function AppContent() {
   const navigate = useNavigate();

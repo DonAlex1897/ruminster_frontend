@@ -81,6 +81,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     setThemeState(initialTheme);
     setEffectiveTheme(initialEffectiveTheme);
     applyTheme(initialEffectiveTheme);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Listen for system theme changes
