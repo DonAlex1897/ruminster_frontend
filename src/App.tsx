@@ -30,7 +30,8 @@ function AppContent() {
       <TosNotification />
       <ThemeToggle />
       <Navbar onNewRumination={() => setIsNewRuminationOpen(true)} />
-      <Routes>
+      <div className="pt-16">
+        <Routes>
         <Route path="/" element={<Navigate to="/public" replace />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
@@ -60,7 +61,8 @@ function AppContent() {
             <PublicPage />
           }
         />
-      </Routes>
+        </Routes>
+      </div>
       <NewRuminationDialog
         isOpen={isNewRuminationOpen}
         onClose={() => setIsNewRuminationOpen(false)}
