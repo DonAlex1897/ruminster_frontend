@@ -26,45 +26,47 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
               <img src={logo} alt="Ruminster" className="h-12 w-auto" />
             </Link>
             
-            <div className="flex space-x-1 sm:space-x-6">
+            <div className="flex space-x-1 sm:space-x-3 lg:space-x-6">
               {isAuthenticated && (
                 <>
                   <Link
                     to="/my-ruminations"
-                    className={`flex items-center gap-1 sm:gap-2 px-1 sm:px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    className={`flex items-center gap-1 sm:gap-2 px-1 sm:px-2 lg:px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                       isActive('/my-ruminations')
                         ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
                         : 'text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'
                     }`}
                   >
                     <BookOpenIcon className="h-5 w-5" />
-                    <span className="hidden md:inline">My Ruminations</span>
+                    <span className="hidden lg:inline">My Ruminations</span>
+                    <span className="hidden sm:inline lg:hidden text-xs">Mine</span>
                   </Link>
                   
                   <Link
                     to="/my-feed"
-                    className={`flex items-center gap-1 sm:gap-2 px-1 sm:px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    className={`flex items-center gap-1 sm:gap-2 px-1 sm:px-2 lg:px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                       isActive('/my-feed')
                         ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
                         : 'text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'
                     }`}
                   >
                     <RssIcon className="h-5 w-5" />
-                    <span className="hidden md:inline">My Feed</span>
+                    <span className="hidden lg:inline">My Feed</span>
+                    <span className="hidden sm:inline lg:hidden text-xs">Feed</span>
                   </Link>
                 </>
               )}
               
               <Link
                 to="/public"
-                className={`flex items-center gap-1 sm:gap-2 px-1 sm:px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                className={`flex items-center gap-1 sm:gap-2 px-1 sm:px-2 lg:px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   isActive('/public')
                     ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
                     : 'text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'
                 }`}
               >
                 <GlobeAltIcon className="h-5 w-5" />
-                <span className="hidden md:inline">Public</span>
+                <span className="hidden sm:inline">Public</span>
               </Link>
             </div>
           </div>
@@ -72,26 +74,27 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
           <div className="flex items-center space-x-1 sm:space-x-4">
             {isAuthenticated ? (
               <>
-                {/* Desktop buttons */}
-                <div className="hidden md:flex items-center space-x-4">
+                {/* Desktop/Tablet buttons */}
+                <div className="hidden sm:flex items-center space-x-2 lg:space-x-4">
                   <button
                     onClick={onNewRumination}
-                    className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                    className="flex items-center gap-1 lg:gap-2 bg-blue-600 hover:bg-blue-700 text-white px-2 lg:px-4 py-2 rounded-md text-xs lg:text-sm font-medium transition-colors"
                   >
-                    <PlusIcon className="h-5 w-5" />
-                    New Rumination
+                    <PlusIcon className="h-4 lg:h-5 w-4 lg:w-5" />
+                    <span className="hidden lg:inline">New Rumination</span>
+                    <span className="inline lg:hidden">New</span>
                   </button>
                   <button
                     onClick={logout}
-                    className="flex items-center gap-2 text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white px-3 py-2 text-sm font-medium transition-colors"
+                    className="flex items-center gap-1 lg:gap-2 text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white px-2 lg:px-3 py-2 text-xs lg:text-sm font-medium transition-colors"
                   >
-                    <ArrowLeftEndOnRectangleIcon className="h-5 w-5" />
-                    Sign Out
+                    <ArrowLeftEndOnRectangleIcon className="h-4 lg:h-5 w-4 lg:w-5" />
+                    <span className="hidden lg:inline">Sign Out</span>
                   </button>
                 </div>
 
                 {/* Mobile menu */}
-                <div className="relative md:hidden">
+                <div className="relative sm:hidden">
                   <button
                     onClick={() => setShowMobileMenu(!showMobileMenu)}
                     className="flex items-center gap-1 text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white px-2 py-2 text-sm font-medium transition-colors"
