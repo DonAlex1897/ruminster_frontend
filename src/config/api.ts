@@ -11,6 +11,9 @@ export const API_CONFIG = {
       SIGNUP: '/api/auth/signup',
       REFRESH_TOKEN: '/api/auth/refresh-token',
       ME: '/api/auth/me',
+      FORGOT_PASSWORD: '/api/auth/forgot-password',
+      RESET_PASSWORD: '/api/auth/reset-password',
+      ACTIVATE: '/api/auth/activate',
     },
     USERS: {
       BASE: '/api/users',

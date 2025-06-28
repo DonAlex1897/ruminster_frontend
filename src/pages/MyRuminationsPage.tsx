@@ -1,32 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../AuthContext';
-import { getMyRuminations } from '../services/RuminationsService';
-import { RuminationResponse, UserRelationType } from '../types/rumination';
+import { useMyRuminations } from '../hooks/useRuminations';
+import { UserRelationType } from '../types/rumination';
 
 export default function MyRuminationsPage() {
-  const { token } = useAuth();
-  const [ruminations, setRuminations] = useState<RuminationResponse[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [showPublished, setShowPublished] = useState(true);
 
-  useEffect(() => {
-    const fetchRuminations = async () => {
-      if (!token) return;
-      
-      try {
-        setLoading(true);
-        const data = await getMyRuminations(token, { isPublic: showPublished });
-        setRuminations(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch ruminations');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchRuminations();
-  }, [token, showPublished]);
+  const { 
+    data: ruminations = [], 
+    isLoading: loading, 
+    error 
+  } = useMyRuminations({ isPublic: showPublished });
 
   const getAudienceLabels = (audiences: { userRelationType: UserRelationType }[]) => {
     const labels = audiences.map(a => {
@@ -64,7 +48,9 @@ export default function MyRuminationsPage() {
   if (error) {
     return (
       <div className="text-center py-8">
-        <p className="text-red-600 dark:text-red-400">{error}</p>
+        <p className="text-red-600 dark:text-red-400">
+          {error instanceof Error ? error.message : 'Failed to fetch ruminations'}
+        </p>
       </div>
     );
   }

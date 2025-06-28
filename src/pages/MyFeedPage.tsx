@@ -1,31 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useAuth } from '../AuthContext';
-import { RuminationResponse, UserRelationType } from '../types/rumination';
-import { getFeedRuminations } from '../services/RuminationsService';
+import { UserRelationType } from '../types/rumination';
+import { useFeedRuminations } from '../hooks/useRuminations';
 
 export default function MyFeedPage() {
-  const { token } = useAuth();
-  const [ruminations, setRuminations] = useState<RuminationResponse[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchRuminations = async () => {
-      if (!token) return;
-      
-      try {
-        setLoading(true);
-        const data = await getFeedRuminations(token);
-        setRuminations(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch feed');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchRuminations();
-  }, [token]);
+  const { 
+    data: ruminations = [], 
+    isLoading: loading, 
+    error 
+  } = useFeedRuminations();
 
   const getAudienceLabels = (audiences: { userRelationType: UserRelationType }[]) => {
     const labels = audiences.map(a => {
@@ -63,7 +46,9 @@ export default function MyFeedPage() {
   if (error) {
     return (
       <div className="text-center py-8">
-        <p className="text-red-600 dark:text-red-400">{error}</p>
+        <p className="text-red-600 dark:text-red-400">
+          {error instanceof Error ? error.message : 'Failed to fetch feed'}
+        </p>
       </div>
     );
   }

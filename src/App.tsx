@@ -6,32 +6,21 @@ import LoginPage from './LoginPage';
 import MyRuminationsPage from './pages/MyRuminationsPage';
 import MyFeedPage from './pages/MyFeedPage';
 import PublicPage from './pages/PublicPage';
+import ActivateAccountPage from './pages/ActivateAccountPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ThemeToggle from './components/ThemeToggle';
 import Navbar from './components/Navbar';
 import NewRuminationDialog from './components/NewRuminationDialog';
 import { useAuth } from './AuthContext';
-import { createRumination } from './services/RuminationsService';
+import { useCreateRumination } from './hooks/useRuminations';
 import { UserRelationType } from './types/rumination';
 import React, { useState } from 'react';
 
 function AppContent() {
-  const { token } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [isNewRuminationOpen, setIsNewRuminationOpen] = useState(false);
-
-  const handleNewRumination = async (content: string, audiences: UserRelationType[], publish: boolean) => {
-    if (!token) return;
-    
-    await createRumination(token, {
-      content,
-      audiences: audiences.length > 0 ? audiences : undefined,
-      publish
-    });
-    
-    // Refresh the current page component
-    navigate(location.pathname, { replace: true });
-  };
 
   return (
     <>
@@ -39,6 +28,9 @@ function AppContent() {
       <Navbar onNewRumination={() => setIsNewRuminationOpen(true)} />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/activate" element={<ActivateAccountPage />} />
         <Route
           path="/my-ruminations"
           element={
@@ -65,7 +57,11 @@ function AppContent() {
       <NewRuminationDialog
         isOpen={isNewRuminationOpen}
         onClose={() => setIsNewRuminationOpen(false)}
-        onSubmit={handleNewRumination}
+        onSuccess={() => {
+          setIsNewRuminationOpen(false);
+          // Refresh the current page component
+          navigate(location.pathname, { replace: true });
+        }}
       />
     </>
   );

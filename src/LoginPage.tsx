@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
-import { useNavigate } from 'react-router-dom';
-import { useMutation } from '@tanstack/react-query';
-import { login, signup } from './services/AuthService';
-import { PostLoginDto, PostSignUpDto } from './types/auth';
+import { useNavigate, Link } from 'react-router-dom';
+import { useLogin, useSignup } from './hooks/useAuth';
 
 const LoginPage: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -24,25 +22,28 @@ const LoginPage: React.FC = () => {
     }
   }, [isAuthenticated, loading, navigate]);
 
-  const loginMutation = useMutation({
-    mutationFn: (credentials: PostLoginDto) => login(credentials),
-    onSuccess: (data) => {
-      authLogin(data.accessToken);
-    },
-    onError: (error: Error) => {
-      setErrors({ general: error.message });
-    }
-  });
+  const loginMutation = useLogin();
+  const signupMutation = useSignup();
 
-  const signupMutation = useMutation({
-    mutationFn: (credentials: PostSignUpDto) => signup(credentials),
-    onSuccess: (data) => {
-      authLogin(data.accessToken);
-    },
-    onError: (error: Error) => {
-      setErrors({ general: error.message });
+  // Handle login success/error
+  React.useEffect(() => {
+    if (loginMutation.isSuccess && loginMutation.data) {
+      authLogin(loginMutation.data.accessToken);
     }
-  });
+    if (loginMutation.isError) {
+      setErrors({ general: loginMutation.error.message });
+    }
+  }, [loginMutation.isSuccess, loginMutation.isError, loginMutation.data, loginMutation.error, authLogin]);
+
+  // Handle signup success/error
+  React.useEffect(() => {
+    if (signupMutation.isSuccess && signupMutation.data) {
+      authLogin(signupMutation.data.accessToken);
+    }
+    if (signupMutation.isError) {
+      setErrors({ general: signupMutation.error.message });
+    }
+  }, [signupMutation.isSuccess, signupMutation.isError, signupMutation.data, signupMutation.error, authLogin]);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -241,6 +242,17 @@ const LoginPage: React.FC = () => {
               )}
             </button>
           </div>
+          
+          {isLogin && (
+            <div className="text-center">
+              <Link
+                to="/forgot-password"
+                className="text-sm text-accent hover:text-primary transition-colors"
+              >
+                Forgot your password?
+              </Link>
+            </div>
+          )}
         </form>
       </div>
     </div>

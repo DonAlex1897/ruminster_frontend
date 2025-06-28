@@ -1,27 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { getPublicRuminations } from '../services/RuminationsService';
-import { RuminationResponse, UserRelationType } from '../types/rumination';
+import React from 'react';
+import { usePublicRuminations } from '../hooks/useRuminations';
+import { UserRelationType } from '../types/rumination';
 
 export default function PublicPage() {
-  const [ruminations, setRuminations] = useState<RuminationResponse[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchRuminations = async () => {
-      try {
-        setLoading(true);
-        const data = await getPublicRuminations();
-        setRuminations(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch public ruminations');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchRuminations();
-  }, []);
+  const { 
+    data: ruminations = [], 
+    isLoading: loading, 
+    error 
+  } = usePublicRuminations();
 
   const getAudienceLabels = (audiences: { userRelationType: UserRelationType }[]) => {
     const labels = audiences.map(a => {
@@ -59,7 +45,9 @@ export default function PublicPage() {
   if (error) {
     return (
       <div className="text-center py-8">
-        <p className="text-red-600 dark:text-red-400">{error}</p>
+        <p className="text-red-600 dark:text-red-400">
+          {error instanceof Error ? error.message : 'Failed to fetch public ruminations'}
+        </p>
       </div>
     );
   }

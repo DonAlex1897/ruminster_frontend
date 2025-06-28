@@ -1,16 +1,26 @@
 import React, { useState } from 'react';
 import { UserRelationType } from '../types/rumination';
+import { useCreateRumination } from '../hooks/useRuminations';
 
 interface NewRuminationDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (content: string, audiences: UserRelationType[], publish: boolean) => Promise<void>;
+  onSuccess: () => void;
 }
 
-export default function NewRuminationDialog({ isOpen, onClose, onSubmit }: NewRuminationDialogProps) {
+export default function NewRuminationDialog({ isOpen, onClose, onSuccess }: NewRuminationDialogProps) {
   const [content, setContent] = useState('');
   const [selectedAudiences, setSelectedAudiences] = useState<UserRelationType[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const createRuminationMutation = useCreateRumination();
+
+  const handleNewRumination = async (content: string, audiences: UserRelationType[], publish: boolean) => {
+    await createRuminationMutation.mutateAsync({
+      content,
+      audiences: audiences.length > 0 ? audiences : undefined,
+      publish
+    });
+  };
 
   const audienceOptions = [
     { value: UserRelationType.Acquaintance, label: 'Acquaintance' },
@@ -34,10 +44,10 @@ export default function NewRuminationDialog({ isOpen, onClose, onSubmit }: NewRu
     
     setIsSubmitting(true);
     try {
-      await onSubmit(content, selectedAudiences, publish);
+      await handleNewRumination(content, selectedAudiences, publish);
       setContent('');
       setSelectedAudiences([]);
-      onClose();
+      onSuccess();
     } catch (error) {
       console.error('Failed to create rumination:', error);
     } finally {

@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { validateToken } from './services/AuthService';
+import { useValidateToken } from './hooks/useAuth';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -29,11 +28,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     data: user,
     isLoading: isLoadingUser,
     isError: isErrorUser,
-  } = useQuery({
-    queryKey: ['validateToken', token],
-    queryFn: () => token ? validateToken(token) : Promise.resolve(null),
-    enabled: !!token, // Only run if token exists
-  });
+  } = useValidateToken(token);
 
   useEffect(() => {
     if (isLoadingUser) {
