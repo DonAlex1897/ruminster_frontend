@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../AuthContext';
 import { getCurrentTos, acceptTos } from '../services/TosService';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import ReactMarkdown from 'react-markdown';
 
 const TermsAcceptance: React.FC = () => {
   const { token, latestTosVersion, updateTosAcceptance, logout } = useAuth();
@@ -90,11 +91,10 @@ const TermsAcceptance: React.FC = () => {
           </div>
 
           <div className="p-6">
-            <div className="prose prose-sm dark:prose-invert max-w-none mb-8">
-              <div 
-                className="border border-border rounded-md p-4 max-h-96 overflow-y-auto bg-muted/30 text-foreground"
-                dangerouslySetInnerHTML={{ __html: tosData.content }}
-              />
+            <div className="border border-border rounded-md p-4 max-h-96 overflow-y-auto bg-muted/30">
+              <div className="prose prose-sm dark:prose-invert max-w-none prose-headings:text-foreground prose-p:text-foreground prose-strong:text-foreground prose-li:text-foreground">
+                <ReactMarkdown>{tosData.content}</ReactMarkdown>
+              </div>
             </div>
 
             <div className="border-t border-border pt-6">
