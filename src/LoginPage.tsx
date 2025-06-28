@@ -50,7 +50,7 @@ const LoginPage: React.FC = () => {
     const newErrors: Record<string, string> = {};
     
     if (!formData.username.trim()) {
-      newErrors.username = 'Username is required';
+      newErrors.username = 'Username or email is required';
     }
     
     if (!isLogin && !formData.email.trim()) {
@@ -169,7 +169,7 @@ const LoginPage: React.FC = () => {
           <div className="space-y-4">
             <div>
               <label htmlFor="username" className="block text-sm font-medium text-text-secondary mb-1">
-                Username
+                Username or Email
               </label>
               <input
                 id="username"
@@ -179,7 +179,7 @@ const LoginPage: React.FC = () => {
                 className={`form-input w-full ${
                   errors.username ? 'border-border-error' : ''
                 }`}
-                placeholder="Enter your username"
+                placeholder="Enter your username or email"
                 value={formData.username}
                 onChange={handleInputChange}
               />
