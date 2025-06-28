@@ -4,7 +4,8 @@ import {
   getFeedRuminations, 
   getPublicRuminations, 
   createRumination,
-  updateRumination 
+  updateRumination,
+  deleteRumination 
 } from '../services/RuminationsService';
 import { MyRuminationsQueryParams, PostRuminationDto, UpdateRuminationDto } from '../types/rumination';
 import { useAuth } from '../AuthContext';
@@ -62,6 +63,24 @@ export const useUpdateRumination = () => {
     mutationFn: (rumination: UpdateRuminationDto) => {
       if (!token) throw new Error('No authentication token available');
       return updateRumination(token, rumination);
+    },
+    onSuccess: () => {
+      // Invalidate and refetch relevant queries
+      queryClient.invalidateQueries({ queryKey: ['myRuminations'] });
+      queryClient.invalidateQueries({ queryKey: ['feedRuminations'] });
+      queryClient.invalidateQueries({ queryKey: ['publicRuminations'] });
+    },
+  });
+};
+
+export const useDeleteRumination = () => {
+  const queryClient = useQueryClient();
+  const { token } = useAuth();
+  
+  return useMutation({
+    mutationFn: (ruminationId: string) => {
+      if (!token) throw new Error('No authentication token available');
+      return deleteRumination(token, ruminationId);
     },
     onSuccess: () => {
       // Invalidate and refetch relevant queries

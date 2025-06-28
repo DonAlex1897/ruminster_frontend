@@ -134,3 +134,25 @@ export async function updateRumination(token: string, rumination: UpdateRuminati
 
   return await response.json();
 }
+
+export async function deleteRumination(token: string, ruminationId: string): Promise<void> {
+  const response = await fetch(buildApiUrl(`${API_CONFIG.ENDPOINTS.RUMINATIONS.BASE}/${ruminationId}`), {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    let errorMessage = 'Failed to delete rumination';
+    
+    try {
+      const errorData = await response.json();
+      errorMessage = errorData.message || errorData.title || errorMessage;
+    } catch {
+      errorMessage = response.statusText || `HTTP ${response.status}`;
+    }
+    
+    throw new Error(errorMessage);
+  }
+}
