@@ -12,6 +12,7 @@ const LoginPage: React.FC = () => {
     confirmPassword: ''
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [showActivationMessage, setShowActivationMessage] = useState(false);
   
   const { isAuthenticated, loading, login: authLogin } = useAuth();
   const navigate = useNavigate();
@@ -38,12 +39,12 @@ const LoginPage: React.FC = () => {
   // Handle signup success/error
   React.useEffect(() => {
     if (signupMutation.isSuccess && signupMutation.data) {
-      authLogin(signupMutation.data.accessToken);
+      setShowActivationMessage(true);
     }
     if (signupMutation.isError) {
       setErrors({ general: signupMutation.error.message });
     }
-  }, [signupMutation.isSuccess, signupMutation.isError, signupMutation.data, signupMutation.error, authLogin]);
+  }, [signupMutation.isSuccess, signupMutation.isError, signupMutation.data, signupMutation.error]);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -104,12 +105,44 @@ const LoginPage: React.FC = () => {
     setIsLogin(!isLogin);
     setFormData({ username: '', email: '', password: '', confirmPassword: '' });
     setErrors({});
+    setShowActivationMessage(false);
   };
 
   if (loading || isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (showActivationMessage) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md w-full space-y-8">
+          <div className="card text-center">
+            <div className="mb-6">
+              <div className="mx-auto w-16 h-16 bg-success/20 rounded-full flex items-center justify-center mb-4">
+                <svg className="w-8 h-8 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold text-text-primary mb-2">Check Your Email</h2>
+              <p className="text-text-secondary mb-4">
+                We've sent an activation email to <strong>{formData.email}</strong>
+              </p>
+              <p className="text-text-secondary text-sm">
+                Please check your email and click the activation link to complete your account setup.
+              </p>
+            </div>
+            <button
+              onClick={toggleMode}
+              className="text-accent hover:text-primary transition-colors font-medium"
+            >
+              Back to sign in
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
