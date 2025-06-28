@@ -77,6 +77,7 @@ export default function UserPage() {
             userId={userId} 
             username={username} 
             size="lg" 
+            showUsername={false}
             clickable={false}
             className="shadow-lg"
           />

@@ -84,10 +84,10 @@ export default function UserAvatar({
   );
 
   const content = (
-    <div className="flex flex-col items-center space-y-1">
+    <div className="flex items-center space-x-2">
       {avatarElement}
       {showUsername && (
-        <span className={`${textSizeClasses[size]} font-medium text-gray-700 dark:text-gray-300 text-center truncate max-w-24`}>
+        <span className={`${textSizeClasses[size]} font-medium text-gray-700 dark:text-gray-300 truncate max-w-24`}>
           {username}
         </span>
       )}
