@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { AuthProvider } from './AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import ProtectedRoute from './ProtectedRoute';
@@ -27,6 +27,7 @@ function AppContent() {
       <ThemeToggle />
       <Navbar onNewRumination={() => setIsNewRuminationOpen(true)} />
       <Routes>
+        <Route path="/" element={<Navigate to="/public" replace />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />

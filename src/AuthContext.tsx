@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const login = (token: string) => {
     localStorage.setItem('authToken', token);
     setIsAuthenticated(true);
-    navigate('/');
+    navigate('/my-ruminations');
   };
 
   const logout = () => {
