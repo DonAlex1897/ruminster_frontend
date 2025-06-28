@@ -1,38 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useActivateAccount } from '../hooks/useAuth';
+import { useQuery } from '@tanstack/react-query';
+import { activateAccount } from '../services/AuthServiceExtended';
 
 const ActivateAccountPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const [activationStatus, setActivationStatus] = useState<'loading' | 'success' | 'error'>('loading');
-  const [message, setMessage] = useState<string>('');
+  const token = searchParams.get('token');
   
-  const activateAccountMutation = useActivateAccount();
+  const { data, error, isLoading, isError, isSuccess } = useQuery({
+    queryKey: ['activateAccount', token],
+    queryFn: () => activateAccount(token!),
+    enabled: !!token,
+    retry: false,
+  });
   
-  useEffect(() => {
-    const token = searchParams.get('token');
-    
-    if (!token) {
-      setActivationStatus('error');
-      setMessage('Invalid activation link. No token provided.');
-      return;
-    }
-    
-    activateAccountMutation.mutate(token);
-  }, [searchParams, activateAccountMutation]);
-  
-  useEffect(() => {
-    if (activateAccountMutation.isSuccess) {
-      setActivationStatus('success');
-      setMessage(activateAccountMutation.data?.message || 'Account activated successfully!');
-    }
-    
-    if (activateAccountMutation.isError) {
-      setActivationStatus('error');
-      setMessage(activateAccountMutation.error?.message || 'Failed to activate account. Please try again.');
-    }
-  }, [activateAccountMutation.isSuccess, activateAccountMutation.isError, activateAccountMutation.data, activateAccountMutation.error]);
+  const activationStatus = isLoading ? 'loading' : isSuccess ? 'success' : 'error';
+  const message = !token 
+    ? 'Invalid activation link. No token provided.'
+    : isSuccess 
+      ? data?.message || 'Account activated successfully!'
+      : error?.message || 'Failed to activate account. Please try again.';
   
   const handleLoginRedirect = () => {
     navigate('/login');
