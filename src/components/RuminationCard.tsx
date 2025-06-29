@@ -70,8 +70,8 @@ export default function RuminationCard({
           bg-white dark:bg-gray-800
           rounded-2xl border border-gray-200/60 dark:border-gray-700/60
           transition-all duration-300 ease-in-out
-          ${isEditable ? 'cursor-pointer hover:scale-[1.02] active:scale-[0.98]' : 'hover:scale-[1.01]'}
-          ${isEditable ? 'hover:border-primary/30 dark:hover:border-primary/40' : 'hover:border-gray-300/80 dark:hover:border-gray-600/80'}
+          ${isEditable ? 'cursor-pointer' : 'cursor-default'}
+          hover:border-gray-300/80 dark:hover:border-gray-600/80
         `}
         onClick={onClick}
       >
@@ -174,7 +174,7 @@ export default function RuminationCard({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center justify-between mt-6 pt-3 border-t border-gray-100 dark:border-gray-700">
+        <div className="flex items-center justify-between mt-6 pb-3 border-b border-gray-100 dark:border-gray-700">
           <div className="flex items-center gap-6">
             {/* Comment Button */}
             <button
