@@ -91,7 +91,6 @@ export default function UserPage() {
                 {ruminations.length} rumination{ruminations.length !== 1 ? 's' : ''}
               </p>
             </div>
-            <UserRelations userId={userId} />
           </div>
         </div>
         
@@ -119,6 +118,8 @@ export default function UserPage() {
           </button>
         </div>
       </div>
+      {/* User Relations */}
+      <UserRelations userId={userId} />
 
       {/* Ruminations List */}
       {ruminations.length === 0 ? (

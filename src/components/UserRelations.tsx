@@ -95,9 +95,9 @@ export default function UserRelations({ userId }: UserRelationsProps) {
   const visibleRelations = relations?.filter(relation => !relation.isRejected) || [];
 
   return (
-    <div className="w-full space-y-3">
+    <div className="w-full space-y-4">
       {/* Request Button */}
-      <div className="relative w-fit">
+      {visibleRelations.length < relationOptions.length && <div className="relative w-fit">
         <button
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           disabled={requestRelationMutation.isPending}
@@ -108,7 +108,7 @@ export default function UserRelations({ userId }: UserRelationsProps) {
         
         {isDropdownOpen && (
           <div className="absolute top-full left-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-10 min-w-full">
-            {relationOptions.map((relationType) => (
+            {relationOptions.filter((relationType) => !visibleRelations.some((relation) => relation.type === relationType)).map((relationType) => (
               <button
                 key={relationType}
                 onClick={() => handleRequestRelation(relationType)}
@@ -119,13 +119,13 @@ export default function UserRelations({ userId }: UserRelationsProps) {
             ))}
           </div>
         )}
-      </div>
+      </div>}
 
       {/* Current Relations List - Horizontal Scroll */}
       {visibleRelations && visibleRelations.length > 0 && (
         <div className="space-y-2">
           <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">Current Relations</h4>
-          <div className="flex gap-2 overflow-x-auto pb-2">
+          <div className="flex gap-2 overflow-x-auto pb-2 max-h-16 [-webkit-scrollbar]:hidden [scrollbar-width:none]">
             {visibleRelations.map((relation) => (
               <div
                 key={relation.id}
