@@ -47,7 +47,7 @@ export default function AddNewComment({
   }
 
   return (
-    <div className="flex items-center gap-3 mt-4 p-2 bg-gray-50 dark:bg-gray-700/50 rounded-xl" onClick={(e) => e.stopPropagation()}>
+    <div className="flex items-center gap-3 p-2 bg-gray-50 dark:bg-gray-700/50 rounded-xl" onClick={(e) => e.stopPropagation()}>
       <UserAvatar 
         userId={userId} 
         username={user.username}

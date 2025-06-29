@@ -3,6 +3,7 @@ import { CommentResponse, UpdateCommentDto } from '../types/comment';
 import { useComments, useUpdateComment, useDeleteComment, useCommentReplies } from '../hooks/useComments';
 import { useAuth } from '../AuthContext';
 import AddNewComment from './AddNewComment';
+import { PencilIcon, TrashIcon } from '@heroicons/react/24/solid';
 
 interface CommentsProps {
   ruminationId: number;
@@ -29,7 +30,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ ruminationId, comment, onRepl
   const isDeleted = comment.isDeleted;
 
   return (
-    <div className="border-l-2 border-gray-200 dark:border-gray-700 pl-6 ml-4 mb-6">
+    <div className="border border-gray-200 dark:border-gray-700 rounded-lg mb-6">
       <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-5">
         <div className="flex justify-between items-start mb-2">
           <div className="flex items-center space-x-2">
@@ -46,13 +47,13 @@ const CommentItem: React.FC<CommentItemProps> = ({ ruminationId, comment, onRepl
                 onClick={() => onEdit(comment)}
                 className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200 text-sm"
               >
-                Edit
+                <PencilIcon className="inline-block w-4 h-4" />
               </button>
               <button
                 onClick={() => onDelete(comment.id)}
                 className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-200 text-sm"
               >
-                Delete
+                <TrashIcon className="inline-block w-4 h-4" />
               </button>
             </div>
           )}
@@ -194,7 +195,7 @@ export const Comments: React.FC<CommentsProps> = ({ ruminationId }) => {
   }
 
   return (
-    <div className="mt-6 border-t border-gray-200 dark:border-gray-700 p-4">
+    <div className="border-gray-200 dark:border-gray-700 p-4">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
           Comments ({comments.length})

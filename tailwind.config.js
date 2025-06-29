@@ -48,6 +48,7 @@ module.exports = {
       
       fontFamily: {
         sans: 'var(--font-family-sans)',
+        serif: 'var(--font-family-serif)',
         mono: 'var(--font-family-mono)',
       },
       

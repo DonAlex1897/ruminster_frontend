@@ -70,7 +70,7 @@ export default function UserAvatar({
   };
 
   const textSizeClasses = {
-    sm: 'text-xs',
+    sm: 'text-base',
     md: 'text-sm',
     lg: 'text-base'
   };
@@ -84,10 +84,10 @@ export default function UserAvatar({
   );
 
   const content = (
-    <div className="flex items-center space-x-2">
+    <div className="flex space-x-2">
       {avatarElement}
       {showUsername && (
-        <span className={`${textSizeClasses[size]} font-medium text-gray-700 dark:text-gray-300 truncate max-w-24`}>
+        <span className={`${textSizeClasses[size]} font-bold text-gray-700 dark:text-gray-300 truncate max-w-24`}>
           {username}
         </span>
       )}
