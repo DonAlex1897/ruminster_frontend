@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import UserAvatar from '../components/UserAvatar';
+import UserRelations from '../components/UserRelations';
 import { useUserRuminations } from '../hooks/useRuminations';
 import { UserRelationType } from '../types/rumination';
 
@@ -10,7 +11,7 @@ export default function UserPage() {
 
   const { 
     data: ruminations = [], 
-    isLoading: loading, 
+    isLoading, 
     error 
   } = useUserRuminations(userId!, { isPublic: showPublicOnly });
 
@@ -47,7 +48,7 @@ export default function UserPage() {
     );
   }
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -81,13 +82,16 @@ export default function UserPage() {
             clickable={false}
             className="shadow-lg"
           />
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-              {username}
-            </h1>
-            <p className="text-gray-500 dark:text-gray-400">
-              {ruminations.length} rumination{ruminations.length !== 1 ? 's' : ''}
-            </p>
+          <div className="flex flex-col space-y-3">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+                {username}
+              </h1>
+              <p className="text-gray-500 dark:text-gray-400">
+                {ruminations.length} rumination{ruminations.length !== 1 ? 's' : ''}
+              </p>
+            </div>
+            <UserRelations userId={userId} />
           </div>
         </div>
         

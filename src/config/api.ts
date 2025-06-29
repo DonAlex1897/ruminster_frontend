@@ -33,6 +33,13 @@ export const API_CONFIG = {
       ACCEPTANCE_STATUS: '/api/TermsOfService/acceptance-status',
       CREATE: '/api/TermsOfService/create',
     },
+    USER_RELATIONS: {
+      BASE: '/api/UserRelations',
+      REQUEST: '/api/UserRelations/request',
+      ACCEPT: '/api/UserRelations/accept',
+      REJECT: '/api/UserRelations/reject',
+      DELETE: '/api/UserRelations/delete',
+    },
   },
 } as const;
 
