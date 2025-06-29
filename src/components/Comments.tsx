@@ -22,9 +22,6 @@ const CommentItem: React.FC<CommentItemProps> = ({ ruminationId, comment, onRepl
   const { user } = useAuth();
   const { data: replies } = useCommentReplies(comment.id, comment.childComments.length > 0);
   const childComments = useMemo(() => {
-    console.log('Replies:', replies);
-    console.log('Child Comments:', comment.childComments);
-    console.log('Merged Child Comments:', comment.childComments.length > 0 ? comment.childComments : replies);
     return comment.childComments.length > 0 ? comment.childComments : replies;
   }, [replies, comment.childComments]);
 
