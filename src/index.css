@@ -5,9 +5,9 @@
 /* CSS Variables for Global Theme System */
 :root {
   /* Light Theme Colors */
-  --color-primary: #16a34a;
-  --color-primary-hover: #15803d;
-  --color-primary-light: #22c55e;
+  --color-primary: rgb(28, 99, 63);
+  --color-primary-hover: #114624;
+  --color-primary-light: #1f6b3b;
   --color-secondary: #64748b;
   --color-accent: #10b981;
   
@@ -74,17 +74,17 @@
 
 /* Dark Theme Colors */
 .dark {
-  --color-primary: #22c55e;
-  --color-primary-hover: #16a34a;
-  --color-primary-light: #4ade80;
+  --color-primary: rgb(47, 136, 91);
+  --color-primary-hover: #1b4d2d;
+  --color-primary-light: #1f6b3b;
   --color-secondary: #94a3b8;
   --color-accent: #34d399;
   
   /* Backgrounds */
-  --color-background: #0f172a;
-  --color-background-secondary: #1e293b;
-  --color-surface: #334155;
-  --color-card: #1e293b;
+  --color-background: #0a101d;
+  --color-background-secondary: #1a2433;
+  --color-surface: #2f4461;
+  --color-card: #111e31;
   
   /* Text Colors - High Contrast */
   --color-text-primary: #f1f5f9;

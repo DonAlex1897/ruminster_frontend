@@ -67,7 +67,7 @@ export default function RuminationCard({
       <article 
         className={`
           group relative overflow-hidden
-          bg-white dark:bg-gray-800
+          bg-white dark:bg-card
           rounded-2xl border border-gray-200/60 dark:border-gray-700/60
           transition-all duration-300 ease-in-out
           ${isEditable ? 'cursor-pointer' : 'cursor-default'}

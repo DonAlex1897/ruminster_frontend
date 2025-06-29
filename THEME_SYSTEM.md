@@ -45,18 +45,18 @@ A comprehensive theming system has been implemented for the Ruminster Frontend a
 ## 🎨 Color Palette
 
 ### Light Theme
-- **Primary**: #16a34a (Green)
+- **Primary**: rgb(28, 99, 63) (Green)
 - **Background**: #ffffff (White)
 - **Text Primary**: #0f172a (Dark slate)
 - **Text Secondary**: #475569 (Medium slate)
 - **Surface**: #f1f5f9 (Light slate)
 
 ### Dark Theme
-- **Primary**: #22c55e (Bright green)
-- **Background**: #0f172a (Dark slate)
+- **Primary**:rgb(28, 99, 63) (Bright green)
+- **Background**:rgb(9, 14, 26) (Dark slate)
 - **Text Primary**: #f1f5f9 (Light slate)
 - **Text Secondary**: #cbd5e1 (Medium light slate)
-- **Surface**: #334155 (Medium slate)
+- **Surface**:rgb(41, 64, 97) (Medium slate)
 
 ## 📚 Usage Examples
 
