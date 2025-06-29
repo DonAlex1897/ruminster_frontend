@@ -101,7 +101,7 @@ export default function UserRelations({ userId }: UserRelationsProps) {
         <button
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           disabled={requestRelationMutation.isPending}
-          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-lg text-sm font-medium transition-colors"
+          className="mb-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-lg text-sm font-medium transition-colors"
         >
           {requestRelationMutation.isPending ? 'Requesting...' : 'Request Relation'}
         </button>
