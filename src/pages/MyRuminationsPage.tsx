@@ -120,6 +120,7 @@ export default function MyRuminationsPage() {
               onClick={() => handleEditRumination(rumination)}
               onDelete={(e) => handleDeleteRumination(rumination, e)}
               showUserInfo={false}
+              showComments={true}
             />
           ))}
         </div>

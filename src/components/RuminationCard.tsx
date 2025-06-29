@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import UserAvatar from './UserAvatar';
+import Comments from './Comments';
 import { UserRelationType } from '../types/rumination';
 
 // Utility functions
@@ -45,6 +46,7 @@ interface RuminationCardProps {
   onClick?: () => void;
   onDelete?: (e: React.MouseEvent) => void;
   showUserInfo?: boolean;
+  showComments?: boolean;
 }
 
 export default function RuminationCard({
@@ -52,9 +54,11 @@ export default function RuminationCard({
   variant = 'default',
   onClick,
   onDelete,
-  showUserInfo = true
+  showUserInfo = true,
+  showComments = false
 }: RuminationCardProps) {
   const isEditable = variant === 'editable';
+  const [commentsExpanded, setCommentsExpanded] = useState(false);
 
   return (
     <article 
@@ -165,8 +169,26 @@ export default function RuminationCard({
             {rumination.content}
           </p>
         </div>
+
+        {/* Comments Section */}
+        {showComments && (
+          <div className="mt-4">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setCommentsExpanded(!commentsExpanded);
+              }}
+              className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200 text-sm font-medium"
+            >
+              {commentsExpanded ? 'Hide Comments' : 'Show Comments'}
+            </button>
+            
+            {commentsExpanded && (
+              <Comments ruminationId={Number(rumination.id)} />
+            )}
+          </div>
+        )}
       </div>
-      
 
     </article>
   );
