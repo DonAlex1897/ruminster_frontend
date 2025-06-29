@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { UserRelationType } from '../types/rumination';
-import { useUserRelations, useRequestUserRelation, useAcceptUserRelation, useRejectUserRelation } from '../hooks/useUserRelations';
+import { useUserRelations, useRequestUserRelation, useAcceptUserRelation, useRejectUserRelation, useDeleteUserRelation } from '../hooks/useUserRelations';
 import { useAuth } from '../AuthContext';
 
 interface UserRelationsProps {
@@ -22,6 +22,7 @@ export default function UserRelations({ userId }: UserRelationsProps) {
   const requestRelationMutation = useRequestUserRelation();
   const acceptRelationMutation = useAcceptUserRelation();
   const rejectRelationMutation = useRejectUserRelation();
+  const deleteRelationMutation = useDeleteUserRelation();
 
   // Don't show component if viewing own profile
   if (userId === currentUserId) {
@@ -74,6 +75,14 @@ export default function UserRelations({ userId }: UserRelationsProps) {
     }
   };
 
+  const handleDeleteRelation = async (relationId: number) => {
+    try {
+      await deleteRelationMutation.mutateAsync(relationId);
+    } catch (error) {
+      console.error('Failed to delete relation:', error);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="w-56 animate-pulse">
@@ -82,25 +91,28 @@ export default function UserRelations({ userId }: UserRelationsProps) {
     );
   }
 
+  // Filter out rejected relations
+  const visibleRelations = relations?.filter(relation => !relation.isRejected) || [];
+
   return (
-    <div className="w-56 space-y-3">
+    <div className="w-full space-y-3">
       {/* Request Button */}
-      <div className="relative">
+      <div className="relative w-fit">
         <button
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           disabled={requestRelationMutation.isPending}
-          className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-lg text-sm font-medium transition-colors"
+          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-lg text-sm font-medium transition-colors"
         >
           {requestRelationMutation.isPending ? 'Requesting...' : 'Request Relation'}
         </button>
         
         {isDropdownOpen && (
-          <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-10">
+          <div className="absolute top-full left-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-10 min-w-full">
             {relationOptions.map((relationType) => (
               <button
                 key={relationType}
                 onClick={() => handleRequestRelation(relationType)}
-                className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 first:rounded-t-lg last:rounded-b-lg"
+                className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 first:rounded-t-lg last:rounded-b-lg whitespace-nowrap"
               >
                 {getRelationLabel(relationType)}
               </button>
@@ -109,60 +121,74 @@ export default function UserRelations({ userId }: UserRelationsProps) {
         )}
       </div>
 
-      {/* Current Relations List */}
-      {relations && relations.length > 0 && (
+      {/* Current Relations List - Horizontal Scroll */}
+      {visibleRelations && visibleRelations.length > 0 && (
         <div className="space-y-2">
           <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">Current Relations</h4>
-          {relations.map((relation) => (
-            <div
-              key={relation.id}
-              className={`flex items-center justify-between p-2 rounded-lg text-sm ${
-                relation.isAccepted
-                  ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700'
-                  : relation.isRejected
-                  ? 'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700'
-                  : 'bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700'
-              }`}
-            >
-              <span className={`font-medium ${
-                relation.isAccepted
-                  ? 'text-green-700 dark:text-green-300'
-                  : relation.isRejected
-                  ? 'text-red-700 dark:text-red-300'
-                  : 'text-yellow-700 dark:text-yellow-300'
-              }`}>
-                {getRelationLabel(relation.type)}
-              </span>
-              {!relation.isAccepted && !relation.isRejected && relation.receiver.id === currentUserId ? (
-                <div className="flex gap-1 flex-shrink-0">
-                  <button
-                    onClick={() => handleAcceptRelation(relation.id)}
-                    disabled={acceptRelationMutation.isPending}
-                    className="px-1.5 py-0.5 text-xs bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white rounded transition-colors min-w-0"
-                  >
-                    ✓
-                  </button>
-                  <button
-                    onClick={() => handleRejectRelation(relation.id)}
-                    disabled={rejectRelationMutation.isPending}
-                    className="px-1.5 py-0.5 text-xs bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white rounded transition-colors min-w-0"
-                  >
-                    ✕
-                  </button>
-                </div>
-              ) : (
-                <span className={`text-xs ${
+          <div className="flex gap-2 overflow-x-auto pb-2">
+            {visibleRelations.map((relation) => (
+              <div
+                key={relation.id}
+                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm whitespace-nowrap flex-shrink-0 ${
                   relation.isAccepted
-                    ? 'text-green-600 dark:text-green-400'
-                    : relation.isRejected
-                    ? 'text-red-600 dark:text-red-400'
-                    : 'text-yellow-600 dark:text-yellow-400'
+                    ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700'
+                    : 'bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700'
+                }`}
+              >
+                <span className={`font-medium ${
+                  relation.isAccepted
+                    ? 'text-green-700 dark:text-green-300'
+                    : 'text-yellow-700 dark:text-yellow-300'
                 }`}>
-                  {relation.isAccepted ? 'Accepted' : relation.isRejected ? 'Rejected' : 'Pending'}
+                  {getRelationLabel(relation.type)}
                 </span>
-              )}
-            </div>
-          ))}
+                {!relation.isAccepted && relation.receiver.id === currentUserId ? (
+                  <div className="flex gap-1">
+                    <button
+                      onClick={() => handleAcceptRelation(relation.id)}
+                      disabled={acceptRelationMutation.isPending}
+                      className="px-1.5 py-0.5 text-xs bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white rounded transition-colors"
+                    >
+                      ✓
+                    </button>
+                    <button
+                      onClick={() => handleRejectRelation(relation.id)}
+                      disabled={rejectRelationMutation.isPending}
+                      className="px-1.5 py-0.5 text-xs bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white rounded transition-colors"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ) : relation.isAccepted ? (
+                  <button
+                    onClick={() => handleDeleteRelation(relation.id)}
+                    disabled={rejectRelationMutation.isPending}
+                    className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 p-1 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                    title="Delete relation"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-4 h-4"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                      />
+                    </svg>
+                  </button>
+                ) : (
+                  <span className="text-xs text-yellow-600 dark:text-yellow-400">
+                    Pending
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>
