@@ -12,7 +12,6 @@ import ResetPasswordPage from './pages/ResetPasswordPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import TermsOfService from './pages/TermsOfService';
 import TermsAcceptance from './pages/TermsAcceptance';
-import ThemeToggle from './components/ThemeToggle';
 import Navbar from './components/Navbar';
 import NewRuminationDialog from './components/NewRuminationDialog';
 import TosNotification from './components/TosNotification';
@@ -26,7 +25,6 @@ function AppContent() {
   return (
     <>
       <TosNotification />
-      <ThemeToggle />
       <Navbar onNewRumination={() => setIsNewRuminationOpen(true)} />
       <div className="pt-16">
         <Routes>

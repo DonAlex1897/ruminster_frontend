@@ -17,7 +17,7 @@ interface ThemeProviderProps {
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const [theme, setThemeState] = useState<Theme>('system');
-  const [effectiveTheme, setEffectiveTheme] = useState<'light' | 'dark'>('light');
+  const [effectiveTheme, setEffectiveTheme] = useState<'light' | 'dark'>('dark');
 
   // Get system preference
   const getSystemTheme = (): 'light' | 'dark' => {
@@ -41,8 +41,10 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       const root = document.documentElement;
       if (newEffectiveTheme === 'dark') {
         root.classList.add('dark');
+        root.style.backgroundColor = '#0a101d';
       } else {
         root.classList.remove('dark');
+        root.style.backgroundColor = '#ffffff';
       }
     }
   };
@@ -70,17 +72,14 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     }
   };
 
-  // Initialize theme on mount
+  // Initialize theme state from localStorage (theme already applied in HTML)
   useEffect(() => {
-    // Get saved preference or default to system
     const savedTheme = localStorage.getItem('theme-preference') as Theme | null;
     const initialTheme = savedTheme || 'system';
-    
     const initialEffectiveTheme = calculateEffectiveTheme(initialTheme);
     
     setThemeState(initialTheme);
     setEffectiveTheme(initialEffectiveTheme);
-    applyTheme(initialEffectiveTheme);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

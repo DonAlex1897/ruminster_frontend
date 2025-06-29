@@ -25,6 +25,40 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>Ruminster</title>
+    <script>
+      // Apply theme immediately to prevent flash
+      (function() {
+        try {
+          const savedTheme = localStorage.getItem('theme-preference');
+          const theme = savedTheme || 'system';
+          
+          let effectiveTheme;
+          if (theme === 'system') {
+            effectiveTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          } else {
+            effectiveTheme = theme;
+          }
+          
+          // Always ensure the theme is applied
+          if (effectiveTheme === 'dark') {
+            document.documentElement.classList.add('dark');
+            // Set dark background immediately
+            document.documentElement.style.backgroundColor = '#0a101d';
+          } else {
+            document.documentElement.classList.remove('dark');
+            // Set light background immediately
+            document.documentElement.style.backgroundColor = '#ffffff';
+          }
+          
+          // Also set a CSS variable to prevent any potential flash
+          document.documentElement.style.setProperty('--theme-initialized', '1');
+        } catch (e) {
+          // Fallback to dark mode if any error occurs
+          document.documentElement.classList.add('dark');
+          document.documentElement.style.setProperty('--theme-initialized', '1');
+        }
+      })();
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

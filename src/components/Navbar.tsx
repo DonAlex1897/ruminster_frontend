@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
-import { BookOpenIcon, RssIcon, GlobeAltIcon, PlusIcon, ArrowLeftEndOnRectangleIcon, EllipsisVerticalIcon } from '@heroicons/react/24/outline';
+import { BookOpenIcon, RssIcon, GlobeAltIcon, PlusIcon, ArrowLeftEndOnRectangleIcon, EllipsisVerticalIcon, MoonIcon, SunIcon } from '@heroicons/react/24/outline';
 import logo from '../assets/ruminster_logo.png';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface NavbarProps {
   onNewRumination: () => void;
@@ -11,6 +12,7 @@ interface NavbarProps {
 export default function Navbar({ onNewRumination }: NavbarProps) {
   const location = useLocation();
   const { isAuthenticated, logout, requiresTosAcceptance } = useAuth();
+  const { effectiveTheme, toggleTheme } = useTheme();
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   const isActive = (path: string) => {
@@ -90,6 +92,17 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
                     <span className="inline lg:hidden">New</span>
                   </button>
                   <button
+                    onClick={toggleTheme}
+                    className="flex items-center gap-1 lg:gap-2 text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white px-2 lg:px-3 py-2 text-xs lg:text-sm font-medium transition-colors"
+                    aria-label="Toggle theme"
+                  >
+                    {effectiveTheme === 'dark' ? (
+                      <SunIcon className="h-4 lg:h-5 w-4 lg:w-5" />
+                    ) : (
+                      <MoonIcon className="h-4 lg:h-5 w-4 lg:w-5" />
+                    )}
+                  </button>
+                  <button
                     onClick={logout}
                     className="flex items-center gap-1 lg:gap-2 text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white px-2 lg:px-3 py-2 text-xs lg:text-sm font-medium transition-colors"
                   >
@@ -129,6 +142,20 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
                           >
                             <PlusIcon className="h-4 w-4" />
                             New Rumination
+                          </button>
+                          <button
+                            onClick={() => {
+                              toggleTheme();
+                              setShowMobileMenu(false);
+                            }}
+                            className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                          >
+                            {effectiveTheme === 'dark' ? (
+                              <SunIcon className="h-4 w-4" />
+                            ) : (
+                              <MoonIcon className="h-4 w-4" />
+                            )}
+                            Toggle Theme
                           </button>
                           <button
                             onClick={() => {
