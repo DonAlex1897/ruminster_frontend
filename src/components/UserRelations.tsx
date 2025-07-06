@@ -29,14 +29,21 @@ export default function UserRelations({ userId }: UserRelationsProps) {
     return null;
   }
 
-  const getRelationLabel = (relationType: UserRelationType) => {
+  const getRelationLabel = (relationType: UserRelationType, receiverId?: string) => {
     switch (relationType) {
       case UserRelationType.Acquaintance: return 'Acquaintance';
       case UserRelationType.Family: return 'Family';
       case UserRelationType.Friend: return 'Friend';
       case UserRelationType.BestFriend: return 'Best Friend';
       case UserRelationType.Partner: return 'Partner';
-      case UserRelationType.Therapist: return 'Therapist';
+      case UserRelationType.Therapist:
+        if (!receiverId) {
+          return 'Therapist';
+        } else if (receiverId === currentUserId) {
+          return 'Patient';
+        } else {
+          return 'Therapist';
+        }
       default: return 'Unknown';
     }
   };
@@ -140,7 +147,7 @@ export default function UserRelations({ userId }: UserRelationsProps) {
                     ? 'text-green-700 dark:text-green-300'
                     : 'text-yellow-700 dark:text-yellow-300'
                 }`}>
-                  {getRelationLabel(relation.type)}
+                  {getRelationLabel(relation.type, relation.receiver.id)}
                 </span>
                 {!relation.isAccepted && relation.receiver.id === currentUserId ? (
                   <div className="flex gap-1">
