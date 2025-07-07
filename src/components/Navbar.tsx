@@ -25,7 +25,7 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-2 sm:space-x-8">
             <Link to="/public" className="flex items-center space-x-2">
-              <img src={logo} alt="Ruminster" className="h-12 w-auto" />
+              <img src={logo} alt="Ruminster" className="h-9 w-auto" />
             </Link>
             
             <div className="flex space-x-1 sm:space-x-3 lg:space-x-6">
