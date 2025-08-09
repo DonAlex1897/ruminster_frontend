@@ -91,10 +91,10 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
                 <Link
                   to="/my-ruminations"
                   onClick={() => setShowSidebar(false)}
-                  className={`flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 group ${
+                  className={`flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-medium transition-colors duration-150 group ${
                     isActive('/my-ruminations')
                       ? 'bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 dark:from-blue-900/20 dark:to-indigo-900/20 dark:text-blue-300 shadow-sm border border-blue-200 dark:border-blue-800'
-                      : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800 hover:scale-[1.02] active:scale-[0.98]'
+                      : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800'
                   }`}
                 >
                   <DocumentTextIcon className="h-4 w-4" />
@@ -104,10 +104,10 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
                 <Link
                   to="/my-feed"
                   onClick={() => setShowSidebar(false)}
-                  className={`flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 group ${
+                  className={`flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-medium transition-colors duration-150 group ${
                     isActive('/my-feed')
                       ? 'bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 dark:from-blue-900/20 dark:to-indigo-900/20 dark:text-blue-300 shadow-sm border border-blue-200 dark:border-blue-800'
-                      : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800 hover:scale-[1.02] active:scale-[0.98]'
+                      : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800'
                   }`}
                 >
                   <RssIcon className="h-4 w-4" />
@@ -119,10 +119,10 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
             <Link
               to="/public"
               onClick={() => setShowSidebar(false)}
-              className={`flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 group ${
+              className={`flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-medium transition-colors duration-150 group ${
                 isActive('/public')
                   ? 'bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 dark:from-blue-900/20 dark:to-indigo-900/20 dark:text-blue-300 shadow-sm border border-blue-200 dark:border-blue-800'
-                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800 hover:scale-[1.02] active:scale-[0.98]'
+                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800'
               }`}
             >
               <GlobeAltIcon className="h-4 w-4" />
@@ -139,7 +139,7 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
                     toggleTheme();
                     setShowSidebar(false);
                   }}
-                  className="flex items-center gap-4 w-full px-4 py-3 rounded-xl text-sm font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                  className="flex items-center gap-4 w-full px-4 py-3 rounded-xl text-sm font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800 transition-colors duration-150"
                 >
                   {effectiveTheme === 'dark' ? (
                     <SunIcon className="h-4 w-4" />
@@ -153,7 +153,7 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
                     logout();
                     setShowSidebar(false);
                   }}
-                  className="flex items-center gap-4 w-full px-4 py-3 rounded-xl text-sm font-medium text-slate-700 hover:text-red-600 hover:bg-red-50 dark:text-slate-300 dark:hover:text-red-400 dark:hover:bg-red-900/20 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                  className="flex items-center gap-4 w-full px-4 py-3 rounded-xl text-sm font-medium text-slate-700 hover:text-red-600 hover:bg-red-50 dark:text-slate-300 dark:hover:text-red-400 dark:hover:bg-red-900/20 transition-colors duration-150"
                 >
                   <ArrowRightOnRectangleIcon className="h-4 w-4" />
                   <span>Sign Out</span>
@@ -163,7 +163,7 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
               <Link
                 to="/login"
                 onClick={() => setShowSidebar(false)}
-                className="flex items-center justify-center w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-4 py-4 rounded-xl text-sm font-semibold transition-all duration-200 shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-[1.02] active:scale-[0.98]"
+                className="flex items-center justify-center w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-4 py-4 rounded-xl text-sm font-semibold transition-colors duration-150 shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40"
               >
                 Sign In
               </Link>
