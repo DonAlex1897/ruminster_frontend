@@ -1,5 +1,3 @@
-import { UserResponse } from "./user";
-
 export interface LoginResponse {
   accessToken: string;
   refreshToken: string;
@@ -24,4 +22,9 @@ export interface PostSignUpDto {
   email: string;
   password: string;
   acceptedTosVersion: string;
+}
+
+export interface PostRefreshTokenDto {
+  userId: string;
+  refreshToken: string;
 }

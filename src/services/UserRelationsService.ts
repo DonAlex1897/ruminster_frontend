@@ -1,4 +1,5 @@
 import { UserRelationType } from '../types/rumination';
+import { apiClient } from '../utils/apiClient';
 import { API_CONFIG, buildApiUrl } from '../config/api';
 
 export interface UserRelationResponse {
@@ -75,8 +76,7 @@ export async function getUserRelations(token: string, queryParams?: GetUserRelat
     }
   }
 
-  const response = await fetch(url, {
-    method: 'GET',
+  const response = await apiClient.get(url, {
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
@@ -91,10 +91,7 @@ export async function getUserRelations(token: string, queryParams?: GetUserRelat
 }
 
 export async function requestUserRelation(token: string, dto: PostUserRelationDto): Promise<UserRelationResponse> {
-  const url = buildApiUrl('/api/UserRelations');
-
-  const response = await fetch(url, {
-    method: 'POST',
+  const response = await apiClient.post(buildApiUrl('/api/UserRelations'), {
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
@@ -110,10 +107,7 @@ export async function requestUserRelation(token: string, dto: PostUserRelationDt
 }
 
 export async function acceptUserRelation(token: string, userRelationId: number): Promise<UserRelationResponse> {
-  const url = buildApiUrl(`/api/UserRelations/${userRelationId}/accept`);
-
-  const response = await fetch(url, {
-    method: 'PUT',
+  const response = await apiClient.put(buildApiUrl(`/api/UserRelations/${userRelationId}/accept`), {
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
@@ -128,10 +122,7 @@ export async function acceptUserRelation(token: string, userRelationId: number):
 }
 
 export async function rejectUserRelation(token: string, userRelationId: number): Promise<UserRelationResponse> {
-  const url = buildApiUrl(`/api/UserRelations/${userRelationId}/reject`);
-
-  const response = await fetch(url, {
-    method: 'PUT',
+  const response = await apiClient.put(buildApiUrl(`/api/UserRelations/${userRelationId}/reject`), {
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
@@ -146,10 +137,7 @@ export async function rejectUserRelation(token: string, userRelationId: number):
 }
 
 export async function deleteUserRelation(token: string, userRelationId: number): Promise<void> {
-  const url = buildApiUrl(`/api/UserRelations/${userRelationId}`);
-
-  const response = await fetch(url, {
-    method: 'DELETE',
+  const response = await apiClient.delete(buildApiUrl(`/api/UserRelations/${userRelationId}`), {
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',

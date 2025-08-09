@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useValidateToken } from './hooks/useAuth';
+import { useValidateToken, useRefreshToken } from './hooks/useAuth';
+import { tokenStorage } from './utils/tokenStorage';
+import { LoginResponse } from './types/auth';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -9,7 +11,7 @@ interface AuthContextType {
   token: string | null;
   requiresTosAcceptance: boolean;
   latestTosVersion: string | null;
-  login: (token: string, requiresTos?: boolean, tosVersion?: string | null) => void;
+  login: (loginResponse: LoginResponse) => void;
   logout: () => void;
   updateTosAcceptance: (accepted: boolean) => void;
 }
@@ -27,30 +29,51 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [latestTosVersion, setLatestTosVersion] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const token = localStorage.getItem('authToken');
+  const accessToken = tokenStorage.getAccessToken();
 
   const {
     data: user,
     isLoading: isLoadingUser,
-    isError: isErrorUser,
-  } = useValidateToken(token);
+  } = useValidateToken(accessToken);
+
+  const refreshTokenMutation = useRefreshToken();
 
   useEffect(() => {
     if (isLoadingUser) {
       setLoading(true);
       return;
     }
-    setIsAuthenticated(!!user && !isErrorUser);
-    setLoading(false);
-  }, [user, isLoadingUser, isErrorUser]);
 
-  const login = (token: string, requiresTos: boolean = false, tosVersion: string | null = null) => {
-    localStorage.setItem('authToken', token);
-    setIsAuthenticated(true);
-    setRequiresTosAcceptance(requiresTos);
-    setLatestTosVersion(tosVersion);
+    // If user is null (token invalid/expired) and we have a refresh token, try refreshing
+    if (!user && accessToken && !refreshTokenMutation.isPending) {
+      const tokenData = tokenStorage.get();
+      if (tokenData?.refreshToken) {
+        // Attempt to refresh the token when validation fails
+        refreshTokenMutation.mutate({
+          userId: tokenData.refreshToken, // Assuming userId is derived from refresh token for now
+          refreshToken: tokenData.refreshToken
+        });
+        return;
+      }
+    }
+
+    setIsAuthenticated(!!user);
+    setLoading(false);
+  }, [user, isLoadingUser, accessToken, refreshTokenMutation]);
+
+  const login = (loginResponse: LoginResponse) => {
+    // Store tokens securely
+    tokenStorage.save({
+      accessToken: loginResponse.accessToken,
+      refreshToken: loginResponse.refreshToken,
+      expiresIn: loginResponse.expiresIn
+    });
     
-    if (requiresTos) {
+    setIsAuthenticated(true);
+    setRequiresTosAcceptance(loginResponse.requiresTosAcceptance);
+    setLatestTosVersion(loginResponse.latestTosVersion);
+    
+    if (loginResponse.requiresTosAcceptance) {
       navigate('/terms-acceptance');
     } else {
       navigate('/my-ruminations');
@@ -58,7 +81,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const logout = () => {
-    localStorage.removeItem('authToken');
+    tokenStorage.clear();
     setIsAuthenticated(false);
     setRequiresTosAcceptance(false);
     setLatestTosVersion(null);
@@ -77,7 +100,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       isAuthenticated, 
       loading, 
       user, 
-      token, 
+      token: accessToken, 
       requiresTosAcceptance,
       latestTosVersion,
       login, 

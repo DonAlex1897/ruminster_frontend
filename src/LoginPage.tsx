@@ -30,11 +30,7 @@ const LoginPage: React.FC = () => {
   // Handle login success/error
   React.useEffect(() => {
     if (loginMutation.isSuccess && loginMutation.data) {
-      authLogin(
-        loginMutation.data.accessToken, 
-        loginMutation.data.requiresTosAcceptance,
-        loginMutation.data.latestTosVersion
-      );
+      authLogin(loginMutation.data);
     }
     if (loginMutation.isError) {
       setErrors({ general: loginMutation.error.message });

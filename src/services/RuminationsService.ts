@@ -1,5 +1,6 @@
 import { RuminationResponse, PostRuminationDto, MyRuminationsQueryParams, UpdateRuminationDto } from '../types/rumination';
-import { buildApiUrl, API_CONFIG } from '../config/api';
+import { apiClient } from '../utils/apiClient';
+import { API_CONFIG, buildApiUrl } from '../config/api';
 
 export async function getMyRuminations(token: string, queryParams?: MyRuminationsQueryParams): Promise<RuminationResponse[]> {
   let url = buildApiUrl(API_CONFIG.ENDPOINTS.RUMINATIONS.MY_RUMINATIONS);
@@ -14,8 +15,7 @@ export async function getMyRuminations(token: string, queryParams?: MyRumination
     }
   }
 
-  const response = await fetch(url, {
-    method: 'GET',
+  const response = await apiClient.get(url, {
     headers: {
       'Authorization': `Bearer ${token}`,
     },
@@ -41,8 +41,7 @@ export async function getFeedRuminations(token: string, queryParams?: MyRuminati
     }
   }
 
-  const response = await fetch(url, {
-    method: 'GET',
+  const response = await apiClient.get(url, {
     headers: {
       'Authorization': `Bearer ${token}`,
     },
@@ -68,9 +67,7 @@ export async function getPublicRuminations(queryParams?: MyRuminationsQueryParam
     }
   }
 
-  const response = await fetch(url, {
-    method: 'GET',
-  });
+  const response = await apiClient.get(url);
 
   if (!response.ok) {
     throw new Error('Failed to fetch all ruminations');
@@ -80,8 +77,7 @@ export async function getPublicRuminations(queryParams?: MyRuminationsQueryParam
 }
 
 export async function createRumination(token: string, rumination: PostRuminationDto): Promise<RuminationResponse> {
-  const response = await fetch(buildApiUrl(API_CONFIG.ENDPOINTS.RUMINATIONS.BASE), {
-    method: 'POST',
+  const response = await apiClient.post(buildApiUrl(API_CONFIG.ENDPOINTS.RUMINATIONS.BASE), {
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
@@ -106,8 +102,7 @@ export async function createRumination(token: string, rumination: PostRumination
 }
 
 export async function updateRumination(token: string, rumination: UpdateRuminationDto): Promise<RuminationResponse> {
-  const response = await fetch(buildApiUrl(`${API_CONFIG.ENDPOINTS.RUMINATIONS.BASE}/${rumination.id}`), {
-    method: 'PUT',
+  const response = await apiClient.put(buildApiUrl(`${API_CONFIG.ENDPOINTS.RUMINATIONS.BASE}/${rumination.id}`), {
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
@@ -136,8 +131,7 @@ export async function updateRumination(token: string, rumination: UpdateRuminati
 }
 
 export async function deleteRumination(token: string, ruminationId: string): Promise<void> {
-  const response = await fetch(buildApiUrl(`${API_CONFIG.ENDPOINTS.RUMINATIONS.BASE}/${ruminationId}`), {
-    method: 'DELETE',
+  const response = await apiClient.delete(buildApiUrl(`${API_CONFIG.ENDPOINTS.RUMINATIONS.BASE}/${ruminationId}`), {
     headers: {
       'Authorization': `Bearer ${token}`,
     },
@@ -171,9 +165,7 @@ export async function getUserRuminations(userId: string, queryParams?: MyRuminat
     url += `?${params.toString()}`;
   }
 
-  const response = await fetch(url, {
-    method: 'GET',
-  });
+  const response = await apiClient.get(url);
 
   if (!response.ok) {
     throw new Error('Failed to fetch user ruminations');

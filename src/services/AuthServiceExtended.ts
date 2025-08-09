@@ -1,9 +1,9 @@
 import { PostForgotPasswordDto, PostResetPasswordDto, ApiResponse } from '../types/authExtended';
-import { buildApiUrl, API_CONFIG } from '../config/api';
+import { apiClient } from '../utils/apiClient';
+import { API_CONFIG, buildApiUrl } from '../config/api';
 
 export async function forgotPassword(credentials: PostForgotPasswordDto): Promise<ApiResponse> {
-  const response = await fetch(buildApiUrl(API_CONFIG.ENDPOINTS.AUTH.FORGOT_PASSWORD), {
-    method: 'POST',
+  const response = await apiClient.post(buildApiUrl(API_CONFIG.ENDPOINTS.AUTH.FORGOT_PASSWORD), {
     headers: {
       'Content-Type': 'application/json',
     },
@@ -28,8 +28,7 @@ export async function forgotPassword(credentials: PostForgotPasswordDto): Promis
 }
 
 export async function resetPassword(credentials: PostResetPasswordDto): Promise<ApiResponse> {
-  const response = await fetch(buildApiUrl(API_CONFIG.ENDPOINTS.AUTH.RESET_PASSWORD), {
-    method: 'POST',
+  const response = await apiClient.post(buildApiUrl(API_CONFIG.ENDPOINTS.AUTH.RESET_PASSWORD), {
     headers: {
       'Content-Type': 'application/json',
     },
@@ -54,9 +53,7 @@ export async function resetPassword(credentials: PostResetPasswordDto): Promise<
 }
 
 export async function activateAccount(token: string): Promise<ApiResponse> {
-  const response = await fetch(buildApiUrl(`${API_CONFIG.ENDPOINTS.AUTH.ACTIVATE}?token=${encodeURIComponent(token)}`), {
-    method: 'GET',
-  });
+  const response = await apiClient.get(buildApiUrl(`${API_CONFIG.ENDPOINTS.AUTH.ACTIVATE}?token=${encodeURIComponent(token)}`));
 
   if (!response.ok) {
     let errorMessage = 'Failed to activate account';
