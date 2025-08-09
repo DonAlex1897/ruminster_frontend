@@ -171,20 +171,76 @@ body {
   background-color: var(--color-background);
   border: 1px solid var(--color-border);
   color: var(--color-text-primary);
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-lg);
   font-size: var(--font-size-base);
-  transition: border-color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .form-input:focus {
   outline: none;
   border-color: var(--color-border-focus);
   box-shadow: 0 0 0 3px rgb(16 185 129 / 0.1);
+  transform: translateY(-1px);
 }
 
 .form-input::placeholder {
   color: var(--color-text-muted);
+}
+
+/* Enhanced button styling */
+.btn-primary {
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
+  border: 1px solid var(--color-primary);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-lg);
+  font-weight: var(--font-weight-medium);
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--color-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Card component with backdrop blur */
+.card {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  padding: var(--spacing-xl);
+  backdrop-filter: blur(10px);
+}
+
+/* Gradient backgrounds */
+.bg-gradient-to-br {
+  background-image: linear-gradient(to bottom right, var(--bg-from), var(--bg-via), var(--bg-to));
+}
+
+:root {
+  --bg-from: var(--color-background);
+  --bg-via: var(--color-background);
+  --bg-to: var(--color-background-secondary);
+}
+
+.dark {
+  --bg-from: var(--color-background);
+  --bg-via: var(--color-background);
+  --bg-to: var(--color-background-secondary);
 }
 
 code {
