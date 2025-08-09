@@ -2,16 +2,20 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { 
-  DocumentTextIcon, 
-  GlobeAltIcon, 
-  PlusIcon, 
+  DocumentTextIcon as DocumentTextIconSolid, 
+  GlobeAltIcon as GlobeAltIconSolid, 
   ArrowRightOnRectangleIcon, 
   MoonIcon, 
   SunIcon, 
   Bars3Icon, 
   XMarkIcon,
-  RssIcon
+  RssIcon as RssIconSolid
 } from '@heroicons/react/24/solid';
+import { 
+  DocumentTextIcon as DocumentTextIconOutline, 
+  GlobeAltIcon as GlobeAltIconOutline, 
+  RssIcon as RssIconOutline
+} from '@heroicons/react/24/outline';
 import logo from '../assets/ruminster_logo.png';
 import { useTheme } from '../contexts/ThemeContext';
 
@@ -54,19 +58,19 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
       )}
 
       {/* Sidebar */}
-      <nav className={`fixed top-0 left-0 h-full w-72 bg-white dark:bg-slate-900 shadow-xl border-r border-slate-200 dark:border-slate-700 z-50 transform transition-transform duration-300 ease-in-out ${
+      <nav className={`fixed top-0 left-0 h-full w-20 bg-white dark:bg-slate-900 shadow-xl border-r border-slate-200 dark:border-slate-700 z-50 transform transition-transform duration-300 ease-in-out ${
         showSidebar ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
       }`}>
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="flex items-center justify-center p-8 border-b border-slate-200 dark:border-slate-700 bg-gradient-to-r from-slate-50 to-white dark:from-slate-800 dark:to-slate-900">
-            <Link to="/public" onClick={() => setShowSidebar(false)} className="hover:scale-105 transition-transform duration-200">
-              <img src={logo} alt="Ruminster" className="h-14 w-auto" />
+          <div className="flex items-center justify-center p-4 border-b border-slate-200 dark:border-slate-700">
+            <Link to="/public" onClick={() => setShowSidebar(false)} className="hover:scale-105 transition-transform duration-200" title="Home">
+              <img src={logo} alt="Ruminster" className="h-8 w-auto" />
             </Link>
           </div>
 
           {/* Navigation Links */}
-          <div className="flex-1 px-6 py-8 space-y-1">
+          <div className="flex-1 flex flex-col items-center py-6 space-y-6">
 
             {/* New Rumination Button */}
             {isAuthenticated && (
@@ -76,14 +80,16 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
                   setShowSidebar(false);
                 }}
                 disabled={requiresTosAcceptance}
-                className={`flex items-center gap-3 w-full px-4 py-4 rounded-xl text-sm font-semibold transition-all duration-200 mb-6 shadow-lg ${
+                className={`p-3 rounded-lg transition-all duration-200 ${
                   requiresTosAcceptance 
                     ? 'bg-slate-400 text-slate-600 cursor-not-allowed' 
-                    : 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-[1.02] active:scale-[0.98]'
+                    : 'bg-accent hover:bg-primary text-white shadow-lg'
                 }`}
+                title="Create Rumination"
               >
-                <PlusIcon className="h-4 w-4" />
-                <span>Create Rumination</span>
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
               </button>
             )}
             {isAuthenticated && (
@@ -91,27 +97,35 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
                 <Link
                   to="/my-ruminations"
                   onClick={() => setShowSidebar(false)}
-                  className={`flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-medium transition-colors duration-150 group ${
+                  className={`p-3 rounded-lg transition-colors duration-150 ${
                     isActive('/my-ruminations')
-                      ? 'bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 dark:from-blue-900/20 dark:to-indigo-900/20 dark:text-blue-300 shadow-sm border border-blue-200 dark:border-blue-800'
-                      : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800'
+                      ? 'text-primary dark:text-accent'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800'
                   }`}
+                  title="My Ruminations"
                 >
-                  <DocumentTextIcon className="h-4 w-4" />
-                  <span>My Ruminations</span>
+                  {isActive('/my-ruminations') ? (
+                    <DocumentTextIconSolid className="h-5 w-5" />
+                  ) : (
+                    <DocumentTextIconOutline className="h-5 w-5" />
+                  )}
                 </Link>
                 
                 <Link
                   to="/my-feed"
                   onClick={() => setShowSidebar(false)}
-                  className={`flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-medium transition-colors duration-150 group ${
+                  className={`p-3 rounded-lg transition-colors duration-150 ${
                     isActive('/my-feed')
-                      ? 'bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 dark:from-blue-900/20 dark:to-indigo-900/20 dark:text-blue-300 shadow-sm border border-blue-200 dark:border-blue-800'
-                      : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800'
+                      ? 'text-primary dark:text-accent'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800'
                   }`}
+                  title="My Feed"
                 >
-                  <RssIcon className="h-4 w-4" />
-                  <span>My Feed</span>
+                  {isActive('/my-feed') ? (
+                    <RssIconSolid className="h-5 w-5" />
+                  ) : (
+                    <RssIconOutline className="h-5 w-5" />
+                  )}
                 </Link>
               </>
             )}
@@ -119,19 +133,23 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
             <Link
               to="/public"
               onClick={() => setShowSidebar(false)}
-              className={`flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-medium transition-colors duration-150 group ${
+              className={`p-3 rounded-lg transition-colors duration-150 ${
                 isActive('/public')
-                  ? 'bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 dark:from-blue-900/20 dark:to-indigo-900/20 dark:text-blue-300 shadow-sm border border-blue-200 dark:border-blue-800'
-                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800'
+                  ? 'text-primary dark:text-accent'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800'
               }`}
+              title="Explore"
             >
-              <GlobeAltIcon className="h-4 w-4" />
-              <span>Explore</span>
+              {isActive('/public') ? (
+                <GlobeAltIconSolid className="h-5 w-5" />
+              ) : (
+                <GlobeAltIconOutline className="h-5 w-5" />
+              )}
             </Link>
           </div>
 
           {/* Bottom Section */}
-          <div className="border-t border-slate-200 dark:border-slate-700 p-6 space-y-2 bg-gradient-to-r from-slate-50 to-white dark:from-slate-800 dark:to-slate-900">
+          <div className="border-t border-slate-200 dark:border-slate-700 p-4 flex flex-col items-center space-y-4">
             {isAuthenticated ? (
               <>
                 <button
@@ -139,33 +157,36 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
                     toggleTheme();
                     setShowSidebar(false);
                   }}
-                  className="flex items-center gap-4 w-full px-4 py-3 rounded-xl text-sm font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800 transition-colors duration-150"
+                  className="p-3 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800 transition-colors duration-150"
+                  title={effectiveTheme === 'dark' ? 'Light Mode' : 'Dark Mode'}
                 >
                   {effectiveTheme === 'dark' ? (
-                    <SunIcon className="h-4 w-4" />
+                    <SunIcon className="h-5 w-5" />
                   ) : (
-                    <MoonIcon className="h-4 w-4" />
+                    <MoonIcon className="h-5 w-5" />
                   )}
-                  <span>{effectiveTheme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
                 </button>
                 <button
                   onClick={() => {
                     logout();
                     setShowSidebar(false);
                   }}
-                  className="flex items-center gap-4 w-full px-4 py-3 rounded-xl text-sm font-medium text-slate-700 hover:text-red-600 hover:bg-red-50 dark:text-slate-300 dark:hover:text-red-400 dark:hover:bg-red-900/20 transition-colors duration-150"
+                  className="p-3 rounded-lg text-slate-600 hover:text-red-600 hover:bg-red-50 dark:text-slate-400 dark:hover:text-red-400 dark:hover:bg-red-900/20 transition-colors duration-150"
+                  title="Sign Out"
                 >
-                  <ArrowRightOnRectangleIcon className="h-4 w-4" />
-                  <span>Sign Out</span>
+                  <ArrowRightOnRectangleIcon className="h-5 w-5" />
                 </button>
               </>
             ) : (
               <Link
                 to="/login"
                 onClick={() => setShowSidebar(false)}
-                className="flex items-center justify-center w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-4 py-4 rounded-xl text-sm font-semibold transition-colors duration-150 shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40"
+                className="p-3 rounded-lg bg-primary hover:bg-primary-hover text-white transition-colors duration-150"
+                title="Sign In"
               >
-                Sign In
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                </svg>
               </Link>
             )}
           </div>
