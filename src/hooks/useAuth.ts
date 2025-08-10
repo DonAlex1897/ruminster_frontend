@@ -1,9 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { login, signup, validateToken, refreshToken } from '../services/AuthService';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { login, signup, validateToken } from '../services/AuthService';
 import { forgotPassword, resetPassword, activateAccount } from '../services/AuthServiceExtended';
-import { PostLoginDto, PostSignUpDto, PostRefreshTokenDto } from '../types/auth';
+import { PostLoginDto, PostSignUpDto } from '../types/auth';
 import { PostForgotPasswordDto, PostResetPasswordDto } from '../types/authExtended';
-import { tokenStorage } from '../utils/tokenStorage';
 
 export const useValidateToken = (token: string | null) => {
   return useQuery({
@@ -15,6 +14,8 @@ export const useValidateToken = (token: string | null) => {
     enabled: !!token,
     staleTime: 5 * 60 * 1000, // 5 minutes
     retry: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
 };
 
@@ -39,31 +40,6 @@ export const useForgotPassword = () => {
 export const useResetPassword = () => {
   return useMutation({
     mutationFn: (credentials: PostResetPasswordDto) => resetPassword(credentials),
-  });
-};
-
-export const useRefreshToken = () => {
-  const queryClient = useQueryClient();
-  
-  return useMutation({
-    mutationFn: (refreshTokenDto: PostRefreshTokenDto) => refreshToken(refreshTokenDto),
-    onSuccess: (data) => {
-      // Save new tokens
-      tokenStorage.save({
-        accessToken: data.accessToken,
-        refreshToken: data.refreshToken,
-        expiresIn: 3600 // Default to 1 hour
-      });
-      
-      // Invalidate and refetch the user validation query
-      queryClient.invalidateQueries({ queryKey: ['validateToken'] });
-    },
-    onError: () => {
-      // Refresh failed, clear tokens and redirect to login
-      tokenStorage.clear();
-      queryClient.clear();
-      window.location.href = '/login';
-    }
   });
 };
 

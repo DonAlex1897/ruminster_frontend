@@ -12,12 +12,21 @@ import { MyRuminationsQueryParams, PostRuminationDto, UpdateRuminationDto } from
 import { useAuth } from '../AuthContext';
 
 export const useMyRuminations = (queryParams?: MyRuminationsQueryParams) => {
-  const { token } = useAuth();
+  const { token, isAuthenticated } = useAuth();
+  
+  console.log('useMyRuminations state:', { 
+    hasToken: !!token, 
+    isAuthenticated, 
+    enabled: !!token && isAuthenticated 
+  });
   
   return useQuery({
     queryKey: ['myRuminations', token, queryParams],
-    queryFn: () => token ? getMyRuminations(token, queryParams) : Promise.resolve([]),
-    enabled: !!token,
+    queryFn: () => {
+      console.log('Actually executing myRuminations query');
+      return token ? getMyRuminations(token, queryParams) : Promise.resolve([]);
+    },
+    enabled: !!token && isAuthenticated,
   });
 };
 

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../AuthContext';
+import { apiClient } from '../utils/apiClient';
+import { API_CONFIG, buildApiUrl } from '../config/api';
 
 interface TosStatus {
   hasAcceptedLatest: boolean;
@@ -11,21 +13,17 @@ const TosNotification: React.FC = () => {
   const [tosStatus, setTosStatus] = useState<TosStatus | null>(null);
   const [isAccepting, setIsAccepting] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading, user } = useAuth();
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && !loading && user) {
       checkTosStatus();
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, loading, user]);
 
   const checkTosStatus = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://localhost:5001'}/api/TermsOfService/acceptance-status`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
+      const response = await apiClient.get(buildApiUrl(API_CONFIG.ENDPOINTS.TERMS_OF_SERVICE.ACCEPTANCE_STATUS));
       
       if (response.ok) {
         const status = await response.json();
@@ -33,6 +31,9 @@ const TosNotification: React.FC = () => {
         if (status.requiresAcceptance) {
           setShowModal(true);
         }
+      } else if (response.status === 401) {
+        // Token might be invalid, let the auth system handle it
+        console.log('Authentication error checking TOS status, letting auth system handle it');
       }
     } catch (error) {
       console.error('Failed to check TOS status:', error);
@@ -44,13 +45,8 @@ const TosNotification: React.FC = () => {
     
     setIsAccepting(true);
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://localhost:5001'}/api/TermsOfService/accept`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({ version: tosStatus.currentVersion })
+      const response = await apiClient.post(buildApiUrl(API_CONFIG.ENDPOINTS.TERMS_OF_SERVICE.ACCEPT), {
+        version: tosStatus.currentVersion
       });
 
       if (response.ok) {

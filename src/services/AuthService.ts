@@ -69,11 +69,9 @@ export async function signup(credentials: PostSignUpDto): Promise<LoginResponse>
 }
 
 export async function refreshToken(body: PostRefreshTokenDto): Promise<TokenResponse> {
-  const response = await apiClient.post(buildApiUrl(API_CONFIG.ENDPOINTS.AUTH.REFRESH_TOKEN), {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
+  const response = await apiClient.post(buildApiUrl(API_CONFIG.ENDPOINTS.AUTH.REFRESH_TOKEN), body, {
+    skipAuth: true, // Don't include auth header for refresh token requests
+    skipRefresh: true, // Prevent infinite refresh loops
   });
 
   if (!response.ok) {

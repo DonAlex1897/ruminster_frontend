@@ -49,8 +49,16 @@ export const tokenStorage = {
     const tokenData = tokenStorage.get();
     if (!tokenData) return true;
     
-    // Consider token expired if it expires within the next 5 minutes
-    return tokenData.expiresAt <= (Date.now() + 5 * 60 * 1000);
+    // Consider token expired if it's actually expired (with 30 second buffer)
+    return tokenData.expiresAt <= (Date.now() + 30 * 1000);
+  },
+
+  needsRefresh: (): boolean => {
+    const tokenData = tokenStorage.get();
+    if (!tokenData) return false;
+    
+    // Refresh if token expires within the next 2 minutes
+    return tokenData.expiresAt <= (Date.now() + 2 * 60 * 1000);
   },
 
   clear: (): void => {

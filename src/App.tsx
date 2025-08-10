@@ -15,6 +15,7 @@ import TermsAcceptance from './pages/TermsAcceptance';
 import Navbar from './components/Navbar';
 import NewRuminationDialog from './components/NewRuminationDialog';
 import TosNotification from './components/TosNotification';
+import { TokenDebugInfo } from './components/TokenDebugInfo';
 import { useState } from 'react';
 
 function AppContent() {
@@ -74,6 +75,9 @@ function AppContent() {
           navigate(location.pathname, { replace: true });
         }}
       />
+      
+      {/* Development debug component */}
+      {process.env.NODE_ENV === 'development' && <TokenDebugInfo />}
     </>
   );
 }

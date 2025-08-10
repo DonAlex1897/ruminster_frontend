@@ -185,7 +185,7 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
                 </Tooltip>
               </>
             ) : (
-              <Tooltip content="Sign In">
+              <Tooltip content="Sign In" position="right" offsetY={-15}>
                 <Link
                   to="/login"
                   onClick={() => setShowSidebar(false)}
