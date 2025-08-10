@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import Comments from './Comments';
 import AddNewComment from './AddNewComment';
-import { UserRelationType } from '../types/rumination';
+import { RuminationResponse, UserRelationType } from '../types/rumination';
 import {
   XMarkIcon,
   ChatBubbleOvalLeftEllipsisIcon,
@@ -12,17 +12,7 @@ import {
 import UserAvatar from './UserAvatar';
 
 interface RuminationCardProps {
-  rumination: {
-    id: string | number;
-    content: string;
-    createTMS: string;
-    isPublished?: boolean;
-    audiences: { relationType: UserRelationType }[];
-    createdBy: {
-      id: string;
-      username: string;
-    };
-  };
+  rumination: RuminationResponse;
   variant?: 'default' | 'editable';
   onClick?: () => void;
   onDelete?: (e: React.MouseEvent) => void;
@@ -39,7 +29,6 @@ export default function RuminationCard({
   showComments = false
 }: RuminationCardProps) {
   const [commentDialogOpen, setCommentDialogOpen] = useState(false);
-  const [commentCount] = useState(Math.floor(Math.random() * 50) + 3);
 
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
@@ -129,8 +118,7 @@ export default function RuminationCard({
               }}
               className="flex items-center gap-2 text-gray-500 hover:text-blue-500 transition-colors duration-200"
             >
-              <ChatBubbleOvalLeftEllipsisIcon className="w-5 h-5" />
-              <span className="text-sm">{commentCount}</span>
+                <ChatBubbleOvalLeftEllipsisIcon className="w-5 h-5" />
             </button>
             <button className="text-gray-500 hover:text-blue-500 transition-colors duration-200">
               <ShareIcon className="w-5 h-5" />
