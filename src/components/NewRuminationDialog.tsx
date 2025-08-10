@@ -70,7 +70,7 @@ export default function NewRuminationDialog({ isOpen, onClose, onSuccess }: NewR
         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
           <div>
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-              Create Rumination
+              Ruminate
             </h2>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
               Share your thoughts with your selected audience
@@ -95,7 +95,7 @@ export default function NewRuminationDialog({ isOpen, onClose, onSuccess }: NewR
               onChange={(e) => setContent(e.target.value)}
               rows={4}
               className="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white resize-none transition-colors placeholder-gray-400 dark:placeholder-gray-500"
-              placeholder="What's on your mind? Share your thoughts..."
+              placeholder="What's on your mind? Share your feelings, thoughts, or experiences..."
             />
             <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
               {content.length} characters

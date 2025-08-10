@@ -231,7 +231,7 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
             )}
             {isAuthenticated && (
               <>
-                <Tooltip content="My Ruminations" position="right" offsetY={-25}>
+                <Tooltip content="My Ruminations" position="right" offsetY={-88}>
                   <Link
                     to="/my-ruminations"
                     onClick={() => setShowSidebar(false)}
@@ -249,7 +249,7 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
                   </Link>
                 </Tooltip>
                 
-                <Tooltip content="My Feed" position="right" offsetY={-25}>
+                <Tooltip content="My Feed" position="right" offsetY={-88}>
                   <Link
                     to="/my-feed"
                     onClick={() => setShowSidebar(false)}
@@ -269,7 +269,7 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
               </>
             )}
             
-            <Tooltip content="Explore" position="right" offsetY={-25}>
+            <Tooltip content="Explore" position="right" offsetY={-88}>
               <Link
                 to="/public"
                 onClick={() => setShowSidebar(false)}
@@ -287,38 +287,6 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
               </Link>
             </Tooltip>
           </div>
-
-          {/* Bottom Section */}
-          {/* <div className="border-t border-slate-200 dark:border-slate-700 p-4 flex flex-col items-center space-y-4">
-            {isAuthenticated ? (
-              <>
-                <Tooltip content="Sign Out" position="right" offsetY={-15}>
-                  <button
-                    onClick={() => {
-                      logout();
-                      setShowSidebar(false);
-                    }}
-                    className="p-3 rounded-lg text-slate-600 hover:text-red-600 hover:bg-red-50 dark:text-slate-400 dark:hover:text-red-400 dark:hover:bg-red-900/20 transition-colors duration-150"
-                  >
-                    <ArrowRightStartOnRectangleIcon className="h-5 w-5" />
-                  </button>
-                </Tooltip>
-              </>
-            ) : (
-              <Tooltip content="Sign In" position="right" offsetY={-15}>
-                <Link
-                  to="/login"
-                  onClick={() => setShowSidebar(false)}
-                  className="flex p-3 rounded-lg bg-primary hover:bg-primary-hover text-white transition-colors duration-150"
-                  title="Sign In"
-                >
-                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                  </svg>
-                </Link>
-              </Tooltip>
-            )}
-          </div> */}
         </div>
       </nav>
     </>
