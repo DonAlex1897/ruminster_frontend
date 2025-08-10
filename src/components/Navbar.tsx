@@ -91,7 +91,7 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
       <div className="fixed top-0 left-0 right-0 h-16 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border-b border-slate-200 dark:border-slate-700 z-40">
         <div className="h-full flex items-center justify-between px-4 md:px-6">
           {/* Logo */}
-          <div className="flex items-center">
+          <div className="flex items-center md:flex-none md:order-first order-first ml-16 md:ml-0">
             <Link to="/public" className="hover:scale-105 transition-transform duration-200">
               <img src={logo} alt="Ruminster" className="h-8 w-auto" />
             </Link>
@@ -181,7 +181,7 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
       </div>
 
       {/* Mobile menu button */}
-      <div className="md:hidden fixed top-4 left-4 z-50">
+      <div className="md:hidden fixed top-2 left-4 z-50">
         <button
           onClick={() => setShowSidebar(!showSidebar)}
           className="bg-white dark:bg-slate-800 p-3 rounded-xl shadow-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all duration-200"
