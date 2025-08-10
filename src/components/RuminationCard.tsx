@@ -97,7 +97,7 @@ export default function RuminationCard({
 
         {/* Category/Audience */}
         {rumination.audiences.length > 0 && (
-          <div className="mb-3">
+          <div className="mb-3 ml-10">
             <span className="inline-flex items-center text-xs text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">
               {getAudienceLabel(rumination.audiences)}
             </span>
@@ -105,8 +105,8 @@ export default function RuminationCard({
         )}
 
         {/* Content */}
-        <div className="mb-4">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 leading-tight">
+        <div className="mb-4 ml-10">
+          <h2 className="text-md font-medium text-gray-900 dark:text-gray-100 mb-2 leading-tight">
             {rumination.content.length > 100 ?
               rumination.content.substring(0, 100) + '...' :
               rumination.content
@@ -120,7 +120,7 @@ export default function RuminationCard({
         </div>
 
         {/* Engagement Actions */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between ml-10">
           <div className="flex items-center gap-6">
             <button
               onClick={(e) => {
