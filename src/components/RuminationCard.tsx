@@ -29,6 +29,7 @@ export default function RuminationCard({
   showComments = false
 }: RuminationCardProps) {
   const [commentDialogOpen, setCommentDialogOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
@@ -95,16 +96,23 @@ export default function RuminationCard({
         {/* Content */}
         <div className="mb-4 ml-10">
           <h2 className="text-md text-gray-900 dark:text-gray-100 mb-2 leading-relaxed whitespace-pre-wrap break-words">
-            {rumination.content.length > 100 ?
-              rumination.content.substring(0, 100) + '...' :
+            {rumination.content.length > 300 ? (
+              <>
+                {isExpanded ? rumination.content : rumination.content.substring(0, 300) + '...'}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsExpanded(!isExpanded);
+                  }}
+                  className="ml-2 px-3 py-1 text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300 text-sm font-medium border border-gray-500 dark:border-gray-400 rounded-full hover:bg-gray-50 dark:hover:bg-gray-900/20 transition-all duration-200"
+                >
+                  {isExpanded ? 'Show less' : 'Read more'}
+                </button>
+              </>
+            ) : (
               rumination.content
-            }
+            )}
           </h2>
-          {rumination.content.length > 100 && (
-            <p className="text-gray-600 dark:text-gray-400 text-base font-serif leading-relaxed whitespace-pre-wrap break-words">
-              {rumination.content.substring(100, 200)}...
-            </p>
-          )}
         </div>
 
         {/* Engagement Actions */}
@@ -160,7 +168,7 @@ export default function RuminationCard({
                   </span>
                 </div>
               </div>
-              <p className="text-gray-900 dark:text-gray-100 leading-relaxed text-lg font-serif whitespace-pre-wrap break-words">
+              <p className="text-gray-900 dark:text-gray-100 leading-relaxed text-lg whitespace-pre-wrap break-words">
                 {rumination.content}
               </p>
               <div className='pt-4'>

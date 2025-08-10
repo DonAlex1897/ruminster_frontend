@@ -64,68 +64,91 @@ export default function NewRuminationDialog({ isOpen, onClose, onSuccess }: NewR
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-end sm:items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-800 rounded-t-lg sm:rounded-lg p-4 sm:p-6 w-full max-w-md sm:mx-4 max-h-[90vh] overflow-y-auto">
-        <div className="flex justify-between items-center mb-3 sm:mb-4">
-          <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
-            Ruminate
-          </h2>
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 w-full max-w-lg max-h-[90vh] overflow-y-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+              Create Rumination
+            </h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+              Share your thoughts with your selected audience
+            </p>
+          </div>
           <button
             onClick={handleClose}
-            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1"
+            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg p-2 transition-colors"
           >
-            <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
-        <div className="space-y-3 sm:space-y-4">
+        {/* Content */}
+        <div className="p-6 space-y-6">
+          {/* Text Input */}
           <div>
             <textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              rows={3}
-              className="w-full p-2 sm:p-3 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-sm sm:text-base leading-relaxed"
-              placeholder="What's on your mind?"
+              rows={4}
+              className="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white resize-none transition-colors placeholder-gray-400 dark:placeholder-gray-500"
+              placeholder="What's on your mind? Share your thoughts..."
             />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Audience (optional)
-            </label>
-            <div className="grid grid-cols-2 gap-2 sm:space-y-2 sm:grid-cols-1">
-              {audienceOptions.map((option) => (
-                <label key={option.value} className="flex items-center">
-                  <input
-                    type="checkbox"
-                    checked={selectedAudiences.includes(option.value)}
-                    onChange={() => handleAudienceToggle(option.value)}
-                    className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                  />
-                  <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">
-                    {option.label}
-                  </span>
-                </label>
-              ))}
+            <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+              {content.length} characters
             </div>
           </div>
 
-          <div className="flex space-x-2 sm:space-x-3 pt-3 sm:pt-4">
+          {/* Audience Selection */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+              Target Audience
+              <span className="text-gray-400 font-normal ml-1">(optional)</span>
+            </label>
+            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+              <div className="grid grid-cols-2 gap-3">
+                {audienceOptions.map((option) => (
+                  <label key={option.value} className="flex items-center cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      checked={selectedAudiences.includes(option.value)}
+                      onChange={() => handleAudienceToggle(option.value)}
+                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600 rounded transition-colors"
+                    />
+                    <span className="ml-3 text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
+                      {option.label}
+                    </span>
+                  </label>
+                ))}
+              </div>
+              {selectedAudiences.length === 0 && (
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-3">
+                  No audience selected - rumination will be public
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="px-6 py-4 bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 rounded-b-xl">
+          <div className="flex space-x-3">
             <button
               onClick={() => handleSubmit(false)}
               disabled={!content.trim() || isSubmitting}
-              className="flex-1 bg-gray-600 hover:bg-gray-700 disabled:bg-gray-400 text-white py-2 px-3 sm:px-4 rounded-md text-xs sm:text-sm font-medium transition-colors"
+              className="flex-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-400 dark:disabled:text-gray-500 py-2.5 px-4 rounded-lg font-medium transition-colors focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:cursor-not-allowed"
             >
-              Save Draft
+              {isSubmitting ? 'Saving...' : 'Save Draft'}
             </button>
             <button
               onClick={() => handleSubmit(true)}
               disabled={!content.trim() || isSubmitting}
-              className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white py-2 px-3 sm:px-4 rounded-md text-xs sm:text-sm font-medium transition-colors"
+              className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white py-2.5 px-4 rounded-lg font-medium transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed shadow-sm"
             >
-              Publish
+              {isSubmitting ? 'Publishing...' : 'Publish'}
             </button>
           </div>
         </div>
