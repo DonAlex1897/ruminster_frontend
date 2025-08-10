@@ -43,11 +43,8 @@ export default function RuminationCard({
     }
   };
 
-  const getAudienceLabel = (audiences: { relationType: UserRelationType }[]): string => {
-    if (audiences.length === 0) return '';
-
-    const firstAudience = audiences[0];
-    switch (firstAudience.relationType) {
+  const getAudienceLabel = (audience: { relationType: UserRelationType }): string => {
+    switch (audience.relationType) {
       case UserRelationType.Acquaintance: return 'Acquaintance Circle';
       case UserRelationType.Family: return 'Family Circle';
       case UserRelationType.Friend: return 'Friend Circle';
@@ -87,9 +84,11 @@ export default function RuminationCard({
         {/* Category/Audience */}
         {rumination.audiences.length > 0 && (
           <div className="mb-3 ml-10">
-            <span className="inline-flex items-center text-xs text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">
-              {getAudienceLabel(rumination.audiences)}
-            </span>
+            {rumination.audiences.sort((a, b) => a.relationType - b.relationType).map((audience, index) => (
+              <span key={index} className="inline-flex items-center text-xs text-gray-600 dark:text-gray-400 mr-2 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">
+                {getAudienceLabel(audience)}
+              </span>
+            ))}
           </div>
         )}
 
