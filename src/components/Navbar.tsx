@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { 
@@ -9,7 +9,9 @@ import {
   SunIcon, 
   Bars3Icon, 
   XMarkIcon,
-  RssIcon as RssIconSolid
+  RssIcon as RssIconSolid,
+  UserIcon,
+  ChevronDownIcon
 } from '@heroicons/react/24/solid';
 import { 
   DocumentTextIcon as DocumentTextIconOutline, 
@@ -19,7 +21,6 @@ import {
 import logo from '../assets/ruminster_logo.png';
 import { useTheme } from '../contexts/ThemeContext';
 import Tooltip from './Tooltip';
-import UserAvatar from './UserAvatar';
 
 interface NavbarProps {
   onNewRumination: () => void;
@@ -30,9 +31,43 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
   const { isAuthenticated, logout, requiresTosAcceptance, user } = useAuth();
   const { effectiveTheme, toggleTheme } = useTheme();
   const [showSidebar, setShowSidebar] = useState(false);
+  const [showUserDropdown, setShowUserDropdown] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const isActive = (path: string) => {
     return location.pathname === path;
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowUserDropdown(false);
+      }
+    };
+
+    if (showUserDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showUserDropdown]);
+
+  // Helper function to get avatar color
+  const getAvatarColor = (username: string): string => {
+    const COLORS = [
+      'bg-blue-500', 'bg-green-500', 'bg-pink-500', 'bg-orange-500', 
+      'bg-purple-500', 'bg-teal-500', 'bg-yellow-500', 'bg-indigo-500',
+      'bg-rose-500', 'bg-emerald-500', 'bg-violet-500', 'bg-sky-500',
+      'bg-amber-500', 'bg-lime-500', 'bg-cyan-500', 'bg-fuchsia-500',
+      'bg-red-500', 'bg-slate-500', 'bg-zinc-500', 'bg-neutral-500'
+    ];
+    
+    if (!username) return COLORS[0];
+    const hash = username.charCodeAt(0) + (username.charCodeAt(username.length - 1) || 0);
+    return COLORS[hash % COLORS.length];
   };
 
   const getPageTitle = (): string => {
@@ -85,13 +120,53 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
                     )}
                   </button>
                 </Tooltip>
-                <UserAvatar
-                  userId={user?.id || ''}
-                  username={user?.username || ''}
-                  size="sm"
-                  showUsername={false}
-                  clickable={true}
-                />
+                
+                {/* User Dropdown */}
+                <div className="relative" ref={dropdownRef}>
+                  <button
+                    onClick={() => setShowUserDropdown(!showUserDropdown)}
+                    className="flex items-center gap-2 p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors duration-150"
+                  >
+                    <div className={`h-8 w-8 ${getAvatarColor(user?.username || '')} rounded-full flex items-center justify-center text-white font-semibold text-sm`}>
+                      {user?.username ? user.username.charAt(0).toUpperCase() : <UserIcon className="h-4 w-4" />}
+                    </div>
+                    <ChevronDownIcon className={`h-4 w-4 text-slate-600 dark:text-slate-400 transition-transform duration-200 ${showUserDropdown ? 'rotate-180' : ''}`} />
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  {showUserDropdown && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 py-2 z-50">
+                      <div className="px-4 py-2 border-b border-slate-200 dark:border-slate-700">
+                        <p className="text-sm font-medium text-slate-900 dark:text-white truncate">
+                          {user?.username}
+                        </p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">
+                          Signed in
+                        </p>
+                      </div>
+                      
+                      <Link
+                        to={`/user/${user?.id}`}
+                        onClick={() => setShowUserDropdown(false)}
+                        className="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors duration-150"
+                      >
+                        <UserIcon className="h-4 w-4" />
+                        View Profile
+                      </Link>
+                      
+                      <button
+                        onClick={() => {
+                          logout();
+                          setShowUserDropdown(false);
+                        }}
+                        className="flex items-center gap-3 w-full px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-150"
+                      >
+                        <ArrowRightStartOnRectangleIcon className="h-4 w-4" />
+                        Sign Out
+                      </button>
+                    </div>
+                  )}
+                </div>
               </>
             ) : (
               <Link
@@ -167,9 +242,9 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
                     }`}
                   >
                     {isActive('/my-ruminations') ? (
-                      <DocumentTextIconSolid className="h-5 w-5" />
+                      <DocumentTextIconSolid className="h-6 w-6" />
                     ) : (
-                      <DocumentTextIconOutline className="h-5 w-5" />
+                      <DocumentTextIconOutline className="h-6 w-6" />
                     )}
                   </Link>
                 </Tooltip>
@@ -185,9 +260,9 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
                     }`}
                   >
                     {isActive('/my-feed') ? (
-                      <RssIconSolid className="h-5 w-5" />
+                      <RssIconSolid className="h-6 w-6" />
                     ) : (
-                      <RssIconOutline className="h-5 w-5" />
+                      <RssIconOutline className="h-6 w-6" />
                     )}
                   </Link>
                 </Tooltip>
@@ -205,33 +280,18 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
                 }`}
               >
                 {isActive('/public') ? (
-                  <GlobeAltIconSolid className="h-5 w-5" />
+                  <GlobeAltIconSolid className="h-6 w-6" />
                 ) : (
-                  <GlobeAltIconOutline className="h-5 w-5" />
+                  <GlobeAltIconOutline className="h-6 w-6" />
                 )}
               </Link>
             </Tooltip>
           </div>
 
           {/* Bottom Section */}
-          <div className="border-t border-slate-200 dark:border-slate-700 p-4 flex flex-col items-center space-y-4">
+          {/* <div className="border-t border-slate-200 dark:border-slate-700 p-4 flex flex-col items-center space-y-4">
             {isAuthenticated ? (
               <>
-                <Tooltip content={effectiveTheme === 'dark' ? 'Light Mode' : 'Dark Mode'} position="right" offsetY={-15}>
-                  <button
-                    onClick={() => {
-                      toggleTheme();
-                      setShowSidebar(false);
-                    }}
-                    className="p-3 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800 transition-colors duration-150"
-                  >
-                    {effectiveTheme === 'dark' ? (
-                      <SunIcon className="h-5 w-5" />
-                    ) : (
-                      <MoonIcon className="h-5 w-5" />
-                    )}
-                  </button>
-                </Tooltip>
                 <Tooltip content="Sign Out" position="right" offsetY={-15}>
                   <button
                     onClick={() => {
@@ -258,7 +318,7 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
                 </Link>
               </Tooltip>
             )}
-          </div>
+          </div> */}
         </div>
       </nav>
     </>
