@@ -4,7 +4,7 @@ import { useAuth } from '../AuthContext';
 import { 
   DocumentTextIcon as DocumentTextIconSolid, 
   GlobeAltIcon as GlobeAltIconSolid, 
-  ArrowRightOnRectangleIcon, 
+  ArrowRightStartOnRectangleIcon, 
   MoonIcon, 
   SunIcon, 
   Bars3Icon, 
@@ -18,6 +18,7 @@ import {
 } from '@heroicons/react/24/outline';
 import logo from '../assets/ruminster_logo.png';
 import { useTheme } from '../contexts/ThemeContext';
+import Tooltip from './Tooltip';
 
 interface NavbarProps {
   onNewRumination: () => void;
@@ -64,9 +65,11 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
         <div className="flex flex-col h-full">
           {/* Logo */}
           <div className="flex items-center justify-center p-4 border-b border-slate-200 dark:border-slate-700">
-            <Link to="/public" onClick={() => setShowSidebar(false)} className="hover:scale-105 transition-transform duration-200" title="Home">
-              <img src={logo} alt="Ruminster" className="h-8 w-auto" />
-            </Link>
+            <Tooltip content="Home" position='right'>
+              <Link to="/public" onClick={() => setShowSidebar(false)} className="hover:scale-105 transition-transform duration-200">
+                <img src={logo} alt="Ruminster" className="h-8 w-auto" />
+              </Link>
+            </Tooltip>
           </div>
 
           {/* Navigation Links */}
@@ -85,7 +88,6 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
                     ? 'bg-slate-400 text-slate-600 cursor-not-allowed' 
                     : 'bg-accent hover:bg-primary text-white shadow-lg'
                 }`}
-                title="Create Rumination"
               >
                 <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -94,100 +96,107 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
             )}
             {isAuthenticated && (
               <>
-                <Link
-                  to="/my-ruminations"
-                  onClick={() => setShowSidebar(false)}
-                  className={`p-3 rounded-lg transition-colors duration-150 ${
-                    isActive('/my-ruminations')
-                      ? 'text-primary dark:text-accent'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800'
-                  }`}
-                  title="My Ruminations"
-                >
-                  {isActive('/my-ruminations') ? (
-                    <DocumentTextIconSolid className="h-5 w-5" />
-                  ) : (
-                    <DocumentTextIconOutline className="h-5 w-5" />
-                  )}
-                </Link>
+                <Tooltip content="My Ruminations" position="right" offsetY={-25}>
+                  <Link
+                    to="/my-ruminations"
+                    onClick={() => setShowSidebar(false)}
+                    className={`flex p-3 rounded-lg transition-colors duration-150 ${
+                      isActive('/my-ruminations')
+                        ? 'text-primary dark:text-accent'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800'
+                    }`}
+                  >
+                    {isActive('/my-ruminations') ? (
+                      <DocumentTextIconSolid className="h-5 w-5" />
+                    ) : (
+                      <DocumentTextIconOutline className="h-5 w-5" />
+                    )}
+                  </Link>
+                </Tooltip>
                 
-                <Link
-                  to="/my-feed"
-                  onClick={() => setShowSidebar(false)}
-                  className={`p-3 rounded-lg transition-colors duration-150 ${
-                    isActive('/my-feed')
-                      ? 'text-primary dark:text-accent'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800'
-                  }`}
-                  title="My Feed"
-                >
-                  {isActive('/my-feed') ? (
-                    <RssIconSolid className="h-5 w-5" />
-                  ) : (
-                    <RssIconOutline className="h-5 w-5" />
-                  )}
-                </Link>
+                <Tooltip content="My Feed" position="right" offsetY={-25}>
+                  <Link
+                    to="/my-feed"
+                    onClick={() => setShowSidebar(false)}
+                    className={`flex p-3 rounded-lg transition-colors duration-150 ${
+                      isActive('/my-feed')
+                        ? 'text-primary dark:text-accent'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800'
+                    }`}
+                  >
+                    {isActive('/my-feed') ? (
+                      <RssIconSolid className="h-5 w-5" />
+                    ) : (
+                      <RssIconOutline className="h-5 w-5" />
+                    )}
+                  </Link>
+                </Tooltip>
               </>
             )}
             
-            <Link
-              to="/public"
-              onClick={() => setShowSidebar(false)}
-              className={`p-3 rounded-lg transition-colors duration-150 ${
-                isActive('/public')
-                  ? 'text-primary dark:text-accent'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800'
-              }`}
-              title="Explore"
-            >
-              {isActive('/public') ? (
-                <GlobeAltIconSolid className="h-5 w-5" />
-              ) : (
-                <GlobeAltIconOutline className="h-5 w-5" />
-              )}
-            </Link>
+            <Tooltip content="Explore" position="right" offsetY={-25}>
+              <Link
+                to="/public"
+                onClick={() => setShowSidebar(false)}
+                className={`flex p-3 rounded-lg transition-colors duration-150 ${
+                  isActive('/public')
+                    ? 'text-primary dark:text-accent'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800'
+                }`}
+              >
+                {isActive('/public') ? (
+                  <GlobeAltIconSolid className="h-5 w-5" />
+                ) : (
+                  <GlobeAltIconOutline className="h-5 w-5" />
+                )}
+              </Link>
+            </Tooltip>
           </div>
 
           {/* Bottom Section */}
           <div className="border-t border-slate-200 dark:border-slate-700 p-4 flex flex-col items-center space-y-4">
             {isAuthenticated ? (
               <>
-                <button
-                  onClick={() => {
-                    toggleTheme();
-                    setShowSidebar(false);
-                  }}
-                  className="p-3 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800 transition-colors duration-150"
-                  title={effectiveTheme === 'dark' ? 'Light Mode' : 'Dark Mode'}
-                >
-                  {effectiveTheme === 'dark' ? (
-                    <SunIcon className="h-5 w-5" />
-                  ) : (
-                    <MoonIcon className="h-5 w-5" />
-                  )}
-                </button>
-                <button
-                  onClick={() => {
-                    logout();
-                    setShowSidebar(false);
-                  }}
-                  className="p-3 rounded-lg text-slate-600 hover:text-red-600 hover:bg-red-50 dark:text-slate-400 dark:hover:text-red-400 dark:hover:bg-red-900/20 transition-colors duration-150"
-                  title="Sign Out"
-                >
-                  <ArrowRightOnRectangleIcon className="h-5 w-5" />
-                </button>
+                <Tooltip content={effectiveTheme === 'dark' ? 'Light Mode' : 'Dark Mode'} position="right" offsetY={-15}>
+                  <button
+                    onClick={() => {
+                      toggleTheme();
+                      setShowSidebar(false);
+                    }}
+                    className="p-3 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800 transition-colors duration-150"
+                  >
+                    {effectiveTheme === 'dark' ? (
+                      <SunIcon className="h-5 w-5" />
+                    ) : (
+                      <MoonIcon className="h-5 w-5" />
+                    )}
+                  </button>
+                </Tooltip>
+                <Tooltip content="Sign Out" position="right" offsetY={-15}>
+                  <button
+                    onClick={() => {
+                      logout();
+                      setShowSidebar(false);
+                    }}
+                    className="p-3 rounded-lg text-slate-600 hover:text-red-600 hover:bg-red-50 dark:text-slate-400 dark:hover:text-red-400 dark:hover:bg-red-900/20 transition-colors duration-150"
+                  >
+                    <ArrowRightStartOnRectangleIcon className="h-5 w-5" />
+                  </button>
+                </Tooltip>
               </>
             ) : (
-              <Link
-                to="/login"
-                onClick={() => setShowSidebar(false)}
-                className="p-3 rounded-lg bg-primary hover:bg-primary-hover text-white transition-colors duration-150"
-                title="Sign In"
-              >
-                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                </svg>
-              </Link>
+              <Tooltip content="Sign In">
+                <Link
+                  to="/login"
+                  onClick={() => setShowSidebar(false)}
+                  className="flex p-3 rounded-lg bg-primary hover:bg-primary-hover text-white transition-colors duration-150"
+                  title="Sign In"
+                >
+                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                  </svg>
+                </Link>
+              </Tooltip>
             )}
           </div>
         </div>
