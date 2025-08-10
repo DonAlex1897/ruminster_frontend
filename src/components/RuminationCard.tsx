@@ -94,14 +94,14 @@ export default function RuminationCard({
 
         {/* Content */}
         <div className="mb-4 ml-10">
-          <h2 className="text-md text-gray-900 dark:text-gray-100 mb-2 leading-relaxed">
+          <h2 className="text-md text-gray-900 dark:text-gray-100 mb-2 leading-relaxed whitespace-pre-wrap break-words">
             {rumination.content.length > 100 ?
               rumination.content.substring(0, 100) + '...' :
               rumination.content
             }
           </h2>
           {rumination.content.length > 100 && (
-            <p className="text-gray-600 dark:text-gray-400 text-base font-serif leading-relaxed">
+            <p className="text-gray-600 dark:text-gray-400 text-base font-serif leading-relaxed whitespace-pre-wrap break-words">
               {rumination.content.substring(100, 200)}...
             </p>
           )}
