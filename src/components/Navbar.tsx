@@ -19,6 +19,7 @@ import {
 import logo from '../assets/ruminster_logo.png';
 import { useTheme } from '../contexts/ThemeContext';
 import Tooltip from './Tooltip';
+import UserAvatar from './UserAvatar';
 
 interface NavbarProps {
   onNewRumination: () => void;
@@ -26,7 +27,7 @@ interface NavbarProps {
 
 export default function Navbar({ onNewRumination }: NavbarProps) {
   const location = useLocation();
-  const { isAuthenticated, logout, requiresTosAcceptance } = useAuth();
+  const { isAuthenticated, logout, requiresTosAcceptance, user } = useAuth();
   const { effectiveTheme, toggleTheme } = useTheme();
   const [showSidebar, setShowSidebar] = useState(false);
 
@@ -34,8 +35,76 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
     return location.pathname === path;
   };
 
+  const getPageTitle = (): string => {
+    const path = location.pathname;
+    if (path === '/my-ruminations') return 'My Ruminations';
+    if (path === '/my-feed') return 'My Feed';
+    if (path === '/public') return 'Explore';
+    if (path.startsWith('/user/')) return 'User Profile';
+    if (path === '/login') return 'Sign In';
+    if (path === '/terms-of-service') return 'Terms of Service';
+    if (path === '/terms-acceptance') return 'Terms Acceptance';
+    if (path === '/activate') return 'Activate Account';
+    if (path === '/forgot-password') return 'Forgot Password';
+    if (path === '/reset-password') return 'Reset Password';
+    return 'Ruminster';
+  };
+
   return (
     <>
+      {/* Top Navigation Bar */}
+      <div className="fixed top-0 left-0 right-0 h-16 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border-b border-slate-200 dark:border-slate-700 z-40">
+        <div className="h-full flex items-center justify-between px-4 md:px-6">
+          {/* Logo */}
+          <div className="flex items-center">
+            <Link to="/public" className="hover:scale-105 transition-transform duration-200">
+              <img src={logo} alt="Ruminster" className="h-8 w-auto" />
+            </Link>
+          </div>
+          
+          {/* Page Title */}
+          <div className="flex-1 flex items-center justify-center">
+            <h1 className="text-lg font-semibold text-slate-900 dark:text-white">
+              {getPageTitle()}
+            </h1>
+          </div>
+          
+          {/* User Avatar or Actions */}
+          <div className="flex items-center gap-3">
+            {isAuthenticated ? (
+              <>
+                <Tooltip content={effectiveTheme === 'dark' ? 'Light Mode' : 'Dark Mode'} position="bottom">
+                  <button
+                    onClick={toggleTheme}
+                    className="p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800 transition-colors duration-150"
+                  >
+                    {effectiveTheme === 'dark' ? (
+                      <SunIcon className="h-5 w-5" />
+                    ) : (
+                      <MoonIcon className="h-5 w-5" />
+                    )}
+                  </button>
+                </Tooltip>
+                <UserAvatar
+                  userId={user?.id || ''}
+                  username={user?.username || ''}
+                  size="sm"
+                  showUsername={false}
+                  clickable={true}
+                />
+              </>
+            ) : (
+              <Link
+                to="/login"
+                className="px-4 py-2 rounded-lg bg-primary hover:bg-primary-hover text-white text-sm font-medium transition-colors duration-150"
+              >
+                Sign In
+              </Link>
+            )}
+          </div>
+        </div>
+      </div>
+
       {/* Mobile menu button */}
       <div className="md:hidden fixed top-4 left-4 z-50">
         <button
@@ -59,19 +128,10 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
       )}
 
       {/* Sidebar */}
-      <nav className={`fixed top-0 left-0 h-full w-20 bg-white dark:bg-slate-900 shadow-xl border-r border-slate-200 dark:border-slate-700 z-50 transform transition-transform duration-300 ease-in-out ${
+      <nav className={`fixed top-16 left-0 h-[calc(100vh-4rem)] w-20 bg-white dark:bg-slate-900 shadow-xl border-r border-slate-200 dark:border-slate-700 z-50 transform transition-transform duration-300 ease-in-out ${
         showSidebar ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
       }`}>
-        <div className="flex flex-col h-full">
-          {/* Logo */}
-          <div className="flex items-center justify-center p-4 border-b border-slate-200 dark:border-slate-700">
-            <Tooltip content="Home" position='right'>
-              <Link to="/public" onClick={() => setShowSidebar(false)} className="hover:scale-105 transition-transform duration-200">
-                <img src={logo} alt="Ruminster" className="h-8 w-auto" />
-              </Link>
-            </Tooltip>
-          </div>
-
+        <div className="flex flex-col h-full pt-4">
           {/* Navigation Links */}
           <div className="flex-1 flex flex-col items-center py-6 space-y-6">
 
