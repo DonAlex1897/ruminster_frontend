@@ -31,10 +31,6 @@ export default function PublicPage() {
 
   return (
     <div className="max-w-3xl mx-auto p-6">
-      <h1 className="text-md font-bold text-gray-900 dark:text-white mb-6">
-        Public Ruminations
-      </h1>
-
       {ruminations.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-gray-500 dark:text-gray-400">
