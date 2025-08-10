@@ -68,7 +68,7 @@ export default function NewRuminationDialog({ isOpen, onClose, onSuccess }: NewR
       <div className="bg-white dark:bg-gray-800 rounded-t-lg sm:rounded-lg p-4 sm:p-6 w-full max-w-md sm:mx-4 max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-3 sm:mb-4">
           <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
-            New Rumination
+            Ruminate
           </h2>
           <button
             onClick={handleClose}
@@ -82,14 +82,11 @@ export default function NewRuminationDialog({ isOpen, onClose, onSuccess }: NewR
 
         <div className="space-y-3 sm:space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Content
-            </label>
             <textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
               rows={3}
-              className="w-full p-2 sm:p-3 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-sm sm:text-base"
+              className="w-full p-2 sm:p-3 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-sm sm:text-base leading-relaxed"
               placeholder="What's on your mind?"
             />
           </div>
