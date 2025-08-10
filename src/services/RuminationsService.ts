@@ -77,13 +77,15 @@ export async function getPublicRuminations(queryParams?: MyRuminationsQueryParam
 }
 
 export async function createRumination(token: string, rumination: PostRuminationDto): Promise<RuminationResponse> {
-  const response = await apiClient.post(buildApiUrl(API_CONFIG.ENDPOINTS.RUMINATIONS.BASE), {
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(rumination),
-  });
+  const response = await apiClient.post(
+    buildApiUrl(API_CONFIG.ENDPOINTS.RUMINATIONS.BASE),
+    rumination,
+    {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    }
+  );
 
   if (!response.ok) {
     let errorMessage = 'Failed to create rumination';
@@ -102,17 +104,19 @@ export async function createRumination(token: string, rumination: PostRumination
 }
 
 export async function updateRumination(token: string, rumination: UpdateRuminationDto): Promise<RuminationResponse> {
-  const response = await apiClient.put(buildApiUrl(`${API_CONFIG.ENDPOINTS.RUMINATIONS.BASE}/${rumination.id}`), {
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
+  const response = await apiClient.put(
+    buildApiUrl(`${API_CONFIG.ENDPOINTS.RUMINATIONS.BASE}/${rumination.id}`),
+    {
       content: rumination.content,
       audiences: rumination.audiences,
       publish: rumination.publish
-    }),
-  });
+    },
+    {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    }
+  );
 
   if (!response.ok) {
     let errorMessage = 'Failed to update rumination';
