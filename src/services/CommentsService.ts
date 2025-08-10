@@ -23,12 +23,10 @@ export async function getCommentReplies(commentId: number): Promise<CommentRespo
 }
 
 export async function postComment(token: string, commentDto: PostCommentDto): Promise<CommentResponse> {
-  const response = await apiClient.post(buildApiUrl('/api/comments'), {
+  const response = await apiClient.post(buildApiUrl('/api/comments'), commentDto, {
     headers: {
-      'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`,
     },
-    body: JSON.stringify(commentDto),
   });
 
   if (!response.ok) {
@@ -39,12 +37,10 @@ export async function postComment(token: string, commentDto: PostCommentDto): Pr
 }
 
 export async function updateComment(token: string, commentDto: UpdateCommentDto): Promise<CommentResponse> {
-  const response = await apiClient.put(buildApiUrl(`/api/comments/${commentDto.id}`), {
+  const response = await apiClient.put(buildApiUrl(`/api/comments/${commentDto.id}`), commentDto, {
     headers: {
-      'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`,
     },
-    body: JSON.stringify(commentDto),
   });
 
   if (!response.ok) {
