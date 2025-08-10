@@ -2,17 +2,19 @@ export interface TokenData {
   accessToken: string;
   refreshToken: string;
   expiresAt: number;
+  userId: string;
 }
 
 const TOKEN_KEY = 'authTokens';
 
 export const tokenStorage = {
-  save: (tokens: { accessToken: string; refreshToken: string; expiresIn: number }): void => {
+  save: (tokens: { accessToken: string; refreshToken: string; expiresIn: number; userId: string }): void => {
     const expiresAt = Date.now() + (tokens.expiresIn * 1000);
     const tokenData: TokenData = {
       accessToken: tokens.accessToken,
       refreshToken: tokens.refreshToken,
-      expiresAt
+      expiresAt,
+      userId: tokens.userId
     };
     
     try {
@@ -58,7 +60,7 @@ export const tokenStorage = {
     if (!tokenData) return false;
     
     // Refresh if token expires within the next 2 minutes
-    return tokenData.expiresAt <= (Date.now() + 2 * 60 * 1000);
+    return tokenData.expiresAt <= (Date.now() + 4 * 60 * 1000);
   },
 
   clear: (): void => {

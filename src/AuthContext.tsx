@@ -176,7 +176,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     tokenStorage.save({
       accessToken: loginResponse.accessToken,
       refreshToken: loginResponse.refreshToken,
-      expiresIn: loginResponse.expiresIn
+      expiresIn: loginResponse.expiresIn,
+      userId: loginResponse.user.id
     });
     
     // Update the local token state immediately

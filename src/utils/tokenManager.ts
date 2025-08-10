@@ -39,28 +39,7 @@ export class TokenManager {
     return this.refreshAccessToken();
   }
 
-  private getUserIdFromToken(token: string): string | null {
-    try {
-      // JWT tokens have 3 parts separated by dots
-      const parts = token.split('.');
-      if (parts.length !== 3) {
-        return null;
-      }
 
-      // Decode the payload (second part)
-      const payload = parts[1];
-      // Add padding if needed for base64 decoding
-      const paddedPayload = payload + '='.repeat((4 - payload.length % 4) % 4);
-      const decodedPayload = atob(paddedPayload);
-      const parsedPayload = JSON.parse(decodedPayload);
-
-      // Return the user ID from the token payload
-      return parsedPayload.sub || parsedPayload.userId || parsedPayload.nameid || null;
-    } catch (error) {
-      console.error('Failed to decode token:', error);
-      return null;
-    }
-  }
 
   async refreshAccessToken(): Promise<string | null> {
     // Prevent multiple simultaneous refresh attempts
@@ -95,11 +74,13 @@ export class TokenManager {
 
   private async performRefresh(refreshTokenValue: string): Promise<string | null> {
     try {
-      // Decode the refresh token to get user ID
-      const userId = this.getUserIdFromToken(refreshTokenValue);
+      const tokenData = tokenStorage.get();
+      if (!tokenData?.userId) {
+        throw new Error('No user ID available for token refresh');
+      }
       
       const refreshDto: PostRefreshTokenDto = {
-        userId: userId || '',
+        userId: tokenData.userId,
         refreshToken: refreshTokenValue
       };
 
@@ -109,7 +90,8 @@ export class TokenManager {
       tokenStorage.save({
         accessToken: response.accessToken,
         refreshToken: response.refreshToken,
-        expiresIn: response.expiresIn || 3600 // Default to 1 hour
+        expiresIn: response.expiresIn || 3600, // Default to 1 hour
+        userId: tokenData.userId
       });
 
       return response.accessToken;
