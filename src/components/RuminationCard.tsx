@@ -36,7 +36,10 @@ export default function RuminationCard({
     const now = new Date();
     const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
 
-    if (diffInHours < 24) {
+    if (diffInHours < 1) {
+      const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
+      return `${diffInMinutes}m`;
+    } else if (diffInHours < 24) {
       return `${diffInHours}h`;
     } else {
       const diffInDays = Math.floor(diffInHours / 24);
