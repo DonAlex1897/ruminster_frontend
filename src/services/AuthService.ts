@@ -2,6 +2,7 @@ import { UserResponse } from '../types/user';
 import { LoginResponse, PostLoginDto, PostRefreshTokenDto, PostSignUpDto, TokenResponse } from '../types/auth';
 import { apiClient } from '../utils/apiClient';
 import { API_CONFIG, buildApiUrl } from '../config/api';
+import { handleApiError } from '../utils/errorHandler';
 
 export async function validateToken(token: string): Promise<UserResponse | null> {
   const response = await apiClient.get(buildApiUrl(API_CONFIG.ENDPOINTS.AUTH.ME), {
@@ -26,18 +27,7 @@ export async function login(credentials: PostLoginDto): Promise<LoginResponse> {
   });
 
   if (!response.ok) {
-    let errorMessage = 'Login failed';
-    
-    // Try to parse JSON error response
-    try {
-      const errorData = await response.json();
-      errorMessage = errorData.message || errorData.title || errorMessage;
-    } catch {
-      // If response is not JSON (like HTML 404 page), use status text
-      errorMessage = response.statusText || `HTTP ${response.status}`;
-    }
-    
-    throw new Error(errorMessage);
+    await handleApiError(response, 'Login failed');
   }
 
   const data: LoginResponse = await response.json();
@@ -50,18 +40,7 @@ export async function signup(credentials: PostSignUpDto): Promise<LoginResponse>
   });
 
   if (!response.ok) {
-    let errorMessage = 'Signup failed';
-    
-    // Try to parse JSON error response
-    try {
-      const errorData = await response.json();
-      errorMessage = errorData.message || errorData.title || errorMessage;
-    } catch {
-      // If response is not JSON (like HTML 404 page), use status text
-      errorMessage = response.statusText || `HTTP ${response.status}`;
-    }
-    
-    throw new Error(errorMessage);
+    await handleApiError(response, 'Signup failed');
   }
 
   const data: LoginResponse = await response.json();
@@ -75,16 +54,7 @@ export async function refreshToken(body: PostRefreshTokenDto): Promise<TokenResp
   });
 
   if (!response.ok) {
-    let errorMessage = 'Token refresh failed';
-    
-    try {
-      const errorData = await response.json();
-      errorMessage = errorData.message || errorData.title || errorMessage;
-    } catch {
-      errorMessage = response.statusText || `HTTP ${response.status}`;
-    }
-    
-    throw new Error(errorMessage);
+    await handleApiError(response, 'Token refresh failed');
   }
 
   const data: TokenResponse = await response.json();

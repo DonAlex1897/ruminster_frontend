@@ -75,12 +75,11 @@ export class TokenManager {
   private async performRefresh(refreshTokenValue: string): Promise<string | null> {
     try {
       const tokenData = tokenStorage.get();
-      if (!tokenData?.userId) {
-        throw new Error('No user ID available for token refresh');
+      if (!tokenData) {
+        throw new Error('No token data available for refresh');
       }
       
       const refreshDto: PostRefreshTokenDto = {
-        userId: tokenData.userId,
         refreshToken: refreshTokenValue
       };
 

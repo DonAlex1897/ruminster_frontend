@@ -2,7 +2,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { login, signup, validateToken } from '../services/AuthService';
 import { forgotPassword, resetPassword, activateAccount } from '../services/AuthServiceExtended';
 import { PostLoginDto, PostSignUpDto } from '../types/auth';
-import { PostForgotPasswordDto, PostResetPasswordDto } from '../types/authExtended';
+import { PostForgotPasswordDto, PostResetPasswordDto } from '../types/auth';
 
 export const useValidateToken = (token: string | null) => {
   return useQuery({

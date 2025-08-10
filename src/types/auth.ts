@@ -26,6 +26,24 @@ export interface PostSignUpDto {
 }
 
 export interface PostRefreshTokenDto {
-  userId: string;
   refreshToken: string;
+}
+
+// Extended auth types (previously in authExtended.ts)
+export interface PostForgotPasswordDto {
+  email: string;
+}
+
+export interface PostResetPasswordDto {
+  token: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+export interface GetActivateDto {
+  token: string;
+}
+
+export interface ApiResponse {
+  message: string;
 }

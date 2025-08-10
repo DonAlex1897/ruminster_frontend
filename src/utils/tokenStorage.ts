@@ -60,7 +60,7 @@ export const tokenStorage = {
     if (!tokenData) return false;
     
     // Refresh if token expires within the next 2 minutes
-    return tokenData.expiresAt <= (Date.now() + 4 * 60 * 1000);
+    return tokenData.expiresAt <= (Date.now() + 2 * 60 * 1000);
   },
 
   clear: (): void => {
