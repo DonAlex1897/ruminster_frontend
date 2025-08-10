@@ -70,7 +70,7 @@ export default function UserPage() {
   const username = ruminations.length > 0 ? ruminations[0].createdBy.username : 'Unknown User';
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="max-w-3xl mx-auto p-6">
       {/* User Avatar Header */}
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center space-x-6">

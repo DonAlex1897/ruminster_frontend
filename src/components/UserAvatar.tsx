@@ -34,16 +34,16 @@ export default function UserAvatar({
   className = ''
 }: UserAvatarProps) {
   const sizeMap = {
-    sm: { avatar: 'h-8 w-8', text: 'text-sm' },
-    md: { avatar: 'h-12 w-12', text: 'text-sm' },
-    lg: { avatar: 'h-16 w-16', text: 'text-base' }
+    sm: { avatar: 'h-8 w-8', text: 'text-lg', avatarText: 'text-lg' },
+    md: { avatar: 'h-12 w-12', text: 'text-lg', avatarText: 'text-2xl' },
+    lg: { avatar: 'h-16 w-16', text: 'text-xl', avatarText: 'text-4xl' }
   };
 
-  const { avatar: avatarSize, text: textSize } = sizeMap[size];
+  const { avatar: avatarSize, text: textSize, avatarText: avatarTextSize } = sizeMap[size];
   const bgColor = getAvatarColor(username);
   
   const avatarElement = (
-    <div className={`${avatarSize} ${bgColor} rounded-full flex items-center justify-center text-white font-semibold ${className}`}>
+    <div className={`${avatarSize} ${bgColor} rounded-full flex items-center justify-center text-white font-semibold ${avatarTextSize} ${className}`}>
       {username ? username.charAt(0).toUpperCase() : <UserIcon className="h-1/2 w-1/2" />}
     </div>
   );
@@ -52,7 +52,7 @@ export default function UserAvatar({
     <div className="flex items-center gap-2">
       {avatarElement}
       {showUsername && (
-        <span className={`${textSize} font-medium text-gray-700 dark:text-gray-300 truncate`}>
+        <span className={`${textSize} font-bold text-gray-700 dark:text-gray-300 truncate`}>
           {username}
         </span>
       )}

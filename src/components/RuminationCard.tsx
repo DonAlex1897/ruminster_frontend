@@ -2,10 +2,14 @@ import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import Comments from './Comments';
 import AddNewComment from './AddNewComment';
-import RuminationHeader from './RuminationHeader';
-import RuminationActionButtons from './RuminationActionButtons';
 import { UserRelationType } from '../types/rumination';
-import { XMarkIcon } from '@heroicons/react/24/solid';
+import {
+  XMarkIcon,
+  ChatBubbleOvalLeftEllipsisIcon,
+  ShareIcon,
+  CheckBadgeIcon
+} from '@heroicons/react/24/outline';
+import UserAvatar from './UserAvatar';
 
 interface RuminationCardProps {
   rumination: {
@@ -34,68 +38,111 @@ export default function RuminationCard({
   showUserInfo = true,
   showComments = false
 }: RuminationCardProps) {
-  const isEditable = variant === 'editable';
   const [commentDialogOpen, setCommentDialogOpen] = useState(false);
+  const [commentCount] = useState(Math.floor(Math.random() * 50) + 3);
+
+  const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
+
+    if (diffInHours < 24) {
+      return `${diffInHours}h`;
+    } else {
+      const diffInDays = Math.floor(diffInHours / 24);
+      return `${diffInDays}d`;
+    }
+  };
+
+  const getAudienceLabel = (audiences: { relationType: UserRelationType }[]): string => {
+    if (audiences.length === 0) return '';
+
+    const firstAudience = audiences[0];
+    switch (firstAudience.relationType) {
+      case UserRelationType.Acquaintance: return 'Acquaintance Circle';
+      case UserRelationType.Family: return 'Family Circle';
+      case UserRelationType.Friend: return 'Friend Circle';
+      case UserRelationType.BestFriend: return 'Best Friend Circle';
+      case UserRelationType.Partner: return 'Partner';
+      case UserRelationType.Therapist: return 'Therapist';
+      default: return 'Public';
+    }
+  };
 
   return (
     <>
-      <article 
-        className={`
-          group relative overflow-hidden
-          bg-white dark:bg-card
-          rounded-2xl border border-gray-200/60 dark:border-gray-700/60
-          transition-all duration-300 ease-in-out
-          ${isEditable ? 'cursor-pointer' : 'cursor-default'}
-          hover:border-gray-300/80 dark:hover:border-gray-600/80
-        `}
+      <article
+        className="
+          border-b border-gray-200 dark:border-gray-800
+          p-6 cursor-pointer
+        "
         onClick={onClick}
       >
-      {/* Subtle accent line */}
-      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary/20 via-primary/60 to-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-      
-      <div className="relative p-6">
-        <RuminationHeader
-          rumination={rumination}
-          showUserInfo={showUserInfo}
-          showPublishStatus={isEditable}
-          onDelete={onDelete}
-        />
-
-        <div className='pl-9'>
-          {/* Content */}
-          <div className="relative">
-            <p className="
-              text-gray-900 dark:text-gray-100 
-              leading-relaxed text-base
-              whitespace-pre-wrap break-words
-              selection:bg-primary/20 selection:text-primary-foreground
-              pl-1 pr-1
-            ">
-              {rumination.content}
-            </p>
-          </div>
-
-          {/* Action Buttons */}
-          <RuminationActionButtons
-            onCommentClick={(e) => {
-              e.stopPropagation();
-              setCommentDialogOpen(true);
-            }}
-          />
-
-          {/* Comment Input */}
-          <div className='pt-3'>
-            <AddNewComment ruminationId={Number(rumination.id)} />
+        {/* Header */}
+        <div className="flex items-start justify-between mb-3">
+          <div className="flex items-center gap-3">
+            <UserAvatar
+              userId={rumination.createdBy.id}
+              username={rumination.createdBy.username}
+              size="sm"
+              showUsername={true}
+            />
+            <div className="flex items-center gap-2">
+              <span className="text-gray-500 dark:text-gray-400 text-sm">
+                {formatDate(rumination.createTMS)}
+              </span>
+            </div>
           </div>
         </div>
-      </div>
 
+        {/* Category/Audience */}
+        {rumination.audiences.length > 0 && (
+          <div className="mb-3">
+            <span className="inline-flex items-center text-xs text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">
+              {getAudienceLabel(rumination.audiences)}
+            </span>
+          </div>
+        )}
+
+        {/* Content */}
+        <div className="mb-4">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 leading-tight">
+            {rumination.content.length > 100 ?
+              rumination.content.substring(0, 100) + '...' :
+              rumination.content
+            }
+          </h2>
+          {rumination.content.length > 100 && (
+            <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+              {rumination.content.substring(100, 200)}...
+            </p>
+          )}
+        </div>
+
+        {/* Engagement Actions */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-6">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setCommentDialogOpen(true);
+              }}
+              className="flex items-center gap-2 text-gray-500 hover:text-blue-500 transition-colors duration-200"
+            >
+              <ChatBubbleOvalLeftEllipsisIcon className="w-5 h-5" />
+              <span className="text-sm">{commentCount}</span>
+            </button>
+            <button className="text-gray-500 hover:text-blue-500 transition-colors duration-200">
+              <ShareIcon className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
       </article>
 
       {/* Comment Dialog - Rendered using Portal */}
       {commentDialogOpen && createPortal(
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setCommentDialogOpen(false)}>
-          <div className="bg-white dark:bg-card rounded-2xl max-w-2xl w-full max-h-[80vh] m-4 flex flex-col" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-white dark:bg-gray-900 rounded-2xl max-w-2xl w-full max-h-[80vh] m-4 flex flex-col" onClick={(e) => e.stopPropagation()}>
             {/* Dialog Header */}
             <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Rumination</h3>
@@ -106,15 +153,26 @@ export default function RuminationCard({
                 <XMarkIcon className="w-5 h-5" />
               </button>
             </div>
-            
+
             {/* Original Rumination */}
             <div className="p-5 border-gray-200 dark:border-gray-700 flex-shrink-0">
-              <RuminationHeader
-                rumination={rumination}
-                showUserInfo={showUserInfo}
-                showPublishStatus={false}
-                className="mb-4"
-              />
+              <div className="flex items-center gap-3 mb-4">
+                <UserAvatar
+                  userId={rumination.createdBy.id}
+                  username={rumination.createdBy.username}
+                  size="sm"
+                  showUsername={false}
+                />
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold text-gray-900 dark:text-gray-100 text-sm">
+                    {rumination.createdBy.username}
+                  </span>
+                  <CheckBadgeIcon className="w-4 h-4 text-blue-500" />
+                  <span className="text-gray-500 dark:text-gray-400 text-sm">
+                    {formatDate(rumination.createTMS)}
+                  </span>
+                </div>
+              </div>
               <p className="text-gray-900 dark:text-gray-100 leading-relaxed text-base whitespace-pre-wrap break-words">
                 {rumination.content}
               </p>
@@ -122,7 +180,7 @@ export default function RuminationCard({
                 <AddNewComment ruminationId={Number(rumination.id)} />
               </div>
             </div>
-            
+
             {/* Comments in Dialog */}
             <div className="border-t border-gray-200 dark:border-gray-700 overflow-y-auto flex-1 min-h-0 [&::-webkit-scrollbar]:hidden">
               <div className='px-1'>
