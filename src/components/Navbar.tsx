@@ -261,9 +261,11 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
       {/* Desktop Sidebar - Hidden on mobile */}
       <nav className="hidden md:block fixed top-16 left-0 h-[calc(100vh-4rem)] w-20 bg-white dark:bg-slate-900 shadow-xl border-r border-slate-200 dark:border-slate-700 z-50">
         <div className="flex flex-col h-full pt-4">
-          {/* Navigation Links */}
-          <div className="flex-1 flex flex-col items-center py-6 space-y-6">
-
+          {/* Top spacer */}
+          <div className="flex-1"></div>
+          
+          {/* Middle Navigation Links */}
+          <div className="flex flex-col items-center py-6 space-y-6">
             {/* New Rumination Button */}
             {isAuthenticated && (
               <button
@@ -333,6 +335,9 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
               </Link>
             </Tooltip>
           </div>
+          
+          {/* Bottom spacer */}
+          <div className="flex-1"></div>
         </div>
       </nav>
     </>
