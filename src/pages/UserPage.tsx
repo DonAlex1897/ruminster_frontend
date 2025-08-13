@@ -4,12 +4,12 @@ import UserAvatar from '../components/UserAvatar';
 import UserRelations from '../components/UserRelations';
 import { useUserRuminations } from '../hooks/useRuminations';
 import { UserRelationType } from '../types/rumination';
-import { useAuth } from '../AuthContext';
+import { useUser } from '../hooks/useUser';
 
 export default function UserPage() {
-  const { user } = useAuth();
-  const username = user?.username || 'Unknown User';
   const { userId } = useParams<{ userId: string }>();
+  const { data: userProfile, isLoading: isUserLoading, error: userError } = useUser(userId);
+  const username = userProfile?.username || 'Unknown User';
   const [showPublicOnly, setShowPublicOnly] = useState(true);
 
   const { 
@@ -51,7 +51,7 @@ export default function UserPage() {
     );
   }
 
-  if (isLoading) {
+  if (isLoading || isUserLoading) {
     return (
       <div className="flex justify-center items-center h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -59,11 +59,11 @@ export default function UserPage() {
     );
   }
 
-  if (error) {
+  if (error || userError) {
     return (
       <div className="text-center py-8">
         <p className="text-red-600 dark:text-red-400">
-          {error instanceof Error ? error.message : 'Failed to fetch user ruminations'}
+          {error instanceof Error ? error.message : userError instanceof Error ? userError.message : 'Failed to fetch data'}
         </p>
       </div>
     );
