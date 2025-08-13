@@ -38,7 +38,7 @@ export interface GetUserRelationsQueryParams {
   Offset?: number;
 }
 
-export async function getUserRelations(token: string, queryParams?: GetUserRelationsQueryParams): Promise<UserRelationResponse[]> {
+export async function getUserRelations(queryParams?: GetUserRelationsQueryParams): Promise<UserRelationResponse[]> {
   let url = buildApiUrl(API_CONFIG.ENDPOINTS.USER_RELATIONS.BASE);
 
   if (queryParams) {
@@ -76,12 +76,7 @@ export async function getUserRelations(token: string, queryParams?: GetUserRelat
     }
   }
 
-  const response = await apiClient.get(url, {
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
-  });
+  const response = await apiClient.get(url);
 
   if (!response.ok) {
     throw new Error('Failed to fetch user relations');
@@ -90,14 +85,8 @@ export async function getUserRelations(token: string, queryParams?: GetUserRelat
   return await response.json();
 }
 
-export async function requestUserRelation(token: string, dto: PostUserRelationDto): Promise<UserRelationResponse> {
-  const response = await apiClient.post(buildApiUrl('/api/UserRelations'), {
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(dto),
-  });
+export async function requestUserRelation(dto: PostUserRelationDto): Promise<UserRelationResponse> {
+  const response = await apiClient.post(buildApiUrl(API_CONFIG.ENDPOINTS.USER_RELATIONS.BASE), dto);
 
   if (!response.ok) {
     throw new Error('Failed to request user relation');
@@ -106,13 +95,8 @@ export async function requestUserRelation(token: string, dto: PostUserRelationDt
   return await response.json();
 }
 
-export async function acceptUserRelation(token: string, userRelationId: number): Promise<UserRelationResponse> {
-  const response = await apiClient.put(buildApiUrl(`/api/UserRelations/${userRelationId}/accept`), {
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
-  });
+export async function acceptUserRelation(userRelationId: number): Promise<UserRelationResponse> {
+  const response = await apiClient.put(buildApiUrl(`${API_CONFIG.ENDPOINTS.USER_RELATIONS.BASE}/${userRelationId}/accept`));
 
   if (!response.ok) {
     throw new Error('Failed to accept user relation');
@@ -121,13 +105,8 @@ export async function acceptUserRelation(token: string, userRelationId: number):
   return await response.json();
 }
 
-export async function rejectUserRelation(token: string, userRelationId: number): Promise<UserRelationResponse> {
-  const response = await apiClient.put(buildApiUrl(`/api/UserRelations/${userRelationId}/reject`), {
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
-  });
+export async function rejectUserRelation(userRelationId: number): Promise<UserRelationResponse> {
+  const response = await apiClient.put(buildApiUrl(`${API_CONFIG.ENDPOINTS.USER_RELATIONS.BASE}/${userRelationId}/reject`));
 
   if (!response.ok) {
     throw new Error('Failed to reject user relation');
@@ -136,13 +115,8 @@ export async function rejectUserRelation(token: string, userRelationId: number):
   return await response.json();
 }
 
-export async function deleteUserRelation(token: string, userRelationId: number): Promise<void> {
-  const response = await apiClient.delete(buildApiUrl(`/api/UserRelations/${userRelationId}`), {
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
-  });
+export async function deleteUserRelation(userRelationId: number): Promise<void> {
+  const response = await apiClient.delete(buildApiUrl(`${API_CONFIG.ENDPOINTS.USER_RELATIONS.BASE}/${userRelationId}`));
 
   if (!response.ok) {
     throw new Error('Failed to delete user relation');

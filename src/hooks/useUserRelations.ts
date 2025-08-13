@@ -2,27 +2,26 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "../AuthContext";
 import { acceptUserRelation, deleteUserRelation, getUserRelations, GetUserRelationsQueryParams, PostUserRelationDto, rejectUserRelation, requestUserRelation } from "../services/UserRelationsService";
 
-export const useUserRelations = (queryParams: GetUserRelationsQueryParams) => {
-  const { token } = useAuth();
+export const useUserRelations = (queryParams?: GetUserRelationsQueryParams) => {
+  const { isAuthenticated } = useAuth();
 
   return useQuery({
     queryKey: ['userRelations', queryParams],
-    queryFn: () => token ? getUserRelations(token, queryParams) : Promise.resolve(null),
-    enabled: !!token,
+    queryFn: () => getUserRelations(queryParams),
+    enabled: isAuthenticated,
   });
 };
 
 export const useRequestUserRelation = () => {
   const queryClient = useQueryClient();
-  const { token } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   return useMutation({
     mutationFn: (userRelation: PostUserRelationDto) => {
-      if (!token) throw new Error('No authentication token available');
-      return requestUserRelation(token, userRelation);
+      if (!isAuthenticated) throw new Error('Not authenticated');
+      return requestUserRelation(userRelation);
     },
     onSuccess: () => {
-      // Invalidate and refetch relevant queries
       queryClient.invalidateQueries({ queryKey: ['userRelations'] });
     },
   });
@@ -30,15 +29,14 @@ export const useRequestUserRelation = () => {
 
 export const useAcceptUserRelation = () => {
   const queryClient = useQueryClient();
-  const { token } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   return useMutation({
     mutationFn: (userRelationId: number) => {
-      if (!token) throw new Error('No authentication token available');
-      return acceptUserRelation(token, userRelationId);
+      if (!isAuthenticated) throw new Error('Not authenticated');
+      return acceptUserRelation(userRelationId);
     },
     onSuccess: () => {
-      // Invalidate and refetch relevant queries
       queryClient.invalidateQueries({ queryKey: ['userRelations'] });
     },
   });
@@ -46,32 +44,30 @@ export const useAcceptUserRelation = () => {
 
 export const useRejectUserRelation = () => {
   const queryClient = useQueryClient();
-  const { token } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   return useMutation({
     mutationFn: (userRelationId: number) => {
-      if (!token) throw new Error('No authentication token available');
-      return rejectUserRelation(token, userRelationId);
+      if (!isAuthenticated) throw new Error('Not authenticated');
+      return rejectUserRelation(userRelationId);
     },
     onSuccess: () => {
-      // Invalidate and refetch relevant queries
       queryClient.invalidateQueries({ queryKey: ['userRelations'] });
     },
   });
-}
+};
 
 export const useDeleteUserRelation = () => {
   const queryClient = useQueryClient();
-  const { token } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   return useMutation({
     mutationFn: (userRelationId: number) => {
-      if (!token) throw new Error('No authentication token available');
-      return deleteUserRelation(token, userRelationId);
+      if (!isAuthenticated) throw new Error('Not authenticated');
+      return deleteUserRelation(userRelationId);
     },
     onSuccess: () => {
-      // Invalidate and refetch relevant queries
       queryClient.invalidateQueries({ queryKey: ['userRelations'] });
     },
   });
-}
+};
