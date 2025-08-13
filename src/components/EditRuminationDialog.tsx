@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { UserRelationType, RuminationResponse } from '../types/rumination';
 import { useUpdateRumination } from '../hooks/useRuminations';
 
@@ -24,12 +24,32 @@ export default function EditRuminationDialog({ isOpen, onClose, onSuccess, rumin
   }, [rumination]);
 
   // Auto-resize textarea when content changes
-  useEffect(() => {
+  const resizeTextarea = () => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
       textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
     }
+  };
+
+  useEffect(() => {
+    // Use setTimeout to ensure DOM is fully rendered
+    const timer = setTimeout(() => {
+      resizeTextarea();
+    }, 0);
+    
+    return () => clearTimeout(timer);
   }, [content]);
+
+  // Also resize when the dialog opens
+  useEffect(() => {
+    if (isOpen && textareaRef.current) {
+      const timer = setTimeout(() => {
+        resizeTextarea();
+      }, 100); // Small delay to ensure the dialog is fully rendered
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
 
   const handleUpdateRumination = async (content: string, audiences: UserRelationType[], publish: boolean) => {
     if (!rumination) return;
@@ -81,6 +101,12 @@ export default function EditRuminationDialog({ isOpen, onClose, onSuccess, rumin
     onClose();
   };
 
+  const isNotModified = useMemo(() => {
+    return content === rumination?.content &&
+           selectedAudiences.length === (rumination?.audiences?.length || 0) &&
+           selectedAudiences.every(a => rumination?.audiences?.some(r => r.relationType === a));
+  }, [content, selectedAudiences, rumination]);
+
   if (!isOpen || !rumination) return null;
 
   return (
@@ -115,6 +141,8 @@ export default function EditRuminationDialog({ isOpen, onClose, onSuccess, rumin
               value={content}
               onChange={(e) => {
                 setContent(e.target.value);
+                // Immediate resize on input
+                setTimeout(() => resizeTextarea(), 0);
               }}
               rows={4}
               className="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white resize-none transition-colors placeholder-gray-400 dark:placeholder-gray-500 min-h-[6rem] max-h-96 overflow-y-auto"
@@ -164,14 +192,14 @@ export default function EditRuminationDialog({ isOpen, onClose, onSuccess, rumin
           <div className="flex space-x-3">
             <button
               onClick={() => handleSubmit(false)}
-              disabled={!content.trim() || isSubmitting}
+              disabled={!content.trim() || isSubmitting || isNotModified}
               className="flex-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-400 dark:disabled:text-gray-500 py-2.5 px-4 rounded-lg font-medium transition-colors focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:cursor-not-allowed"
             >
               {isSubmitting ? 'Saving...' : 'Save Draft'}
             </button>
             <button
               onClick={() => handleSubmit(true)}
-              disabled={!content.trim() || isSubmitting}
+              disabled={!content.trim() || isSubmitting || isNotModified}
               className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white py-2.5 px-4 rounded-lg font-medium transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed shadow-sm"
             >
               {isSubmitting ? 'Publishing...' : 'Update & Publish'}
