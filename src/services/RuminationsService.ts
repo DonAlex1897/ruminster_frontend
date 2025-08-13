@@ -2,7 +2,7 @@ import { RuminationResponse, PostRuminationDto, MyRuminationsQueryParams, Update
 import { apiClient } from '../utils/apiClient';
 import { API_CONFIG, buildApiUrl } from '../config/api';
 
-export async function getMyRuminations(token: string, queryParams?: MyRuminationsQueryParams): Promise<RuminationResponse[]> {
+export async function getMyRuminations(queryParams?: MyRuminationsQueryParams): Promise<RuminationResponse[]> {
   let url = buildApiUrl(API_CONFIG.ENDPOINTS.RUMINATIONS.MY_RUMINATIONS);
   
   if (queryParams) {
@@ -15,11 +15,7 @@ export async function getMyRuminations(token: string, queryParams?: MyRumination
     }
   }
 
-  const response = await apiClient.get(url, {
-    headers: {
-      'Authorization': `Bearer ${token}`,
-    },
-  });
+  const response = await apiClient.get(url);
 
   if (!response.ok) {
     throw new Error('Failed to fetch my ruminations');
@@ -28,7 +24,7 @@ export async function getMyRuminations(token: string, queryParams?: MyRumination
   return await response.json();
 }
 
-export async function getFeedRuminations(token: string, queryParams?: MyRuminationsQueryParams): Promise<RuminationResponse[]> {
+export async function getFeedRuminations(queryParams?: MyRuminationsQueryParams): Promise<RuminationResponse[]> {
   let url = buildApiUrl(API_CONFIG.ENDPOINTS.RUMINATIONS.FEED);
 
   if (queryParams) {
@@ -41,11 +37,7 @@ export async function getFeedRuminations(token: string, queryParams?: MyRuminati
     }
   }
 
-  const response = await apiClient.get(url, {
-    headers: {
-      'Authorization': `Bearer ${token}`,
-    },
-  });
+  const response = await apiClient.get(url);
 
   if (!response.ok) {
     throw new Error('Failed to fetch all ruminations');
@@ -76,16 +68,8 @@ export async function getPublicRuminations(queryParams?: MyRuminationsQueryParam
   return await response.json();
 }
 
-export async function createRumination(token: string, rumination: PostRuminationDto): Promise<RuminationResponse> {
-  const response = await apiClient.post(
-    buildApiUrl(API_CONFIG.ENDPOINTS.RUMINATIONS.BASE),
-    rumination,
-    {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    }
-  );
+export async function createRumination(rumination: PostRuminationDto): Promise<RuminationResponse> {
+  const response = await apiClient.post(buildApiUrl(API_CONFIG.ENDPOINTS.RUMINATIONS.BASE), rumination);
 
   if (!response.ok) {
     let errorMessage = 'Failed to create rumination';
@@ -103,18 +87,13 @@ export async function createRumination(token: string, rumination: PostRumination
   return await response.json();
 }
 
-export async function updateRumination(token: string, rumination: UpdateRuminationDto): Promise<RuminationResponse> {
+export async function updateRumination(rumination: UpdateRuminationDto): Promise<RuminationResponse> {
   const response = await apiClient.put(
     buildApiUrl(`${API_CONFIG.ENDPOINTS.RUMINATIONS.BASE}/${rumination.id}`),
     {
       content: rumination.content,
       audiences: rumination.audiences,
       publish: rumination.publish
-    },
-    {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
     }
   );
 
@@ -134,12 +113,8 @@ export async function updateRumination(token: string, rumination: UpdateRuminati
   return await response.json();
 }
 
-export async function deleteRumination(token: string, ruminationId: string): Promise<void> {
-  const response = await apiClient.delete(buildApiUrl(`${API_CONFIG.ENDPOINTS.RUMINATIONS.BASE}/${ruminationId}`), {
-    headers: {
-      'Authorization': `Bearer ${token}`,
-    },
-  });
+export async function deleteRumination(ruminationId: string): Promise<void> {
+  const response = await apiClient.delete(buildApiUrl(`${API_CONFIG.ENDPOINTS.RUMINATIONS.BASE}/${ruminationId}`));
 
   if (!response.ok) {
     let errorMessage = 'Failed to delete rumination';

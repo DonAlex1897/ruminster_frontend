@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const {
     data: user,
     isLoading: isLoadingUser,
-  } = useValidateToken(accessToken);
+  } = useValidateToken(!!accessToken);
 
   const logout = useCallback(() => {
     tokenManager.clearTokens();

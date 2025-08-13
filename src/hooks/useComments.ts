@@ -4,37 +4,37 @@ import { PostCommentDto, UpdateCommentDto } from '../types/comment';
 import * as commentsService from '../services/CommentsService';
 
 export const useComments = (ruminationId: number) => {
-  const { token } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   return useQuery({
     queryKey: ['comments', ruminationId],
-    queryFn: () => token ? commentsService.getCommentsByRumination(ruminationId) : Promise.resolve([]),
-    enabled: !!token && !!ruminationId,
+    queryFn: () => commentsService.getCommentsByRumination(ruminationId),
+    enabled: isAuthenticated && !!ruminationId,
   });
 };
 
 export const useCommentReplies = (commentId: number, hasChildren: boolean) => {
-  const { token } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   return useQuery({
     queryKey: ['commentReplies', commentId],
-    queryFn: () => token ? commentsService.getCommentReplies(commentId) : Promise.resolve([]),
-    enabled: !!token && !!commentId && !hasChildren,
+    queryFn: () => commentsService.getCommentReplies(commentId),
+    enabled: isAuthenticated && !!commentId && !hasChildren,
   });
 };
 
 export const useAddComment = () => {
   const queryClient = useQueryClient();
-  const { token } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   return useMutation({
     mutationFn: (commentDto: PostCommentDto) => {
-      if (!token) throw new Error('No authentication token available');
+      if (!isAuthenticated) throw new Error('Not authenticated');
       let dtoModified = { ...commentDto };
       if (!!dtoModified.parentCommentId) {
-        dtoModified.ruminationId = undefined; // Ensure ruminationId is not set if parentCommentId is present
+        dtoModified.ruminationId = undefined;
       }
-      return commentsService.postComment(token, dtoModified);
+      return commentsService.postComment(dtoModified);
     },
     onSuccess: (_, commentDto) => {
       queryClient.invalidateQueries({ queryKey: ['comments', commentDto.ruminationId] });
@@ -44,12 +44,12 @@ export const useAddComment = () => {
 
 export const useUpdateComment = () => {
   const queryClient = useQueryClient();
-  const { token } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   return useMutation({
     mutationFn: (commentDto: UpdateCommentDto) => {
-      if (!token) throw new Error('No authentication token available');
-      return commentsService.updateComment(token, commentDto);
+      if (!isAuthenticated) throw new Error('Not authenticated');
+      return commentsService.updateComment(commentDto);
     },
     onSuccess: (_, commentDto) => {
       queryClient.invalidateQueries({ queryKey: ['comments'] });
@@ -59,12 +59,12 @@ export const useUpdateComment = () => {
 
 export const useDeleteComment = () => {
   const queryClient = useQueryClient();
-  const { token } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   return useMutation({
     mutationFn: (commentId: number) => {
-      if (!token) throw new Error('No authentication token available');
-      return commentsService.deleteComment(token, commentId);
+      if (!isAuthenticated) throw new Error('Not authenticated');
+      return commentsService.deleteComment(commentId);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['comments'] });

@@ -95,7 +95,7 @@ export default function DeleteRuminationDialog({ isOpen, onClose, onSuccess, rum
                 {rumination.isPublished ? 'Published' : 'Draft'}
               </span>
               <span className="text-xs text-gray-500 dark:text-gray-400">
-                {formatDate(rumination.createTMS)}
+                {formatDate(rumination.createTms)}
               </span>
             </div>
             <p className="text-sm text-gray-900 dark:text-white whitespace-pre-wrap line-clamp-3">

@@ -154,7 +154,7 @@ export default function UserPage() {
                   )}
                 </div>
                 <span className="text-sm text-gray-500 dark:text-gray-400">
-                  {formatDate(rumination.createTMS)}
+                  {formatDate(rumination.createTms)}
                 </span>
               </div>
               

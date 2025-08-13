@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "../AuthContext";
-import { acceptUserRelation, deleteUserRelation, getUserRelations, GetUserRelationsQueryParams, PostUserRelationDto, rejectUserRelation, requestUserRelation } from "../services/UserRelationsService";
+import { acceptUserRelation, deleteUserRelation, getUserRelations, rejectUserRelation, requestUserRelation } from "../services/UserRelationsService";
+import { GetUserRelationsQueryParams, PostUserRelationDto } from "../types/userRelation";
 
 export const useUserRelations = (queryParams?: GetUserRelationsQueryParams) => {
   const { isAuthenticated } = useAuth();

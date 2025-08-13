@@ -31,7 +31,7 @@ const getAudienceLabels = (audiences: { relationType: UserRelationType }[]): str
 
 interface RuminationHeaderProps {
   rumination: {
-    createTMS: string;
+    createTms: string;
     isPublished?: boolean;
     audiences: { relationType: UserRelationType }[];
     createdBy: {
@@ -98,7 +98,7 @@ export default function RuminationHeader({
       {/* Actions */}
       <div className="flex items-center gap-3 ml-4">
         <time className="text-sm font-medium text-gray-500 dark:text-gray-400 tabular-nums">
-          {formatDate(rumination.createTMS)}
+          {formatDate(rumination.createTms)}
         </time>
         
         {onDelete && (

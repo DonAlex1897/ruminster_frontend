@@ -4,15 +4,12 @@ import { forgotPassword, resetPassword, activateAccount } from '../services/Auth
 import { PostLoginDto, PostSignUpDto } from '../types/auth';
 import { PostForgotPasswordDto, PostResetPasswordDto } from '../types/auth';
 
-export const useValidateToken = (token: string | null) => {
+export const useValidateToken = (enabled: boolean = true) => {
   return useQuery({
-    queryKey: ['validateToken', token],
-    queryFn: async () => {
-      if (!token) return null;
-      return validateToken(token);
-    },
-    enabled: !!token,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    queryKey: ['validateToken'],
+    queryFn: () => validateToken(),
+    enabled,
+    staleTime: 5 * 60 * 1000,
     retry: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,

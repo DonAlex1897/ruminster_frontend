@@ -12,31 +12,22 @@ import { MyRuminationsQueryParams, PostRuminationDto, UpdateRuminationDto } from
 import { useAuth } from '../AuthContext';
 
 export const useMyRuminations = (queryParams?: MyRuminationsQueryParams) => {
-  const { token, isAuthenticated } = useAuth();
-  
-  console.log('useMyRuminations state:', { 
-    hasToken: !!token, 
-    isAuthenticated, 
-    enabled: !!token && isAuthenticated 
-  });
+  const { isAuthenticated } = useAuth();
   
   return useQuery({
-    queryKey: ['myRuminations', token, queryParams],
-    queryFn: () => {
-      console.log('Actually executing myRuminations query');
-      return token ? getMyRuminations(token, queryParams) : Promise.resolve([]);
-    },
-    enabled: !!token && isAuthenticated,
+    queryKey: ['myRuminations', queryParams],
+    queryFn: () => getMyRuminations(queryParams),
+    enabled: isAuthenticated,
   });
 };
 
 export const useFeedRuminations = (queryParams?: MyRuminationsQueryParams) => {
-  const { token } = useAuth();
+  const { isAuthenticated } = useAuth();
   
   return useQuery({
-    queryKey: ['feedRuminations', token, queryParams],
-    queryFn: () => token ? getFeedRuminations(token, queryParams) : Promise.resolve([]),
-    enabled: !!token,
+    queryKey: ['feedRuminations', queryParams],
+    queryFn: () => getFeedRuminations(queryParams),
+    enabled: isAuthenticated,
   });
 };
 
@@ -57,15 +48,14 @@ export const useUserRuminations = (userId: string, queryParams?: MyRuminationsQu
 
 export const useCreateRumination = () => {
   const queryClient = useQueryClient();
-  const { token } = useAuth();
+  const { isAuthenticated } = useAuth();
   
   return useMutation({
     mutationFn: (rumination: PostRuminationDto) => {
-      if (!token) throw new Error('No authentication token available');
-      return createRumination(token, rumination);
+      if (!isAuthenticated) throw new Error('Not authenticated');
+      return createRumination(rumination);
     },
     onSuccess: () => {
-      // Invalidate and refetch relevant queries
       queryClient.invalidateQueries({ queryKey: ['myRuminations'] });
       queryClient.invalidateQueries({ queryKey: ['feedRuminations'] });
       queryClient.invalidateQueries({ queryKey: ['publicRuminations'] });
@@ -75,15 +65,14 @@ export const useCreateRumination = () => {
 
 export const useUpdateRumination = () => {
   const queryClient = useQueryClient();
-  const { token } = useAuth();
+  const { isAuthenticated } = useAuth();
   
   return useMutation({
     mutationFn: (rumination: UpdateRuminationDto) => {
-      if (!token) throw new Error('No authentication token available');
-      return updateRumination(token, rumination);
+      if (!isAuthenticated) throw new Error('Not authenticated');
+      return updateRumination(rumination);
     },
     onSuccess: () => {
-      // Invalidate and refetch relevant queries
       queryClient.invalidateQueries({ queryKey: ['myRuminations'] });
       queryClient.invalidateQueries({ queryKey: ['feedRuminations'] });
       queryClient.invalidateQueries({ queryKey: ['publicRuminations'] });
@@ -93,15 +82,14 @@ export const useUpdateRumination = () => {
 
 export const useDeleteRumination = () => {
   const queryClient = useQueryClient();
-  const { token } = useAuth();
+  const { isAuthenticated } = useAuth();
   
   return useMutation({
     mutationFn: (ruminationId: string) => {
-      if (!token) throw new Error('No authentication token available');
-      return deleteRumination(token, ruminationId);
+      if (!isAuthenticated) throw new Error('Not authenticated');
+      return deleteRumination(ruminationId);
     },
     onSuccess: () => {
-      // Invalidate and refetch relevant queries
       queryClient.invalidateQueries({ queryKey: ['myRuminations'] });
       queryClient.invalidateQueries({ queryKey: ['feedRuminations'] });
       queryClient.invalidateQueries({ queryKey: ['publicRuminations'] });

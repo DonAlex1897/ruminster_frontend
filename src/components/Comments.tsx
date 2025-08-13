@@ -38,7 +38,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ ruminationId, comment, onRepl
               {comment.createdBy.username}
             </span>
             <span className="text-sm text-gray-500 dark:text-gray-400">
-              {new Date(comment.createTMS).toLocaleDateString()}
+              {new Date(comment.createTms).toLocaleDateString()}
             </span>
           </div>
           {canEdit && !isDeleted && (

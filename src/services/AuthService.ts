@@ -4,19 +4,13 @@ import { apiClient } from '../utils/apiClient';
 import { API_CONFIG, buildApiUrl } from '../config/api';
 import { handleApiError } from '../utils/errorHandler';
 
-export async function validateToken(token: string): Promise<UserResponse | null> {
-  const response = await apiClient.get(buildApiUrl(API_CONFIG.ENDPOINTS.AUTH.ME), {
-    headers: {
-      'Authorization': `Bearer ${token}`,
-    },
-  });
+export async function validateToken(): Promise<UserResponse | null> {
+  const response = await apiClient.get(buildApiUrl(API_CONFIG.ENDPOINTS.AUTH.ME));
 
   if (!response.ok) {
-    // Token is invalid or expired
     return null;
   }
 
-  // Returns user info if valid
   const data: UserResponse = await response.json();
   return data;
 }

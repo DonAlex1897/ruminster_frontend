@@ -5,7 +5,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import ReactMarkdown from 'react-markdown';
 
 const TermsAcceptance: React.FC = () => {
-  const { token, latestTosVersion, updateTosAcceptance, logout } = useAuth();
+  const { latestTosVersion, updateTosAcceptance, logout } = useAuth();
   const [hasAccepted, setHasAccepted] = useState(false);
 
   const { data: tosData, isLoading: isLoadingTos, error: tosError } = useQuery({
@@ -14,7 +14,7 @@ const TermsAcceptance: React.FC = () => {
   });
 
   const acceptTosMutation = useMutation({
-    mutationFn: (version: string) => acceptTos({ version }, token!),
+    mutationFn: (version: string) => acceptTos({ version }),
     onSuccess: () => {
       updateTosAcceptance(true);
     },

@@ -1,3 +1,5 @@
+import { UserResponse } from './user';
+
 export enum UserRelationType {
   Acquaintance = 0,
   Family = 1,
@@ -34,18 +36,8 @@ export interface RuminationResponse {
   content: string;
   isPublished: boolean;
   audiences: RuminationAudienceResponse[];
-  createdBy: {
-    id: string;
-    username: string;
-    email: string;
-    roles: string[];
-  };
-  updatedBy: {
-    id: string;
-    username: string;
-    email: string;
-    roles: string[];
-  };
-  createTMS: string;
-  updateTMS: string;
+  createdBy: UserResponse;
+  updatedBy: UserResponse;
+  createTms: string;
+  updateTms: string;
 }

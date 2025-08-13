@@ -15,8 +15,8 @@ export default function UserRelations({ userId }: UserRelationsProps) {
   }, [user]);
 
   const { data: relations = [], isLoading } = useUserRelations({
-    UserId: userId,
-    WithMe: true
+    userId: userId,
+    withMe: true
   });
   
   const requestRelationMutation = useRequestUserRelation();

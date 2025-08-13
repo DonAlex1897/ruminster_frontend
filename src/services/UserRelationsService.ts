@@ -1,42 +1,6 @@
-import { UserRelationType } from '../types/rumination';
 import { apiClient } from '../utils/apiClient';
 import { API_CONFIG, buildApiUrl } from '../config/api';
-
-export interface UserRelationResponse {
-  id: number;
-  initiator: {
-    id: string;
-    username: string;
-    email: string;
-    roles: string[];
-  };
-  receiver: {
-    id: string;
-    username: string;
-    email: string;
-    roles: string[];
-  };
-  isAccepted: boolean;
-  isRejected: boolean;
-  type: UserRelationType;
-}
-
-export interface PostUserRelationDto {
-  userId: string;
-  relationType: UserRelationType;
-}
-
-export interface GetUserRelationsQueryParams {
-  Id?: number[];
-  UserId?: string;
-  WithMe?: boolean;
-  FromTMS?: string; // ISO date string
-  ToTMS?: string;   // ISO date string
-  IncludeDeleted?: boolean;
-  Sort?: string;
-  Limit?: number;
-  Offset?: number;
-}
+import { UserRelationResponse, PostUserRelationDto, GetUserRelationsQueryParams } from '../types/userRelation';
 
 export async function getUserRelations(queryParams?: GetUserRelationsQueryParams): Promise<UserRelationResponse[]> {
   let url = buildApiUrl(API_CONFIG.ENDPOINTS.USER_RELATIONS.BASE);
@@ -44,32 +8,32 @@ export async function getUserRelations(queryParams?: GetUserRelationsQueryParams
   if (queryParams) {
     const params = new URLSearchParams();
 
-    if (queryParams.Id) {
-      params.append('Id', JSON.stringify(queryParams.Id));
+    if (queryParams.id) {
+      params.append('Id', JSON.stringify(queryParams.id));
     }
-    if (queryParams.UserId) {
-      params.append('UserId', queryParams.UserId);
+    if (queryParams.userId) {
+      params.append('UserId', queryParams.userId);
     }
-    if (queryParams.WithMe) {
-      params.append('WithMe', JSON.stringify(queryParams.WithMe));
+    if (queryParams.withMe) {
+      params.append('WithMe', JSON.stringify(queryParams.withMe));
     }
-    if (queryParams.FromTMS) {
-      params.append('FromTMS', queryParams.FromTMS);
+    if (queryParams.fromTMS) {
+      params.append('FromTMS', queryParams.fromTMS);
     }
-    if (queryParams.ToTMS) {
-      params.append('ToTMS', queryParams.ToTMS);
+    if (queryParams.toTMS) {
+      params.append('ToTMS', queryParams.toTMS);
     }
-    if (queryParams.IncludeDeleted) {
-      params.append('IncludeDeleted', JSON.stringify(queryParams.IncludeDeleted));
+    if (queryParams.includeDeleted) {
+      params.append('IncludeDeleted', JSON.stringify(queryParams.includeDeleted));
     }
-    if (queryParams.Sort) {
-      params.append('Sort', queryParams.Sort);
+    if (queryParams.sort) {
+      params.append('Sort', queryParams.sort);
     }
-    if (queryParams.Limit) {
-      params.append('Limit', JSON.stringify(queryParams.Limit));
+    if (queryParams.limit) {
+      params.append('Limit', JSON.stringify(queryParams.limit));
     }
-    if (queryParams.Offset) {
-      params.append('Offset', JSON.stringify(queryParams.Offset));
+    if (queryParams.offset) {
+      params.append('Offset', JSON.stringify(queryParams.offset));
     }
     if (params.toString()) {
       url += `?${params.toString()}`;

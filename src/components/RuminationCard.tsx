@@ -72,7 +72,7 @@ export default function RuminationCard({
             />
             <div className="flex items-center gap-2">
               <span className="text-gray-500 dark:text-gray-400 text-sm">
-                {formatDate(rumination.createTMS)}
+                {formatDate(rumination.createTms)}
               </span>
             </div>
           </div>
