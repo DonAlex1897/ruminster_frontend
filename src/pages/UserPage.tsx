@@ -4,8 +4,11 @@ import UserAvatar from '../components/UserAvatar';
 import UserRelations from '../components/UserRelations';
 import { useUserRuminations } from '../hooks/useRuminations';
 import { UserRelationType } from '../types/rumination';
+import { useAuth } from '../AuthContext';
 
 export default function UserPage() {
+  const { user } = useAuth();
+  const username = user?.username || 'Unknown User';
   const { userId } = useParams<{ userId: string }>();
   const [showPublicOnly, setShowPublicOnly] = useState(true);
 
@@ -65,9 +68,6 @@ export default function UserPage() {
       </div>
     );
   }
-
-  // Get username from first rumination (temporary solution)
-  const username = ruminations.length > 0 ? ruminations[0].createdBy.username : 'Unknown User';
 
   return (
     <div className="max-w-3xl mx-auto p-6">
