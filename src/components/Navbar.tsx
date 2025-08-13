@@ -30,11 +30,24 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
   const { isAuthenticated, logout, requiresTosAcceptance, user } = useAuth();
   const { effectiveTheme, toggleTheme } = useTheme();
   const [showUserDropdown, setShowUserDropdown] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const isActive = (path: string) => {
     return location.pathname === path;
   };
+
+  // Check for mobile screen size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768); // md breakpoint
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -173,7 +186,7 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
           <div className="flex items-center gap-3">
             {isAuthenticated ? (
               <>
-                <Tooltip content={effectiveTheme === 'dark' ? 'Light Mode' : 'Dark Mode'} position="bottom">
+                <Tooltip content={effectiveTheme === 'dark' ? 'Light Mode' : 'Dark Mode'} position="bottom" disabled={isMobile}>
                   <button
                     onClick={toggleTheme}
                     className="p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800 transition-colors duration-150"
@@ -267,7 +280,7 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
             )}
             {isAuthenticated && (
               <>
-                <Tooltip content="My Ruminations" position="right" offsetY={-25}>
+                <Tooltip content="My Ruminations" position="right" offsetY={-25} disabled={isMobile}>
                   <Link
                     to="/my-ruminations"
                     className={`flex p-3 rounded-lg transition-colors duration-150 ${
@@ -284,7 +297,7 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
                   </Link>
                 </Tooltip>
                 
-                <Tooltip content="My Feed" position="right" offsetY={-25}>
+                <Tooltip content="My Feed" position="right" offsetY={-25} disabled={isMobile}>
                   <Link
                     to="/my-feed"
                     className={`flex p-3 rounded-lg transition-colors duration-150 ${
@@ -303,7 +316,7 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
               </>
             )}
             
-            <Tooltip content="Explore" position="right" offsetY={-25}>
+            <Tooltip content="Explore" position="right" offsetY={-25} disabled={isMobile}>
               <Link
                 to="/public"
                 className={`flex p-3 rounded-lg transition-colors duration-150 ${
