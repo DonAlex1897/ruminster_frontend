@@ -46,7 +46,6 @@ export default function MyFeedPage() {
                 audiences: rumination.audiences || []
               }}
               showUserInfo={true}
-              showComments={true}
             />
           ))}
         </div>

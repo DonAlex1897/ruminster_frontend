@@ -154,11 +154,9 @@ export default function MyRuminationsPage() {
                 <RuminationCard
                   key={rumination.id}
                   rumination={rumination}
-                  variant="editable"
                   onClick={() => handleEditRumination(rumination)}
                   onDelete={(e) => handleDeleteRumination(rumination, e)}
                   showUserInfo={false}
-                  showComments={true}
                 />
               ))}
             </div>

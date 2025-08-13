@@ -44,7 +44,6 @@ export default function PublicPage() {
               key={rumination.id}
               rumination={rumination}
               showUserInfo={true}
-              showComments={true}
             />
           ))}
         </div>
