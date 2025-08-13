@@ -64,7 +64,7 @@ export default function RuminationDialog({
               </span>
             </div>
           </div>
-          <p className="text-gray-900 dark:text-gray-100 leading-relaxed text-lg whitespace-pre-wrap break-words">
+          <p className="text-gray-900 dark:text-gray-100 leading-relaxed text-lg whitespace-pre-wrap break-words pl-10">
             {rumination.content}
           </p>
           <div className='pt-4'>

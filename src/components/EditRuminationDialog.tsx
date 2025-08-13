@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef, useMemo, useCallback } from 'react';
 import { UserRelationType, RuminationResponse } from '../types/rumination';
 import { useUpdateRumination } from '../hooks/useRuminations';
 
@@ -23,33 +23,25 @@ export default function EditRuminationDialog({ isOpen, onClose, onSuccess, rumin
     }
   }, [rumination]);
 
-  // Auto-resize textarea when content changes
-  const resizeTextarea = () => {
+  // Auto-resize textarea function
+  const resizeTextarea = useCallback(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
       textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
     }
-  };
+  }, []);
 
-  useEffect(() => {
-    // Use setTimeout to ensure DOM is fully rendered
-    const timer = setTimeout(() => {
+  // Resize on content change
+  useLayoutEffect(() => {
+    resizeTextarea();
+  }, [content, resizeTextarea]);
+
+  // Resize when dialog becomes visible
+  useLayoutEffect(() => {
+    if (isOpen) {
       resizeTextarea();
-    }, 0);
-    
-    return () => clearTimeout(timer);
-  }, [content]);
-
-  // Also resize when the dialog opens
-  useEffect(() => {
-    if (isOpen && textareaRef.current) {
-      const timer = setTimeout(() => {
-        resizeTextarea();
-      }, 100); // Small delay to ensure the dialog is fully rendered
-      
-      return () => clearTimeout(timer);
     }
-  }, [isOpen]);
+  }, [isOpen, resizeTextarea]);
 
   const handleUpdateRumination = async (content: string, audiences: UserRelationType[], publish: boolean) => {
     if (!rumination) return;
@@ -141,8 +133,6 @@ export default function EditRuminationDialog({ isOpen, onClose, onSuccess, rumin
               value={content}
               onChange={(e) => {
                 setContent(e.target.value);
-                // Immediate resize on input
-                setTimeout(() => resizeTextarea(), 0);
               }}
               rows={4}
               className="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white resize-none transition-colors placeholder-gray-400 dark:placeholder-gray-500 min-h-[6rem] max-h-96 overflow-y-auto"
