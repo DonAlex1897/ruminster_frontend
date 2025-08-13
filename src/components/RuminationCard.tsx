@@ -7,7 +7,6 @@ import {
   XMarkIcon,
   ChatBubbleOvalLeftEllipsisIcon,
   ShareIcon,
-  CheckBadgeIcon
 } from '@heroicons/react/24/outline';
 import UserAvatar from './UserAvatar';
 
@@ -159,13 +158,9 @@ export default function RuminationCard({
                   userId={rumination.createdBy.id}
                   username={rumination.createdBy.username}
                   size="sm"
-                  showUsername={false}
+                  showUsername={true}
                 />
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-gray-900 dark:text-gray-100 text-sm">
-                    {rumination.createdBy.username}
-                  </span>
-                  <CheckBadgeIcon className="w-4 h-4 text-blue-500" />
                   <span className="text-gray-500 dark:text-gray-400 text-sm">
                     {formatDate(rumination.createTMS)}
                   </span>
