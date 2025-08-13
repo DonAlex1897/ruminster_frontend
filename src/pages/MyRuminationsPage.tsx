@@ -76,22 +76,22 @@ export default function MyRuminationsPage() {
   return (
     <div className="max-w-3xl mx-auto p-6">
       {/* User Avatar Header */}
-      <div className="max-w-7xl mx-auto flex items-center justify-between mb-8">
-        <div className="flex items-center space-x-6">
+      <div className="max-w-7xl mx-auto flex items-center justify-between mb-6 sm:mb-8">
+        <div className="flex items-center space-x-3 sm:space-x-6">
           <UserAvatar 
             userId={userId} 
             username={user?.username || 'Unknown User'} 
-            size="lg" 
+            size="md" 
             showUsername={false}
             clickable={false}
-            className="shadow-lg"
+            className="shadow-lg sm:w-16 sm:h-16"
           />
-          <div className="flex flex-col space-y-3">
+          <div className="flex flex-col space-y-1 sm:space-y-3">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                 {user?.username || 'Unknown User'}
               </h1>
-              <p className="text-gray-500 dark:text-gray-400">
+              <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400">
                 {ruminations.length} {showPublished ? 'published' : 'draft'} rumination{ruminations.length !== 1 ? 's' : ''}
               </p>
             </div>
@@ -99,10 +99,10 @@ export default function MyRuminationsPage() {
         </div>
         
         {/* Public/Private Toggle */}
-        <div className="flex items-center space-x-2 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+        <div className="flex items-center space-x-1 bg-gray-100 dark:bg-gray-700 rounded-lg p-0.5 sm:p-1">
           <button
             onClick={() => setShowPublished(true)}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+            className={`px-2 py-1.5 sm:px-4 sm:py-2 rounded-md text-xs sm:text-sm font-medium transition-colors ${
               showPublished
                 ? 'bg-primary text-white shadow-sm'
                 : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
@@ -112,7 +112,7 @@ export default function MyRuminationsPage() {
           </button>
           <button
             onClick={() => setShowPublished(false)}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+            className={`px-2 py-1.5 sm:px-4 sm:py-2 rounded-md text-xs sm:text-sm font-medium transition-colors ${
               !showPublished
                 ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
                 : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'

@@ -96,22 +96,7 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
           </div>
 
           {/* Mobile Navigation Links - Only visible on mobile */}
-          <div className="flex md:hidden items-center space-x-2">
-            {/* New Rumination Button */}
-            {isAuthenticated && (
-              <button
-                onClick={requiresTosAcceptance ? undefined : onNewRumination}
-                disabled={requiresTosAcceptance}
-                className={`p-2 rounded-lg transition-all duration-200 ${
-                  requiresTosAcceptance 
-                    ? 'bg-slate-400 text-slate-600 cursor-not-allowed' 
-                    : 'bg-accent hover:bg-primary text-white shadow-lg'
-                }`}
-              >
-                <PlusIcon className="h-4 w-4" />
-              </button>
-            )}
-            
+          <div className="flex md:hidden items-center space-x-2">            
             {isAuthenticated && (
               <>
                 <Link
@@ -123,9 +108,9 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
                   }`}
                 >
                   {isActive('/my-ruminations') ? (
-                    <DocumentTextIconSolid className="h-4 w-4" />
+                    <DocumentTextIconSolid className="h-5 w-5" />
                   ) : (
-                    <DocumentTextIconOutline className="h-4 w-4" />
+                    <DocumentTextIconOutline className="h-5 w-5" />
                   )}
                 </Link>
                 
@@ -138,9 +123,9 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
                   }`}
                 >
                   {isActive('/my-feed') ? (
-                    <RssIconSolid className="h-4 w-4" />
+                    <RssIconSolid className="h-5 w-5" />
                   ) : (
-                    <RssIconOutline className="h-4 w-4" />
+                    <RssIconOutline className="h-5 w-5" />
                   )}
                 </Link>
               </>
@@ -155,11 +140,26 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
               }`}
             >
               {isActive('/public') ? (
-                <GlobeAltIconSolid className="h-4 w-4" />
+                <GlobeAltIconSolid className="h-5 w-5" />
               ) : (
-                <GlobeAltIconOutline className="h-4 w-4" />
+                <GlobeAltIconOutline className="h-5 w-5" />
               )}
             </Link>
+            
+            {/* New Rumination Button */}
+            {isAuthenticated && (
+              <button
+                onClick={requiresTosAcceptance ? undefined : onNewRumination}
+                disabled={requiresTosAcceptance}
+                className={`p-1 rounded-lg transition-all duration-200 ${
+                  requiresTosAcceptance 
+                    ? 'bg-slate-400 text-slate-600 cursor-not-allowed' 
+                    : 'bg-accent hover:bg-primary text-white shadow-lg'
+                }`}
+              >
+                <PlusIcon className="h-5 w-5" />
+              </button>
+            )}
           </div>
 
           {/* Page Title - Hidden on mobile when authenticated */}
@@ -267,7 +267,7 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
             )}
             {isAuthenticated && (
               <>
-                <Tooltip content="My Ruminations" position="right" offsetY={-88}>
+                <Tooltip content="My Ruminations" position="right" offsetY={-25}>
                   <Link
                     to="/my-ruminations"
                     className={`flex p-3 rounded-lg transition-colors duration-150 ${
@@ -284,7 +284,7 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
                   </Link>
                 </Tooltip>
                 
-                <Tooltip content="My Feed" position="right" offsetY={-88}>
+                <Tooltip content="My Feed" position="right" offsetY={-25}>
                   <Link
                     to="/my-feed"
                     className={`flex p-3 rounded-lg transition-colors duration-150 ${
@@ -303,7 +303,7 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
               </>
             )}
             
-            <Tooltip content="Explore" position="right" offsetY={-88}>
+            <Tooltip content="Explore" position="right" offsetY={-25}>
               <Link
                 to="/public"
                 className={`flex p-3 rounded-lg transition-colors duration-150 ${
