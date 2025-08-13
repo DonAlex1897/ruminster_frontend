@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { UserRelationType, RuminationResponse } from '../types/rumination';
 import { useUpdateRumination } from '../hooks/useRuminations';
 
@@ -13,6 +13,7 @@ export default function EditRuminationDialog({ isOpen, onClose, onSuccess, rumin
   const [content, setContent] = useState('');
   const [selectedAudiences, setSelectedAudiences] = useState<UserRelationType[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const updateRuminationMutation = useUpdateRumination();
 
   useEffect(() => {
@@ -21,6 +22,14 @@ export default function EditRuminationDialog({ isOpen, onClose, onSuccess, rumin
       setSelectedAudiences(rumination.audiences?.map(a => a.relationType) || []);
     }
   }, [rumination]);
+
+  // Auto-resize textarea when content changes
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
+    }
+  }, [content]);
 
   const handleUpdateRumination = async (content: string, audiences: UserRelationType[], publish: boolean) => {
     if (!rumination) return;
@@ -102,10 +111,13 @@ export default function EditRuminationDialog({ isOpen, onClose, onSuccess, rumin
           {/* Text Input */}
           <div>
             <textarea
+              ref={textareaRef}
               value={content}
-              onChange={(e) => setContent(e.target.value)}
+              onChange={(e) => {
+                setContent(e.target.value);
+              }}
               rows={4}
-              className="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white resize-none transition-colors placeholder-gray-400 dark:placeholder-gray-500"
+              className="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white resize-none transition-colors placeholder-gray-400 dark:placeholder-gray-500 min-h-[6rem] max-h-96 overflow-y-auto"
               placeholder="What's on your mind? Share your thoughts..."
             />
             <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
