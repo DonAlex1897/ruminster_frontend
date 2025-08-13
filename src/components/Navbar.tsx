@@ -7,11 +7,10 @@ import {
   ArrowRightStartOnRectangleIcon, 
   MoonIcon, 
   SunIcon, 
-  Bars3Icon, 
-  XMarkIcon,
   RssIcon as RssIconSolid,
   UserIcon,
-  ChevronDownIcon
+  ChevronDownIcon,
+  PlusIcon
 } from '@heroicons/react/24/solid';
 import { 
   DocumentTextIcon as DocumentTextIconOutline, 
@@ -30,7 +29,6 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
   const location = useLocation();
   const { isAuthenticated, logout, requiresTosAcceptance, user } = useAuth();
   const { effectiveTheme, toggleTheme } = useTheme();
-  const [showSidebar, setShowSidebar] = useState(false);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -91,14 +89,81 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
       <div className="fixed top-0 left-0 right-0 h-16 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border-b border-slate-200 dark:border-slate-700 z-40">
         <div className="h-full flex items-center justify-between px-4 md:px-6">
           {/* Logo */}
-          <div className="flex items-center md:flex-none md:order-first order-first ml-16 md:ml-0">
+          <div className="flex items-center md:flex-none md:order-first order-first ml-0">
             <Link to="/public" className="hover:scale-105 transition-transform duration-200">
               <img src={logo} alt="Ruminster" className="h-8 w-auto" />
             </Link>
           </div>
-          
-          {/* Page Title */}
-          <div className="flex-1 flex items-center justify-center">
+
+          {/* Mobile Navigation Links - Only visible on mobile */}
+          <div className="flex md:hidden items-center space-x-2">
+            {/* New Rumination Button */}
+            {isAuthenticated && (
+              <button
+                onClick={requiresTosAcceptance ? undefined : onNewRumination}
+                disabled={requiresTosAcceptance}
+                className={`p-2 rounded-lg transition-all duration-200 ${
+                  requiresTosAcceptance 
+                    ? 'bg-slate-400 text-slate-600 cursor-not-allowed' 
+                    : 'bg-accent hover:bg-primary text-white shadow-lg'
+                }`}
+              >
+                <PlusIcon className="h-4 w-4" />
+              </button>
+            )}
+            
+            {isAuthenticated && (
+              <>
+                <Link
+                  to="/my-ruminations"
+                  className={`flex p-2 rounded-lg transition-colors duration-150 ${
+                    isActive('/my-ruminations')
+                      ? 'text-primary dark:text-accent'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800'
+                  }`}
+                >
+                  {isActive('/my-ruminations') ? (
+                    <DocumentTextIconSolid className="h-4 w-4" />
+                  ) : (
+                    <DocumentTextIconOutline className="h-4 w-4" />
+                  )}
+                </Link>
+                
+                <Link
+                  to="/my-feed"
+                  className={`flex p-2 rounded-lg transition-colors duration-150 ${
+                    isActive('/my-feed')
+                      ? 'text-primary dark:text-accent'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800'
+                  }`}
+                >
+                  {isActive('/my-feed') ? (
+                    <RssIconSolid className="h-4 w-4" />
+                  ) : (
+                    <RssIconOutline className="h-4 w-4" />
+                  )}
+                </Link>
+              </>
+            )}
+            
+            <Link
+              to="/public"
+              className={`flex p-2 rounded-lg transition-colors duration-150 ${
+                isActive('/public')
+                  ? 'text-primary dark:text-accent'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800'
+              }`}
+            >
+              {isActive('/public') ? (
+                <GlobeAltIconSolid className="h-4 w-4" />
+              ) : (
+                <GlobeAltIconOutline className="h-4 w-4" />
+              )}
+            </Link>
+          </div>
+
+          {/* Page Title - Hidden on mobile when authenticated */}
+          <div className={`flex-1 flex items-center justify-center ${isAuthenticated ? 'hidden md:flex' : 'flex'}`}>
             <h1 className="text-lg font-semibold text-slate-900 dark:text-white">
               {getPageTitle()}
             </h1>
@@ -180,32 +245,8 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
         </div>
       </div>
 
-      {/* Mobile menu button */}
-      <div className="md:hidden fixed top-2 left-4 z-50">
-        <button
-          onClick={() => setShowSidebar(!showSidebar)}
-          className="bg-white dark:bg-slate-800 p-3 rounded-xl shadow-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all duration-200"
-        >
-          {showSidebar ? (
-            <XMarkIcon className="h-5 w-5 text-slate-700 dark:text-slate-300" />
-          ) : (
-            <Bars3Icon className="h-5 w-5 text-slate-700 dark:text-slate-300" />
-          )}
-        </button>
-      </div>
-
-      {/* Overlay for mobile */}
-      {showSidebar && (
-        <div 
-          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
-          onClick={() => setShowSidebar(false)}
-        />
-      )}
-
-      {/* Sidebar */}
-      <nav className={`fixed top-16 left-0 h-[calc(100vh-4rem)] w-20 bg-white dark:bg-slate-900 shadow-xl border-r border-slate-200 dark:border-slate-700 z-50 transform transition-transform duration-300 ease-in-out ${
-        showSidebar ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
-      }`}>
+      {/* Desktop Sidebar - Hidden on mobile */}
+      <nav className="hidden md:block fixed top-16 left-0 h-[calc(100vh-4rem)] w-20 bg-white dark:bg-slate-900 shadow-xl border-r border-slate-200 dark:border-slate-700 z-50">
         <div className="flex flex-col h-full pt-4">
           {/* Navigation Links */}
           <div className="flex-1 flex flex-col items-center py-6 space-y-6">
@@ -213,10 +254,7 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
             {/* New Rumination Button */}
             {isAuthenticated && (
               <button
-                onClick={requiresTosAcceptance ? undefined : () => {
-                  onNewRumination();
-                  setShowSidebar(false);
-                }}
+                onClick={requiresTosAcceptance ? undefined : onNewRumination}
                 disabled={requiresTosAcceptance}
                 className={`p-3 rounded-lg transition-all duration-200 ${
                   requiresTosAcceptance 
@@ -224,9 +262,7 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
                     : 'bg-accent hover:bg-primary text-white shadow-lg'
                 }`}
               >
-                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                </svg>
+                <PlusIcon className="h-5 w-5" />
               </button>
             )}
             {isAuthenticated && (
@@ -234,7 +270,6 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
                 <Tooltip content="My Ruminations" position="right" offsetY={-88}>
                   <Link
                     to="/my-ruminations"
-                    onClick={() => setShowSidebar(false)}
                     className={`flex p-3 rounded-lg transition-colors duration-150 ${
                       isActive('/my-ruminations')
                         ? 'text-primary dark:text-accent'
@@ -252,7 +287,6 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
                 <Tooltip content="My Feed" position="right" offsetY={-88}>
                   <Link
                     to="/my-feed"
-                    onClick={() => setShowSidebar(false)}
                     className={`flex p-3 rounded-lg transition-colors duration-150 ${
                       isActive('/my-feed')
                         ? 'text-primary dark:text-accent'
@@ -272,7 +306,6 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
             <Tooltip content="Explore" position="right" offsetY={-88}>
               <Link
                 to="/public"
-                onClick={() => setShowSidebar(false)}
                 className={`flex p-3 rounded-lg transition-colors duration-150 ${
                   isActive('/public')
                     ? 'text-primary dark:text-accent'
