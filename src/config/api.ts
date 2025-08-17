@@ -40,6 +40,9 @@ export const API_CONFIG = {
       REJECT: '/api/UserRelations/reject',
       DELETE: '/api/UserRelations/delete',
     },
+    SEARCH: {
+      BASE: '/api/search',
+    },
   },
 } as const;
 
