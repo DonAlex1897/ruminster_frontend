@@ -107,7 +107,7 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
     <>
       {/* Top Navigation Bar */}
       <div className="fixed top-0 left-0 right-0 h-16 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border-b border-slate-200 dark:border-slate-700 z-40">
-        <div className="h-full grid grid-cols-[auto_1fr_auto] items-center px-4 md:px-6">
+        <div className="relative h-full grid grid-cols-[auto_1fr_auto] items-center px-4 md:px-6">
           {/* Left: Logo + Search (desktop) */}
           <div className="flex items-center gap-3">
             <Link to="/public" className="hover:scale-105 transition-transform duration-200">
@@ -116,7 +116,7 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
           </div>
 
           {/* Middle: Title */}
-          <div className="flex items-center justify-center">
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
             <h1 className="text-lg md:text-xl font-semibold text-slate-900 dark:text-white text-center">
               {getPageTitle()}
             </h1>
