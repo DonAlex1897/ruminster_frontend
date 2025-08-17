@@ -86,8 +86,8 @@ export const NameChangeDialog: React.FC<NameChangeDialogProps> = ({ isOpen, onCl
           </button>
         </div>
 
-        {/* Content */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+  {/* Content */}
+  <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Display name</label>
             <input
@@ -112,8 +112,6 @@ export const NameChangeDialog: React.FC<NameChangeDialogProps> = ({ isOpen, onCl
           {error && (
             <div className="text-sm text-red-600 dark:text-red-400">{error}</div>
           )}
-        </form>
-
         {/* Footer */}
         <div className="px-6 py-4 bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 rounded-b-xl flex justify-end gap-3">
           <button
@@ -142,6 +140,7 @@ export const NameChangeDialog: React.FC<NameChangeDialogProps> = ({ isOpen, onCl
             )}
           </button>
         </div>
+  </form>
       </div>
     </div>
   );
