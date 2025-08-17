@@ -24,7 +24,7 @@ import { useTheme } from '../contexts/ThemeContext';
 import Tooltip from './Tooltip';
 import SearchBar from './SearchBar';
 import SearchDialog from './SearchDialog';
-import { NameChangeModal } from './NameChangeModal';
+import { NameChangeDialog } from './NameChangeDialog';
 
 interface NavbarProps {
   onNewRumination: () => void;
@@ -396,8 +396,8 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
   {/* Search Dialog for mobile icon */}
   <SearchDialog isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
   
-   {/* Name Change Modal */}
-   <NameChangeModal isOpen={nameChangeOpen} onClose={() => setNameChangeOpen(false)} />
+   {/* Name Change Dialog */}
+   <NameChangeDialog isOpen={nameChangeOpen} onClose={() => setNameChangeOpen(false)} />
     </>
   );
 }

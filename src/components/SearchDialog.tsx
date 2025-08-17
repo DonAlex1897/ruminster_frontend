@@ -45,8 +45,8 @@ export default function SearchDialog({ isOpen, onClose }: SearchDialogProps) {
           </div>
         </div>
 
-  {/* Body */}
-  <div className="flex-1 min-h-0 overflow-y-auto p-4 space-y-6">
+        {/* Body */}
+        <div className="flex-1 min-h-0 overflow-y-auto p-4 space-y-6">
           {!query.trim() && (
             <div className="text-center text-slate-500 dark:text-slate-400 py-8">Start typing to search</div>
           )}
