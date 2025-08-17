@@ -11,3 +11,15 @@ export async function getUserById(userId: string): Promise<UserResponse> {
 
   return await response.json();
 }
+
+export async function updateUserName(name: string): Promise<UserResponse> {
+  const response = await apiClient.put(buildApiUrl(API_CONFIG.ENDPOINTS.USERS.NAME), {
+    name
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to update user name');
+  }
+
+  return await response.json();
+}

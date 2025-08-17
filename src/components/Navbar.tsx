@@ -10,7 +10,8 @@ import {
   RssIcon as RssIconSolid,
   UserIcon,
   ChevronDownIcon,
-  PlusIcon
+  PlusIcon,
+  PencilIcon
 } from '@heroicons/react/24/solid';
 import { 
   DocumentTextIcon as DocumentTextIconOutline, 
@@ -23,6 +24,7 @@ import { useTheme } from '../contexts/ThemeContext';
 import Tooltip from './Tooltip';
 import SearchBar from './SearchBar';
 import SearchDialog from './SearchDialog';
+import { NameChangeModal } from './NameChangeModal';
 
 interface NavbarProps {
   onNewRumination: () => void;
@@ -35,6 +37,7 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
   const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [nameChangeOpen, setNameChangeOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const isActive = (path: string) => {
@@ -132,7 +135,7 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
             {isAuthenticated ? (
               <>
                 {/* Search next to logo on desktop */}
-                <div className="hidden md:block w-56 lg:w-96 mr-2">
+                <div className="hidden md:block w-66 lg:w-96 mr-2">
                   <SearchBar />
                 </div>
                 
@@ -196,6 +199,17 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
                         <UserIcon className="h-4 w-4" />
                         View Profile
                       </Link>
+                      
+                      <button
+                        onClick={() => {
+                          setNameChangeOpen(true);
+                          setShowUserDropdown(false);
+                        }}
+                        className="flex items-center gap-3 w-full px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors duration-150"
+                      >
+                        <PencilIcon className="h-4 w-4" />
+                        Change Name
+                      </button>
                       
                       <button
                         onClick={() => {
@@ -381,6 +395,9 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
 
   {/* Search Dialog for mobile icon */}
   <SearchDialog isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
+  
+   {/* Name Change Modal */}
+   <NameChangeModal isOpen={nameChangeOpen} onClose={() => setNameChangeOpen(false)} />
     </>
   );
 }

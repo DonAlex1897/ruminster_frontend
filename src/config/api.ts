@@ -19,6 +19,10 @@ export const API_CONFIG = {
       BASE: '/api/users',
       CURRENT: '/api/users/current',
       LIST: '/api/users',
+      NAME: '/api/users/me/name',
+    },
+    ME: {
+      BASE: '/api/me',
     },
     RUMINATIONS: {
       BASE: '/api/ruminations',
