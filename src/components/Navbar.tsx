@@ -159,7 +159,7 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
                     onClick={() => setShowUserDropdown(!showUserDropdown)}
                     className="flex items-center gap-2 p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors duration-150"
                   >
-                    <div className={`h-8 w-8 ${getAvatarColor((user?.name || user?.username) || '')} rounded-full flex items-center justify-center text-white font-semibold text-sm`}>
+                    <div className={`h-8 w-8 ${getAvatarColor((user?.username || user?.name) || '')} rounded-full flex items-center justify-center text-white font-semibold text-sm`}>
                       {(user?.name || user?.username) ? (user?.name || user?.username).charAt(0).toUpperCase() : <UserIcon className="h-4 w-4" />}
                     </div>
                     <ChevronDownIcon className={`h-4 w-4 text-slate-600 dark:text-slate-400 transition-transform duration-200 ${showUserDropdown ? 'rotate-180' : ''} hidden md:block`} />
