@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import UserAvatar from '../components/UserAvatar';
 import UserRelations from '../components/UserRelations';
-import { useUserRuminations } from '../hooks/useRuminations';
+import { useFeedRuminations, useUserRuminations } from '../hooks/useRuminations';
 import { useUser } from '../hooks/useUser';
 import RuminationCard from '../components/RuminationCard';
 
@@ -13,16 +13,26 @@ export default function UserPage() {
   const displayName = (userProfile as any)?.name || userProfile?.username || 'Unknown User';
   const [showPublicOnly, setShowPublicOnly] = useState(true);
 
+  // Public ruminations made by this user
   const { 
-    data: ruminations = [], 
-    isLoading, 
-    error 
-  } = useUserRuminations(userId!, { isPublic: showPublicOnly });
+    data: publicRuminations = [], 
+    isLoading: loadingPublic, 
+    error: errorPublic 
+  } = useUserRuminations(userId!);
+
+  // Ruminations created by this user and shared with the current viewer (feed filtered by userId)
+  const {
+    data: sharedWithMe = [],
+    isLoading: loadingShared,
+    error: errorShared,
+  } = useFeedRuminations({ userId: userId! });
+
+  const activeList = showPublicOnly ? publicRuminations : sharedWithMe;
   const query = useMemo(() => new URLSearchParams(location.search).get('q')?.trim().toLowerCase() || '', [location.search]);
   const filtered = useMemo(() => {
-    if (!query) return ruminations;
-    return ruminations.filter(r => r.content.toLowerCase().includes(query));
-  }, [ruminations, query]);
+    if (!query) return activeList;
+    return activeList.filter(r => r.content.toLowerCase().includes(query));
+  }, [activeList, query]);
 
   // Cards now reuse shared RuminationCard component like other pages.
 
@@ -34,7 +44,7 @@ export default function UserPage() {
     );
   }
 
-  if (isLoading || isUserLoading) {
+  if (isUserLoading || (showPublicOnly ? loadingPublic : loadingShared)) {
     return (
       <div className="flex justify-center items-center h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -42,11 +52,15 @@ export default function UserPage() {
     );
   }
 
-  if (error || userError) {
+  if (userError || (showPublicOnly ? errorPublic : errorShared)) {
     return (
       <div className="text-center py-8">
         <p className="text-red-600 dark:text-red-400">
-          {error instanceof Error ? error.message : userError instanceof Error ? userError.message : 'Failed to fetch data'}
+          {userError instanceof Error
+            ? userError.message
+            : (showPublicOnly
+                ? (errorPublic instanceof Error ? errorPublic.message : 'Failed to fetch public ruminations')
+                : (errorShared instanceof Error ? errorShared.message : 'Failed to fetch shared ruminations'))}
         </p>
       </div>
     );
@@ -84,7 +98,7 @@ export default function UserPage() {
       {/* User Relations */}
       <UserRelations userId={userId} />
 
-      {/* Tabs: Public / All Visible (above ruminations list) */}
+  {/* Tabs: Public / Shared with Me */}
       <div className="w-full mt-6">
         <nav className="w-full mb-4 sm:mb-6 border-b border-gray-200 dark:border-gray-700" aria-label="Ruminations tabs">
           <div className="grid grid-cols-2 w-full" role="tablist" aria-orientation="horizontal">
@@ -124,7 +138,7 @@ export default function UserPage() {
           <p className="text-gray-500 dark:text-gray-400">
             {showPublicOnly 
               ? "No public ruminations to display."
-              : "No ruminations visible to you."
+              : "No ruminations shared with you."
             }
           </p>
         </div>

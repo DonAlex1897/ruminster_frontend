@@ -25,13 +25,21 @@ export async function getMyRuminations(queryParams?: MyRuminationsQueryParams): 
   return normalizeRuminations(data);
 }
 
-export async function getFeedRuminations(queryParams?: MyRuminationsQueryParams): Promise<RuminationResponse[]> {
+export interface FeedRuminationsQueryParams extends MyRuminationsQueryParams {
+  userId?: string;
+}
+
+export async function getFeedRuminations(queryParams?: FeedRuminationsQueryParams): Promise<RuminationResponse[]> {
   let url = buildApiUrl(API_CONFIG.ENDPOINTS.RUMINATIONS.FEED);
 
   if (queryParams) {
     const params = new URLSearchParams();
     if (queryParams.isPublic !== undefined) {
       params.append('isPublic', queryParams.isPublic.toString());
+    }
+    if (queryParams.userId) {
+      // Keep param naming consistent with other endpoints
+      params.append('UserId', queryParams.userId);
     }
     if (params.toString()) {
       url += `?${params.toString()}`;

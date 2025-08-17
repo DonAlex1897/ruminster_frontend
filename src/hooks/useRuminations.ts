@@ -9,6 +9,7 @@ import {
   deleteRumination 
 } from '../services/RuminationsService';
 import { MyRuminationsQueryParams, PostRuminationDto, UpdateRuminationDto } from '../types/rumination';
+import type { FeedRuminationsQueryParams } from '../services/RuminationsService';
 import { useAuth } from '../AuthContext';
 
 export const useMyRuminations = (queryParams?: MyRuminationsQueryParams) => {
@@ -21,7 +22,7 @@ export const useMyRuminations = (queryParams?: MyRuminationsQueryParams) => {
   });
 };
 
-export const useFeedRuminations = (queryParams?: MyRuminationsQueryParams) => {
+export const useFeedRuminations = (queryParams?: FeedRuminationsQueryParams) => {
   const { isAuthenticated } = useAuth();
   
   return useQuery({
