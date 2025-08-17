@@ -293,31 +293,25 @@ export default function UserRelations({ userId }: UserRelationsProps) {
                       <span className="opacity-80">{getRelationIcon(relation.type)}</span>
                       <span className="font-medium whitespace-nowrap leading-none">{getRelationLabel(relation.type, relation.receiver.id)}</span>
                       {!relation.isAccepted && (
-                        isIncoming ? (
-                          <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-white/60 dark:bg-black/20 border border-current/20 whitespace-nowrap">
-                            Incoming
+                        <Tooltip content={isIncoming ? 'Incoming' : 'Requested'} position="top">
+                          <span
+                            className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-gray-200/70 dark:bg-gray-700/70 text-gray-700 dark:text-gray-200"
+                            aria-label={isIncoming ? 'Incoming' : 'Requested'}
+                          >
+                            <ClockIcon className="h-3 w-3" />
                           </span>
-                        ) : (
-                          <Tooltip content="Requested" position="top">
-                            <span
-                              className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-gray-200/70 dark:bg-gray-700/70 text-gray-700 dark:text-gray-200"
-                              aria-label="Requested"
-                            >
-                              <ClockIcon className="h-3 w-3" />
-                            </span>
-                          </Tooltip>
-                        )
+                        </Tooltip>
                       )}
                     </div>
 
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center pl-3">
                       {!relation.isAccepted && isIncoming && (
                         <>
                           <Tooltip content="Accept request" position="top">
                             <button
                               onClick={() => handleAcceptRelation(relation.id)}
                               disabled={acceptRelationMutation.isPending}
-                              className="p-1 rounded-md text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800/60 border border-transparent disabled:opacity-60 transition-colors"
+                              className="p-1 rounded-md bg-white text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:bg-transparent dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-800/60 disabled:opacity-60 transition-colors"
                               aria-label="Accept relation request"
                             >
                               <CheckIcon className="h-4 w-4" />
@@ -327,7 +321,7 @@ export default function UserRelations({ userId }: UserRelationsProps) {
                             <button
                               onClick={() => handleRejectRelation(relation.id)}
                               disabled={rejectRelationMutation.isPending}
-                              className="p-1 rounded-md text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 hover:bg-gray-100 dark:hover:bg-gray-800/60 border border-transparent disabled:opacity-60 transition-colors"
+                              className="p-1 rounded-md bg-white text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:bg-transparent dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-800/60 disabled:opacity-60 transition-colors"
                               aria-label="Reject relation request"
                             >
                               <XMarkIcon className="h-4 w-4" />
