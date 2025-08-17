@@ -4,6 +4,7 @@ import { UserIcon } from '@heroicons/react/24/solid';
 
 interface UserAvatarProps {
   userId: string;
+  name?: string;
   username: string;
   size?: 'sm' | 'md' | 'lg';
   showUsername?: boolean;
@@ -19,14 +20,15 @@ const COLORS = [
   'bg-red-500', 'bg-slate-500', 'bg-zinc-500', 'bg-neutral-500'
 ];
 
-const getAvatarColor = (username: string): string => {
-  if (!username) return COLORS[0];
-  const hash = username.charCodeAt(0) + (username.charCodeAt(username.length - 1) || 0);
+const getAvatarColor = (seed: string): string => {
+  if (!seed) return COLORS[0];
+  const hash = seed.charCodeAt(0) + (seed.charCodeAt(seed.length - 1) || 0);
   return COLORS[hash % COLORS.length];
 };
 
 export default function UserAvatar({ 
   userId, 
+  name,
   username, 
   size = 'md', 
   showUsername = true, 
@@ -34,17 +36,18 @@ export default function UserAvatar({
   className = ''
 }: UserAvatarProps) {
   const sizeMap = {
-    sm: { avatar: 'h-8 w-8', text: 'text-lg', avatarText: 'text-lg' },
-    md: { avatar: 'h-12 w-12', text: 'text-lg', avatarText: 'text-2xl' },
-    lg: { avatar: 'h-16 w-16', text: 'text-xl', avatarText: 'text-4xl' }
+    sm: { avatar: 'h-8 w-8', nameText: 'text-sm', usernameText: 'text-xs', avatarText: 'text-lg' },
+    md: { avatar: 'h-12 w-12', nameText: 'text-base', usernameText: 'text-sm', avatarText: 'text-2xl' },
+    lg: { avatar: 'h-16 w-16', nameText: 'text-lg', usernameText: 'text-base', avatarText: 'text-4xl' }
   };
 
-  const { avatar: avatarSize, text: textSize, avatarText: avatarTextSize } = sizeMap[size];
-  const bgColor = getAvatarColor(username);
+  const { avatar: avatarSize, nameText, usernameText, avatarText: avatarTextSize } = sizeMap[size];
+  const bgColor = getAvatarColor(username || name || '');
   
+  const initial = (name?.[0] ?? username?.[0] ?? '').toUpperCase();
   const avatarElement = (
     <div className={`${avatarSize} ${bgColor} rounded-full flex items-center justify-center text-white font-semibold ${avatarTextSize} ${className}`}>
-      {username ? username.charAt(0).toUpperCase() : <UserIcon className="h-1/2 w-1/2" />}
+      {initial ? initial : <UserIcon className="h-1/2 w-1/2" />}
     </div>
   );
 
@@ -52,9 +55,16 @@ export default function UserAvatar({
     <div className="flex items-center gap-2">
       {avatarElement}
       {showUsername && (
-        <span className={`${textSize} font-bold text-gray-700 dark:text-gray-300 truncate`}>
-          {username}
-        </span>
+        <div className="flex flex-col leading-tight min-w-0">
+          <span className={`${nameText} font-semibold text-gray-900 dark:text-gray-100 truncate`}>
+            {name || username}
+          </span>
+          {username && (
+            <span className={`${usernameText} text-gray-500 dark:text-gray-400 truncate`}>
+              @{username}
+            </span>
+          )}
+        </div>
       )}
     </div>
   );

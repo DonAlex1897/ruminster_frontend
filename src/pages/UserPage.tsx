@@ -9,7 +9,7 @@ import { useUser } from '../hooks/useUser';
 export default function UserPage() {
   const { userId } = useParams<{ userId: string }>();
   const { data: userProfile, isLoading: isUserLoading, error: userError } = useUser(userId);
-  const username = userProfile?.username || 'Unknown User';
+  const displayName = (userProfile as any)?.name || userProfile?.username || 'Unknown User';
   const [showPublicOnly, setShowPublicOnly] = useState(true);
 
   const { 
@@ -76,7 +76,8 @@ export default function UserPage() {
         <div className="flex items-center space-x-6">
           <UserAvatar 
             userId={userId} 
-            username={username} 
+            name={(userProfile as any)?.name}
+            username={userProfile?.username || ''} 
             size="lg" 
             showUsername={false}
             clickable={false}
@@ -85,8 +86,11 @@ export default function UserPage() {
           <div className="flex flex-col space-y-3">
             <div>
               <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                {username}
+                {displayName}
               </h1>
+              {userProfile?.username && (
+                <p className="text-gray-500 dark:text-gray-400">@{userProfile.username}</p>
+              )}
               <p className="text-gray-500 dark:text-gray-400">
                 {ruminations.length} rumination{ruminations.length !== 1 ? 's' : ''}
               </p>

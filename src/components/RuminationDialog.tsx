@@ -54,6 +54,7 @@ export default function RuminationDialog({
           <div className="flex items-center gap-3 mb-4">
             <UserAvatar
               userId={rumination.createdBy.id}
+              name={(rumination.createdBy as any).name}
               username={rumination.createdBy.username}
               size="sm"
               showUsername={true}

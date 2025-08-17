@@ -4,6 +4,7 @@ import { useComments, useUpdateComment, useDeleteComment, useCommentReplies } fr
 import { useAuth } from '../AuthContext';
 import AddNewComment from './AddNewComment';
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/solid';
+import UserAvatar from './UserAvatar';
 import { useDraftPersistence } from '../hooks/useDraftPersistence';
 
 interface CommentsProps {
@@ -35,9 +36,14 @@ const CommentItem: React.FC<CommentItemProps> = ({ ruminationId, comment, onRepl
       <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-5">
         <div className="flex justify-between items-start mb-2">
           <div className="flex items-center space-x-2">
-            <span className="font-medium text-gray-900 dark:text-gray-100">
-              {comment.createdBy.username}
-            </span>
+            <UserAvatar
+              userId={comment.createdBy.id}
+              name={(comment.createdBy as any).name}
+              username={comment.createdBy.username}
+              size="sm"
+              showUsername={true}
+              clickable={true}
+            />
             <span className="text-sm text-gray-500 dark:text-gray-400">
               {new Date(comment.createTms).toLocaleDateString()}
             </span>

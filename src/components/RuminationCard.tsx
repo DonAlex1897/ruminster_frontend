@@ -7,6 +7,7 @@ import {
   TrashIcon,
 } from '@heroicons/react/24/outline';
 import UserAvatar from './UserAvatar';
+import { formatRelativeTime } from '../utils/date';
 
 interface RuminationCardProps {
   rumination: RuminationResponse;
@@ -24,21 +25,9 @@ export default function RuminationCard({
   const [commentDialogOpen, setCommentDialogOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const formatDate = (dateString: string): string => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
-
-    if (diffInHours < 1) {
-      const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
-      return `${diffInMinutes}m`;
-    } else if (diffInHours < 24) {
-      return `${diffInHours}h`;
-    } else {
-      const diffInDays = Math.floor(diffInHours / 24);
-      return `${diffInDays}d`;
-    }
-  };
+  // Robust timestamp parser: supports ISO strings, "YYYY-MM-DD HH:mm:ss" strings,
+  // numeric strings, and epoch values in seconds/ms/µs/ns.
+  const formatDate = (input: unknown): string => formatRelativeTime(input);
 
   const getAudienceLabel = (audience: { relationType: UserRelationType }): string => {
     switch (audience.relationType) {
@@ -66,6 +55,7 @@ export default function RuminationCard({
           <div className="flex items-center gap-3">
             <UserAvatar
               userId={rumination.createdBy.id}
+              name={(rumination.createdBy as any).name}
               username={rumination.createdBy.username}
               size="sm"
               showUsername={true}

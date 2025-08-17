@@ -67,7 +67,7 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
   }, [showUserDropdown]);
 
   // Helper function to get avatar color
-  const getAvatarColor = (username: string): string => {
+  const getAvatarColor = (seed: string): string => {
     const COLORS = [
       'bg-blue-500', 'bg-green-500', 'bg-pink-500', 'bg-orange-500', 
       'bg-purple-500', 'bg-teal-500', 'bg-yellow-500', 'bg-indigo-500',
@@ -76,8 +76,8 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
       'bg-red-500', 'bg-slate-500', 'bg-zinc-500', 'bg-neutral-500'
     ];
     
-    if (!username) return COLORS[0];
-    const hash = username.charCodeAt(0) + (username.charCodeAt(username.length - 1) || 0);
+  if (!seed) return COLORS[0];
+  const hash = seed.charCodeAt(0) + (seed.charCodeAt(seed.length - 1) || 0);
     return COLORS[hash % COLORS.length];
   };
 
@@ -205,8 +205,8 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
                     onClick={() => setShowUserDropdown(!showUserDropdown)}
                     className="flex items-center gap-2 p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors duration-150"
                   >
-                    <div className={`h-8 w-8 ${getAvatarColor(user?.username || '')} rounded-full flex items-center justify-center text-white font-semibold text-sm`}>
-                      {user?.username ? user.username.charAt(0).toUpperCase() : <UserIcon className="h-4 w-4" />}
+                    <div className={`h-8 w-8 ${getAvatarColor((user?.name || user?.username) || '')} rounded-full flex items-center justify-center text-white font-semibold text-sm`}>
+                      {(user?.name || user?.username) ? (user?.name || user?.username).charAt(0).toUpperCase() : <UserIcon className="h-4 w-4" />}
                     </div>
                     <ChevronDownIcon className={`h-4 w-4 text-slate-600 dark:text-slate-400 transition-transform duration-200 ${showUserDropdown ? 'rotate-180' : ''}`} />
                   </button>
@@ -216,11 +216,12 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
                     <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 py-2 z-50">
                       <div className="px-4 py-2 border-b border-slate-200 dark:border-slate-700">
                         <p className="text-sm font-medium text-slate-900 dark:text-white truncate">
-                          {user?.username}
+                          {user?.name || user?.username}
                         </p>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">
-                          Signed in
-                        </p>
+                        {user?.username && (
+                          <p className="text-xs text-slate-500 dark:text-slate-400 truncate">@{user.username}</p>
+                        )}
+                        <p className="text-xs text-slate-500 dark:text-slate-400">Signed in</p>
                       </div>
                       
                       <Link

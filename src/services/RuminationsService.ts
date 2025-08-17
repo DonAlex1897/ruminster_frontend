@@ -21,7 +21,8 @@ export async function getMyRuminations(queryParams?: MyRuminationsQueryParams): 
     throw new Error('Failed to fetch my ruminations');
   }
 
-  return await response.json();
+  const data = await response.json();
+  return normalizeRuminations(data);
 }
 
 export async function getFeedRuminations(queryParams?: MyRuminationsQueryParams): Promise<RuminationResponse[]> {
@@ -43,7 +44,8 @@ export async function getFeedRuminations(queryParams?: MyRuminationsQueryParams)
     throw new Error('Failed to fetch all ruminations');
   }
 
-  return await response.json();
+  const data = await response.json();
+  return normalizeRuminations(data);
 }
 
 export async function getPublicRuminations(queryParams?: MyRuminationsQueryParams): Promise<RuminationResponse[]> {
@@ -65,7 +67,8 @@ export async function getPublicRuminations(queryParams?: MyRuminationsQueryParam
     throw new Error('Failed to fetch all ruminations');
   }
 
-  return await response.json();
+  const data = await response.json();
+  return normalizeRuminations(data);
 }
 
 export async function createRumination(rumination: PostRuminationDto): Promise<RuminationResponse> {
@@ -84,7 +87,8 @@ export async function createRumination(rumination: PostRuminationDto): Promise<R
     throw new Error(errorMessage);
   }
 
-  return await response.json();
+  const data = await response.json();
+  return normalizeRumination(data);
 }
 
 export async function updateRumination(rumination: UpdateRuminationDto): Promise<RuminationResponse> {
@@ -110,7 +114,8 @@ export async function updateRumination(rumination: UpdateRuminationDto): Promise
     throw new Error(errorMessage);
   }
 
-  return await response.json();
+  const data = await response.json();
+  return normalizeRumination(data);
 }
 
 export async function deleteRumination(ruminationId: string): Promise<void> {
@@ -150,5 +155,22 @@ export async function getUserRuminations(userId: string, queryParams?: MyRuminat
     throw new Error('Failed to fetch user ruminations');
   }
 
-  return await response.json();
+  const data = await response.json();
+  return normalizeRuminations(data);
+}
+
+// Helpers to normalize backend field naming to our TS types
+function normalizeRumination(input: any): RuminationResponse {
+  if (!input) return input as RuminationResponse;
+  return {
+    ...input,
+    // Normalize backend keys like createTMS/updateTMS to createTms/updateTms
+    createTms: input.createTms ?? input.createTMS ?? input.createdAt ?? input.created_at ?? input.create_time ?? input.createTime ?? input.createdOn ?? input.created_on,
+    updateTms: input.updateTms ?? input.updateTMS ?? input.updatedAt ?? input.updated_at ?? input.update_time ?? input.updateTime ?? input.updatedOn ?? input.updated_on,
+  } as RuminationResponse;
+}
+
+function normalizeRuminations(input: any): RuminationResponse[] {
+  if (!Array.isArray(input)) return input as RuminationResponse[];
+  return input.map(normalizeRumination);
 }

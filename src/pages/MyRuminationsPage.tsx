@@ -80,6 +80,7 @@ export default function MyRuminationsPage() {
         <div className="flex items-center space-x-3 sm:space-x-6">
           <UserAvatar 
             userId={userId} 
+            name={user?.name}
             username={user?.username || 'Unknown User'} 
             size="md" 
             showUsername={false}
@@ -89,8 +90,11 @@ export default function MyRuminationsPage() {
           <div className="flex flex-col space-y-1 sm:space-y-3">
             <div>
               <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
-                {user?.username || 'Unknown User'}
+                {user?.name || user?.username || 'Unknown User'}
               </h1>
+              {user?.username && (
+                <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400">@{user.username}</p>
+              )}
               <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400">
                 {ruminations.length} {showPublished ? 'published' : 'draft'} rumination{ruminations.length !== 1 ? 's' : ''}
               </p>

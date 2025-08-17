@@ -36,6 +36,7 @@ interface RuminationHeaderProps {
     audiences: { relationType: UserRelationType }[];
     createdBy: {
       id: string;
+  name?: string;
       username: string;
     };
   };
@@ -58,6 +59,7 @@ export default function RuminationHeader({
         {showUserInfo && (
           <UserAvatar
             userId={rumination.createdBy.id}
+            name={rumination.createdBy.name}
             username={rumination.createdBy.username}
             size="sm"
             showUsername={true}
