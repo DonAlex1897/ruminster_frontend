@@ -110,10 +110,6 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
             <Link to="/public" className="hover:scale-105 transition-transform duration-200">
               <img src={logo} alt="Ruminster" className="h-8 w-auto" />
             </Link>
-            {/* Search next to logo on desktop */}
-            <div className="hidden md:block w-56 lg:w-96 ml-2">
-              <SearchBar />
-            </div>
           </div>
 
           {/* Middle: Title */}
@@ -135,6 +131,11 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
             </button>
             {isAuthenticated ? (
               <>
+                {/* Search next to logo on desktop */}
+                <div className="hidden md:block w-56 lg:w-96 mr-2">
+                  <SearchBar />
+                </div>
+                
                 {/* Standalone theme toggle (desktop only) */}
                 <Tooltip content={effectiveTheme === 'dark' ? 'Light Mode' : 'Dark Mode'} position="bottom" disabled={isMobile}>
                   <button
