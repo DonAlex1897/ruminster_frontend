@@ -6,8 +6,10 @@ import EditRuminationDialog from '../components/EditRuminationDialog';
 import DeleteRuminationDialog from '../components/DeleteRuminationDialog';
 import UserAvatar from '../components/UserAvatar';
 import { useAuth } from '../AuthContext';
+import { useLocation } from 'react-router-dom';
 
 export default function MyRuminationsPage() {
+  const location = useLocation();
   const [showPublished, setShowPublished] = useState(true);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -21,6 +23,12 @@ export default function MyRuminationsPage() {
 
   const { user } = useAuth();
   const userId = useMemo(() => user?.id, [user]);
+
+  const query = useMemo(() => new URLSearchParams(location.search).get('q')?.trim().toLowerCase() || '', [location.search]);
+  const filteredRuminations = useMemo(() => {
+    if (!query) return ruminations;
+    return ruminations.filter(r => r.content.toLowerCase().includes(query));
+  }, [ruminations, query]);
 
   const handleEditRumination = (rumination: RuminationResponse) => {
     setSelectedRumination(rumination);
@@ -71,7 +79,7 @@ export default function MyRuminationsPage() {
     );
   }
 
-  const filteredRuminations = ruminations;
+  
 
   return (
     <div className="max-w-3xl mx-auto p-6">

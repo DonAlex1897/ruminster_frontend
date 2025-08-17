@@ -1,14 +1,20 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { usePublicRuminations } from '../hooks/useRuminations';
 import RuminationCard from '../components/RuminationCard';
+import { useLocation } from 'react-router-dom';
 
 export default function PublicPage() {
+  const location = useLocation();
   const { 
     data: ruminations = [], 
     isLoading: loading, 
     error 
   } = usePublicRuminations();
-
+  const query = useMemo(() => new URLSearchParams(location.search).get('q')?.trim().toLowerCase() || '', [location.search]);
+  const filtered = useMemo(() => {
+    if (!query) return ruminations;
+    return ruminations.filter(r => r.content.toLowerCase().includes(query) || (r.createdBy?.username || '').toLowerCase().includes(query) || (r.createdBy as any)?.name?.toLowerCase?.().includes(query));
+  }, [ruminations, query]);
 
 
   if (loading) {
@@ -31,7 +37,7 @@ export default function PublicPage() {
 
   return (
     <div className="max-w-3xl mx-auto p-6">
-      {ruminations.length === 0 ? (
+    {filtered.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-gray-500 dark:text-gray-400">
             No public ruminations available.
@@ -39,7 +45,7 @@ export default function PublicPage() {
         </div>
       ) : (
         <div className="space-y-8">
-          {ruminations.map((rumination) => (
+      {filtered.map((rumination) => (
             <RuminationCard
               key={rumination.id}
               rumination={rumination}

@@ -20,6 +20,7 @@ import {
 import logo from '../assets/ruminster_logo.png';
 import { useTheme } from '../contexts/ThemeContext';
 import Tooltip from './Tooltip';
+import SearchBar from './SearchBar';
 
 interface NavbarProps {
   onNewRumination: () => void;
@@ -174,12 +175,25 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
               </button>
             )}
           </div>
-
+          
           {/* Page Title - Hidden on mobile when authenticated */}
           <div className={`flex-1 flex items-center justify-center ${isAuthenticated ? 'hidden md:flex' : 'flex'}`}>
-            <h1 className="text-lg font-semibold text-slate-900 dark:text-white">
+            <h1 className="text-xl font-semibold text-slate-900 dark:text-white">
               {getPageTitle()}
             </h1>
+          </div>
+
+          {/* Center Search */}
+          <div className="flex-1 flex items-center justify-center px-4">
+            <div className="w-full max-w-xl hidden md:block">
+              <SearchBar />
+            </div>
+            {/* Title fallback on small screens */}
+            <div className="md:hidden">
+              <h1 className="text-base font-semibold text-slate-900 dark:text-white">
+                {getPageTitle()}
+              </h1>
+            </div>
           </div>
           
           {/* User Avatar or Actions */}

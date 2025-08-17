@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useMemo, useState } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
 import UserAvatar from '../components/UserAvatar';
 import UserRelations from '../components/UserRelations';
 import { useUserRuminations } from '../hooks/useRuminations';
@@ -8,6 +8,7 @@ import { useUser } from '../hooks/useUser';
 
 export default function UserPage() {
   const { userId } = useParams<{ userId: string }>();
+  const location = useLocation();
   const { data: userProfile, isLoading: isUserLoading, error: userError } = useUser(userId);
   const displayName = (userProfile as any)?.name || userProfile?.username || 'Unknown User';
   const [showPublicOnly, setShowPublicOnly] = useState(true);
@@ -17,6 +18,11 @@ export default function UserPage() {
     isLoading, 
     error 
   } = useUserRuminations(userId!, { isPublic: showPublicOnly });
+  const query = useMemo(() => new URLSearchParams(location.search).get('q')?.trim().toLowerCase() || '', [location.search]);
+  const filtered = useMemo(() => {
+    if (!query) return ruminations;
+    return ruminations.filter(r => r.content.toLowerCase().includes(query));
+  }, [ruminations, query]);
 
   const getAudienceLabels = (audiences: { relationType: UserRelationType }[]) => {
     const labels = audiences.map(a => {
@@ -92,7 +98,7 @@ export default function UserPage() {
                 <p className="text-gray-500 dark:text-gray-400">@{userProfile.username}</p>
               )}
               <p className="text-gray-500 dark:text-gray-400">
-                {ruminations.length} rumination{ruminations.length !== 1 ? 's' : ''}
+                {filtered.length} rumination{filtered.length !== 1 ? 's' : ''}
               </p>
             </div>
           </div>
@@ -126,7 +132,7 @@ export default function UserPage() {
       <UserRelations userId={userId} />
 
       {/* Ruminations List */}
-      {ruminations.length === 0 ? (
+    {filtered.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-gray-500 dark:text-gray-400">
             {showPublicOnly 
@@ -137,7 +143,7 @@ export default function UserPage() {
         </div>
       ) : (
         <div className="space-y-6">
-          {ruminations.map((rumination) => (
+      {filtered.map((rumination) => (
             <div
               key={rumination.id}
               className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6"
