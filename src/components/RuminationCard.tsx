@@ -52,7 +52,7 @@ export default function RuminationCard({
       >
         {/* Header */}
         <div className="flex items-start justify-between mb-3">
-          <div className="flex items-center gap-3">
+          <div className="flex items-start gap-3">
             <UserAvatar
               userId={rumination.createdBy.id}
               name={(rumination.createdBy as any).name}
@@ -60,8 +60,8 @@ export default function RuminationCard({
               size="sm"
               showUsername={true}
             />
-            <div className="flex items-center gap-2">
-              <span className="text-gray-500 dark:text-gray-400 text-sm">
+            <div className="self-start flex items-center gap-2">
+              <span className="text-gray-500 dark:text-gray-400 text-xs">
                 {formatDate(rumination.createTms)}
               </span>
             </div>
