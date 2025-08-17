@@ -109,30 +109,40 @@ export default function MyRuminationsPage() {
             </div>
           </div>
         </div>
-        
-        {/* Public/Private Toggle */}
-        <div className="flex items-center space-x-1 bg-gray-100 dark:bg-gray-700 rounded-lg p-0.5 sm:p-1">
-          <button
-            onClick={() => setShowPublished(true)}
-            className={`px-2 py-1.5 sm:px-4 sm:py-2 rounded-md text-xs sm:text-sm font-medium transition-colors ${
-              showPublished
-                ? 'bg-primary text-white shadow-sm'
-                : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
-            }`}
-          >
-            Published
-          </button>
-          <button
-            onClick={() => setShowPublished(false)}
-            className={`px-2 py-1.5 sm:px-4 sm:py-2 rounded-md text-xs sm:text-sm font-medium transition-colors ${
-              !showPublished
-                ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
-                : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
-            }`}
-          >
-            Draft
-          </button>
-        </div>
+      </div>
+
+      {/* Tabs: Published / Draft (moved above cards) */}
+      <div className="w-full">
+        <nav className="w-full mb-4 sm:mb-6 border-b border-gray-200 dark:border-gray-700" aria-label="Ruminations tabs">
+          <div className="grid grid-cols-2 w-full" role="tablist" aria-orientation="horizontal">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={showPublished}
+              onClick={() => setShowPublished(true)}
+              className={`-mb-px w-full text-center whitespace-nowrap py-2 px-3 sm:px-4 border-b-2 font-medium text-sm sm:text-base transition-colors ${
+                showPublished
+                  ? 'border-white text-gray-900 dark:text-white'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+              }`}
+            >
+              Published
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={!showPublished}
+              onClick={() => setShowPublished(false)}
+              className={`-mb-px w-full text-center whitespace-nowrap py-2 px-3 sm:px-4 border-b-2 font-medium text-sm sm:text-base transition-colors ${
+                !showPublished
+                  ? 'border-white text-gray-900 dark:text-white'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+              }`}
+            >
+              Draft
+            </button>
+          </div>
+        </nav>
       </div>
 
       {/* Content Section */}
