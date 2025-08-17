@@ -108,7 +108,7 @@ export default function UserPage() {
       <UserRelations userId={userId} />
 
       {/* Tabs: Public / All Visible (above ruminations list) */}
-      <div className="w-full">
+      <div className="w-full mt-6">
         <nav className="w-full mb-4 sm:mb-6 border-b border-gray-200 dark:border-gray-700" aria-label="Ruminations tabs">
           <div className="grid grid-cols-2 w-full" role="tablist" aria-orientation="horizontal">
             <button
