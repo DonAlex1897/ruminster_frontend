@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { UserRelationType } from '../types/rumination';
 import { useUserRelations, useRequestUserRelation, useAcceptUserRelation, useRejectUserRelation, useDeleteUserRelation } from '../hooks/useUserRelations';
 import { useAuth } from '../AuthContext';
@@ -9,6 +9,7 @@ interface UserRelationsProps {
 
 export default function UserRelations({ userId }: UserRelationsProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
   const { user } = useAuth();
   const currentUserId = useMemo(() => {
     return user?.id;
@@ -18,6 +19,31 @@ export default function UserRelations({ userId }: UserRelationsProps) {
     userId: userId,
     withMe: true
   });
+  
+  // Close dropdown on outside click or Escape key
+  useEffect(() => {
+    if (!isDropdownOpen) return;
+
+    const handleClick = (e: MouseEvent) => {
+      if (!dropdownRef.current) return;
+      if (!dropdownRef.current.contains(e.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClick);
+    document.addEventListener('keydown', handleKey);
+    return () => {
+      document.removeEventListener('mousedown', handleClick);
+      document.removeEventListener('keydown', handleKey);
+    };
+  }, [isDropdownOpen]);
   
   const requestRelationMutation = useRequestUserRelation();
   const acceptRelationMutation = useAcceptUserRelation();
@@ -104,7 +130,7 @@ export default function UserRelations({ userId }: UserRelationsProps) {
   return (
     <div className="w-full space-y-4">
       {/* Request Button */}
-      {visibleRelations.length < relationOptions.length && <div className="relative w-fit">
+      {visibleRelations.length < relationOptions.length && <div ref={dropdownRef} className="relative w-fit">
         <button
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           disabled={requestRelationMutation.isPending}

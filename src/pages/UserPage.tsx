@@ -78,7 +78,7 @@ export default function UserPage() {
   return (
     <div className="max-w-3xl mx-auto p-6">
       {/* User Avatar Header */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-start mb-8">
         <div className="flex items-center space-x-6">
           <UserAvatar 
             userId={userId} 
@@ -103,33 +103,43 @@ export default function UserPage() {
             </div>
           </div>
         </div>
-        
-        {/* Public/Private Toggle */}
-        <div className="flex items-center space-x-2 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
-          <button
-            onClick={() => setShowPublicOnly(true)}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-              showPublicOnly
-                ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
-                : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
-            }`}
-          >
-            Public
-          </button>
-          <button
-            onClick={() => setShowPublicOnly(false)}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-              !showPublicOnly
-                ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
-                : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
-            }`}
-          >
-            All Visible
-          </button>
-        </div>
       </div>
       {/* User Relations */}
       <UserRelations userId={userId} />
+
+      {/* Tabs: Public / All Visible (above ruminations list) */}
+      <div className="w-full">
+        <nav className="w-full mb-4 sm:mb-6 border-b border-gray-200 dark:border-gray-700" aria-label="Ruminations tabs">
+          <div className="grid grid-cols-2 w-full" role="tablist" aria-orientation="horizontal">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={showPublicOnly}
+              onClick={() => setShowPublicOnly(true)}
+              className={`-mb-px w-full text-center whitespace-nowrap py-2 px-3 sm:px-4 border-b-2 font-medium text-sm sm:text-base transition-colors ${
+                showPublicOnly
+                  ? 'border-white text-gray-900 dark:text-white'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:border-gray-300'
+              }`}
+            >
+              Public
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={!showPublicOnly}
+              onClick={() => setShowPublicOnly(false)}
+              className={`-mb-px w-full text-center whitespace-nowrap py-2 px-3 sm:px-4 border-b-2 font-medium text-sm sm:text-base transition-colors ${
+                !showPublicOnly
+                  ? 'border-white text-gray-900 dark:text-white'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:border-gray-300'
+              }`}
+            >
+              All Visible
+            </button>
+          </div>
+        </nav>
+      </div>
 
       {/* Ruminations List */}
     {filtered.length === 0 ? (
