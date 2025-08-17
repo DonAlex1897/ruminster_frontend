@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../AuthContext';
 import { UserIcon } from '@heroicons/react/24/solid';
 
 interface UserAvatarProps {
@@ -35,6 +36,7 @@ export default function UserAvatar({
   clickable = true,
   className = ''
 }: UserAvatarProps) {
+  const { user } = useAuth();
   const sizeMap = {
     sm: { avatar: 'h-8 w-8', nameText: 'text-sm', usernameText: 'text-xs', avatarText: 'text-lg' },
     md: { avatar: 'h-12 w-12', nameText: 'text-base', usernameText: 'text-sm', avatarText: 'text-2xl' },
@@ -70,8 +72,10 @@ export default function UserAvatar({
   );
 
   if (clickable) {
+    const isCurrentUser = user?.id && String(user.id) === String(userId);
+    const to = isCurrentUser ? '/my-ruminations' : `/user/${userId}`;
     return (
-      <Link to={`/user/${userId}`} className="hover:opacity-80 transition-opacity">
+      <Link to={to} className="hover:opacity-80 transition-opacity">
         {content}
       </Link>
     );
