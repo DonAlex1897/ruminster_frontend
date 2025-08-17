@@ -273,7 +273,7 @@ export default function UserRelations({ userId }: UserRelationsProps) {
           >
           {visibleRelations.length === 0 ? (
             <div className="text-sm text-gray-500 dark:text-gray-400 py-2 whitespace-nowrap">
-              No relationship set yet.
+              {/* No relationship set yet. */}
             </div>
           ) : (
             <div className="flex items-center gap-2 flex-nowrap px-2">
