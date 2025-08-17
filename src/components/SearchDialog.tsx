@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { XMarkIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
-import { searchAll, SearchResults } from '../services/SearchService';
+import { useSearch } from '../hooks/useSearch';
 import { Link } from 'react-router-dom';
 import UserAvatar from './UserAvatar';
 import RuminationCard from './RuminationCard';
@@ -13,58 +13,13 @@ interface SearchDialogProps {
 
 export default function SearchDialog({ isOpen, onClose }: SearchDialogProps) {
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState<SearchResults>({ users: [], ruminations: [] });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const abortRef = useRef<AbortController | null>(null);
+  const { data: results, isLoading: loading, error } = useSearch(query, isOpen && query.trim().length >= 2);
 
   useEffect(() => {
-    if (!isOpen) return;
-    setQuery('');
-    setResults({ users: [], ruminations: [] });
-    setError(null);
-  }, [isOpen]);
-
-  // Debounced remote search with cancellation
-  useEffect(() => {
-    if (!isOpen) return;
-    const q = query.trim();
-    if (q.length < 2) {
-      // Require minimum 2 chars to reduce noise
-      setResults({ users: [], ruminations: [] });
-      setError(null);
-      setLoading(false);
-      // cancel any in-flight
-      abortRef.current?.abort();
-      abortRef.current = null;
-      return;
+    if (!isOpen) {
+      setQuery('');
     }
-
-    setLoading(true);
-    const controller = new AbortController();
-    abortRef.current?.abort();
-    abortRef.current = controller;
-
-    const t = setTimeout(async () => {
-      try {
-        const res = await searchAll(q, controller.signal);
-        if (!controller.signal.aborted) {
-          setResults(res);
-          setError(null);
-        }
-      } catch (e: any) {
-        if (controller.signal.aborted) return; // ignore
-        setError(e?.message || 'Search failed');
-      } finally {
-        if (!controller.signal.aborted) setLoading(false);
-      }
-    }, 350);
-
-    return () => {
-      clearTimeout(t);
-      controller.abort();
-    };
-  }, [query, isOpen]);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -101,10 +56,10 @@ export default function SearchDialog({ isOpen, onClose }: SearchDialogProps) {
             </div>
           )}
           {error && (
-            <div className="text-center text-red-600 dark:text-red-400 py-4">{error}</div>
+            <div className="text-center text-red-600 dark:text-red-400 py-4">{error.message}</div>
           )}
 
-          {!loading && !error && query.trim() && (
+          {!loading && !error && query.trim() && results && (
             <>
               {/* Users */}
               <section>

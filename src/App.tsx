@@ -28,7 +28,7 @@ function AppContent() {
     <>
       <TosNotification />
       <Navbar onNewRumination={() => openDialog('new-rumination')} />
-      <div className="pt-16">
+  <div className="pt-16 pb-16 md:pb-0">
         <Routes>
         <Route path="/" element={<Navigate to="/public" replace />} />
         <Route path="/login" element={<LoginPage />} />

@@ -1,5 +1,6 @@
 import { apiClient } from '../utils/apiClient';
 import { API_CONFIG, buildApiUrl } from '../config/api';
+import { handleApiError } from '../utils/errorHandler';
 import { UserResponse } from '../types/user';
 import { RuminationResponse } from '../types/rumination';
 
@@ -22,14 +23,7 @@ export async function searchAll(query: string, signal?: AbortSignal): Promise<Se
   const response = await apiClient.get(url, { signal });
 
   if (!response.ok) {
-    let errorMessage = 'Failed to search';
-    try {
-      const errorData = await response.json();
-      errorMessage = errorData.message || errorData.title || errorMessage;
-    } catch {
-      errorMessage = response.statusText || `HTTP ${response.status}`;
-    }
-    throw new Error(errorMessage);
+    await handleApiError(response, 'Failed to search');
   }
 
   const data = await response.json();
