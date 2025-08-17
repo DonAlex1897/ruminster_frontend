@@ -101,16 +101,19 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
     <>
       {/* Top Navigation Bar */}
       <div className="fixed top-0 left-0 right-0 h-16 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border-b border-slate-200 dark:border-slate-700 z-40">
-        <div className="h-full flex items-center justify-between px-4 md:px-6">
-          {/* Logo */}
-          <div className="flex items-center md:flex-none md:order-first order-first ml-0">
+        <div className="h-full grid grid-cols-3 items-center px-4 md:px-6">
+          {/* Left: Logo + Search (desktop) + Mobile nav */}
+          <div className="flex items-center gap-3">
             <Link to="/public" className="hover:scale-105 transition-transform duration-200">
               <img src={logo} alt="Ruminster" className="h-8 w-auto" />
             </Link>
-          </div>
-
+            {/* Search next to logo on desktop */}
+            <div className="hidden md:block w-56 lg:w-96 ml-2">
+              <SearchBar />
+            </div>
+          
           {/* Mobile Navigation Links - Only visible on mobile */}
-          <div className="flex md:hidden items-center space-x-2">            
+          <div className="flex md:hidden items-center space-x-2 ml-1">
             {isAuthenticated && (
               <>
                 <Link
@@ -175,29 +178,17 @@ export default function Navbar({ onNewRumination }: NavbarProps) {
               </button>
             )}
           </div>
-          
-          {/* Page Title - Hidden on mobile when authenticated */}
-          <div className={`flex-1 flex items-center justify-center ${isAuthenticated ? 'hidden md:flex' : 'flex'}`}>
-            <h1 className="text-xl font-semibold text-slate-900 dark:text-white">
+          </div>
+
+          {/* Middle: Title */}
+          <div className="flex items-center justify-center">
+            <h1 className="text-lg md:text-xl font-semibold text-slate-900 dark:text-white text-center">
               {getPageTitle()}
             </h1>
           </div>
-
-          {/* Center Search */}
-          <div className="flex-1 flex items-center justify-center px-4">
-            <div className="w-full max-w-xl hidden md:block">
-              <SearchBar />
-            </div>
-            {/* Title fallback on small screens */}
-            <div className="md:hidden">
-              <h1 className="text-base font-semibold text-slate-900 dark:text-white">
-                {getPageTitle()}
-              </h1>
-            </div>
-          </div>
           
-          {/* User Avatar or Actions */}
-          <div className="flex items-center gap-3">
+          {/* Right: User Avatar or Actions */}
+          <div className="flex items-center gap-3 justify-end">
             {isAuthenticated ? (
               <>
                 <Tooltip content={effectiveTheme === 'dark' ? 'Light Mode' : 'Dark Mode'} position="bottom" disabled={isMobile}>
