@@ -3,8 +3,8 @@ import { useLocation, useParams } from 'react-router-dom';
 import UserAvatar from '../components/UserAvatar';
 import UserRelations from '../components/UserRelations';
 import { useUserRuminations } from '../hooks/useRuminations';
-import { UserRelationType } from '../types/rumination';
 import { useUser } from '../hooks/useUser';
+import RuminationCard from '../components/RuminationCard';
 
 export default function UserPage() {
   const { userId } = useParams<{ userId: string }>();
@@ -24,30 +24,7 @@ export default function UserPage() {
     return ruminations.filter(r => r.content.toLowerCase().includes(query));
   }, [ruminations, query]);
 
-  const getAudienceLabels = (audiences: { relationType: UserRelationType }[]) => {
-    const labels = audiences.map(a => {
-      switch (a.relationType) {
-        case UserRelationType.Acquaintance: return 'Acquaintance';
-        case UserRelationType.Family: return 'Family';
-        case UserRelationType.Friend: return 'Friend';
-        case UserRelationType.BestFriend: return 'Best Friend';
-        case UserRelationType.Partner: return 'Partner';
-        case UserRelationType.Therapist: return 'Therapist';
-        default: return 'Unknown';
-      }
-    });
-    return labels.join(', ');
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
+  // Cards now reuse shared RuminationCard component like other pages.
 
   if (!userId) {
     return (
@@ -135,14 +112,14 @@ export default function UserPage() {
                   : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:border-gray-300'
               }`}
             >
-              All Visible
+              Shared with Me
             </button>
           </div>
         </nav>
       </div>
 
       {/* Ruminations List */}
-    {filtered.length === 0 ? (
+      {filtered.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-gray-500 dark:text-gray-400">
             {showPublicOnly 
@@ -152,36 +129,16 @@ export default function UserPage() {
           </p>
         </div>
       ) : (
-        <div className="space-y-6">
-      {filtered.map((rumination) => (
-            <div
+        <div className="space-y-8">
+          {filtered.map((rumination) => (
+            <RuminationCard
               key={rumination.id}
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6"
-            >
-              <div className="flex justify-between items-start mb-4">
-                <div className="flex items-center space-x-2">
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    rumination.isPublished
-                      ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
-                      : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
-                  }`}>
-                    {rumination.isPublished ? 'Published' : 'Draft'}
-                  </span>
-                  {rumination.audiences.length > 0 && (
-                    <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
-                      {getAudienceLabels(rumination.audiences)}
-                    </span>
-                  )}
-                </div>
-                <span className="text-sm text-gray-500 dark:text-gray-400">
-                  {formatDate(rumination.createTms)}
-                </span>
-              </div>
-              
-              <p className="text-gray-900 dark:text-white whitespace-pre-wrap">
-                {rumination.content}
-              </p>
-            </div>
+              rumination={{
+                ...rumination,
+                audiences: rumination.audiences || [],
+              }}
+              showUserInfo={false}
+            />
           ))}
         </div>
       )}
