@@ -235,11 +235,11 @@ export default function UserRelations({ userId }: UserRelationsProps) {
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               disabled={requestRelationMutation.isPending}
-              className="inline-flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium text-white bg-primary hover:bg-primary-hover disabled:opacity-70 disabled:cursor-not-allowed transition-colors"
+              className="inline-flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium text-gray-800 dark:text-gray-100 border border-gray-300 dark:border-gray-700 bg-white dark:bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-70 disabled:cursor-not-allowed transition-colors"
               aria-expanded={isDropdownOpen}
               aria-haspopup="menu"
             >
-              {requestRelationMutation.isPending ? 'Requesting…' : 'Set relationship'}
+              {requestRelationMutation.isPending ? 'Requesting…' : 'Request Relation'}
               <ChevronDownIcon className="h-4 w-4" />
             </button>
             {isDropdownOpen && (
@@ -287,11 +287,11 @@ export default function UserRelations({ userId }: UserRelationsProps) {
                 return (
                   <div
                     key={relation.id}
-                    className={`flex-none flex items-center justify-between px-3 py-1 rounded-full text-sm border transition-colors whitespace-nowrap ${statusStyles}`}
+                    className={`flex-none flex items-center justify-between px-2.5 py-1 rounded-full text-sm border transition-colors whitespace-nowrap ${statusStyles}`}
                   >
-                    <div className="flex items-center gap-2 pr-1">
+                    <div className="flex items-center gap-1.5 pr-1">
                       <span className="opacity-80">{getRelationIcon(relation.type)}</span>
-                      <span className="font-medium whitespace-nowrap">{getRelationLabel(relation.type, relation.receiver.id)}</span>
+                      <span className="font-medium whitespace-nowrap leading-none">{getRelationLabel(relation.type, relation.receiver.id)}</span>
                       {!relation.isAccepted && (
                         isIncoming ? (
                           <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-white/60 dark:bg-black/20 border border-current/20 whitespace-nowrap">
@@ -317,7 +317,7 @@ export default function UserRelations({ userId }: UserRelationsProps) {
                             <button
                               onClick={() => handleAcceptRelation(relation.id)}
                               disabled={acceptRelationMutation.isPending}
-                              className="p-1.5 rounded-md text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800/60 border border-transparent disabled:opacity-60 transition-colors"
+                              className="p-1 rounded-md text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800/60 border border-transparent disabled:opacity-60 transition-colors"
                               aria-label="Accept relation request"
                             >
                               <CheckIcon className="h-4 w-4" />
@@ -327,7 +327,7 @@ export default function UserRelations({ userId }: UserRelationsProps) {
                             <button
                               onClick={() => handleRejectRelation(relation.id)}
                               disabled={rejectRelationMutation.isPending}
-                              className="p-1.5 rounded-md text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 hover:bg-gray-100 dark:hover:bg-gray-800/60 border border-transparent disabled:opacity-60 transition-colors"
+                              className="p-1 rounded-md text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 hover:bg-gray-100 dark:hover:bg-gray-800/60 border border-transparent disabled:opacity-60 transition-colors"
                               aria-label="Reject relation request"
                             >
                               <XMarkIcon className="h-4 w-4" />
@@ -336,12 +336,12 @@ export default function UserRelations({ userId }: UserRelationsProps) {
                         </>
                       )}
 
-          {(!relation.isAccepted && isOutgoing) || relation.isAccepted ? (
+                      {(!relation.isAccepted && isOutgoing) || relation.isAccepted ? (
                         <Tooltip content={relation.isAccepted ? 'Remove relationship' : 'Cancel request'} position="top">
                           <button
                             onClick={() => handleDeleteRelation(relation.id)}
                             disabled={deleteRelationMutation.isPending}
-            className="p-1.5 rounded-md bg-white text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:bg-transparent dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-800/60 disabled:opacity-60 transition-colors"
+                            className="p-1 rounded-md bg-white text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:bg-transparent dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-800/60 disabled:opacity-60 transition-colors"
                             aria-label={relation.isAccepted ? 'Delete relation' : 'Cancel relation request'}
                           >
                             <TrashIcon className="h-4 w-4" />
