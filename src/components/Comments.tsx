@@ -4,6 +4,7 @@ import { useComments, useUpdateComment, useDeleteComment, useCommentReplies } fr
 import { useAuth } from '../AuthContext';
 import AddNewComment from './AddNewComment';
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/solid';
+import { useDraftPersistence } from '../hooks/useDraftPersistence';
 
 interface CommentsProps {
   ruminationId: number;
@@ -106,13 +107,24 @@ interface EditCommentDialogProps {
 }
 
 const EditCommentDialog: React.FC<EditCommentDialogProps> = ({ comment, isOpen, onClose, onSave }) => {
-  const [content, setContent] = useState(comment.content);
+  const draftKey = `edit-comment-${comment.id}`;
+  const {
+    content,
+    setContent,
+    clearDraft
+  } = useDraftPersistence(draftKey, comment.content);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (content.trim()) {
       onSave(content.trim());
+      clearDraft();
     }
+  };
+
+  const handleClose = () => {
+    // Don't clear draft when closing, let it persist
+    onClose();
   };
 
   if (!isOpen) return null;
@@ -134,7 +146,7 @@ const EditCommentDialog: React.FC<EditCommentDialogProps> = ({ comment, isOpen, 
           <div className="flex justify-end space-x-2 mt-4">
             <button
               type="button"
-              onClick={onClose}
+              onClick={handleClose}
               className="px-4 py-2 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
             >
               Close

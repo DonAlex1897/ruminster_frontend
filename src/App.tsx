@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { AuthProvider } from './AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { DialogProvider } from './contexts/DialogContext';
 import ProtectedRoute from './ProtectedRoute';
 import LoginPage from './LoginPage';
 import MyRuminationsPage from './pages/MyRuminationsPage';
@@ -16,17 +17,17 @@ import Navbar from './components/Navbar';
 import NewRuminationDialog from './components/NewRuminationDialog';
 import TosNotification from './components/TosNotification';
 import { TokenDebugInfo } from './components/TokenDebugInfo';
-import { useState } from 'react';
+import { useDialog } from './contexts/DialogContext';
 
 function AppContent() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isNewRuminationOpen, setIsNewRuminationOpen] = useState(false);
+  const { isDialogOpen, openDialog, closeDialog } = useDialog();
 
   return (
     <>
       <TosNotification />
-      <Navbar onNewRumination={() => setIsNewRuminationOpen(true)} />
+      <Navbar onNewRumination={() => openDialog('new-rumination')} />
       <div className="pt-16">
         <Routes>
         <Route path="/" element={<Navigate to="/public" replace />} />
@@ -67,10 +68,10 @@ function AppContent() {
         </Routes>
       </div>
       <NewRuminationDialog
-        isOpen={isNewRuminationOpen}
-        onClose={() => setIsNewRuminationOpen(false)}
+        isOpen={isDialogOpen('new-rumination')}
+        onClose={() => closeDialog('new-rumination')}
         onSuccess={() => {
-          setIsNewRuminationOpen(false);
+          closeDialog('new-rumination');
           // Refresh the current page component
           navigate(location.pathname, { replace: true });
         }}
@@ -87,7 +88,9 @@ function App() {
     <ThemeProvider>
       <Router>
         <AuthProvider>
-          <AppContent />
+          <DialogProvider>
+            <AppContent />
+          </DialogProvider>
         </AuthProvider>
       </Router>
     </ThemeProvider>

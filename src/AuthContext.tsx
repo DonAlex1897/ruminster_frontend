@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useValidateToken } from './hooks/useAuth';
 import { tokenStorage } from './utils/tokenStorage';
@@ -49,8 +49,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   useEffect(() => {
     tokenManager.setCallbacks(
       (newToken: string) => {
-        setAccessToken(newToken);
-        console.log('Token refreshed successfully');
+        // Only update if the token is actually different to prevent unnecessary re-renders
+        setAccessToken(prevToken => {
+          if (prevToken !== newToken) {
+            console.log('Token refreshed successfully');
+            return newToken;
+          }
+          return prevToken;
+        });
       },
       () => {
         console.log('Token refresh failed, logging out');
@@ -86,18 +92,26 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, [isAuthenticated, loading, isLoadingUser, requiresTosAcceptance, navigate]);
 
-  // Set up automatic token refresh timer - simplified
+  // Set up automatic token refresh timer - less aggressive approach
   useEffect(() => {
     if (!isAuthenticated || !accessToken) return;
 
     const checkTokenRefresh = async () => {
-      if (tokenStorage.needsRefresh()) {
-        await tokenManager.refreshAccessToken();
+      // Only refresh if token expires in less than 2 minutes (instead of 4)
+      const tokenData = tokenStorage.get();
+      if (tokenData) {
+        const timeUntilExpiry = tokenData.expiresAt - Date.now();
+        const twoMinutesInMs = 2 * 60 * 1000;
+        
+        if (timeUntilExpiry < twoMinutesInMs && timeUntilExpiry > 0) {
+          console.log('Proactively refreshing token...');
+          await tokenManager.refreshAccessToken();
+        }
       }
     };
 
-    // Check every 30 seconds for more responsive refresh
-    const interval = setInterval(checkTokenRefresh, 30 * 1000);
+    // Check every 60 seconds instead of 30 seconds
+    const interval = setInterval(checkTokenRefresh, 60 * 1000);
     
     return () => clearInterval(interval);
   }, [isAuthenticated, accessToken]);
@@ -122,11 +136,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         const tokenData = tokenStorage.get();
         if (tokenData?.refreshToken) {
           console.log('Token needs refresh, attempting refresh...');
+          // Don't set loading state during refresh to prevent dialog closures
           tokenManager.refreshAccessToken().then((newToken) => {
             if (newToken) {
               console.log('Token refresh successful');
-              setAccessToken(newToken);
-              // Don't set loading here, let the next cycle handle it
+              // Token update will be handled by the callback above
             } else {
               console.log('Token refresh failed, logging out');
               setIsAuthenticated(false);
@@ -137,6 +151,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             setIsAuthenticated(false);
             setLoading(false);
           });
+          // Continue with current authentication state during refresh
+          if (user) {
+            setIsAuthenticated(true);
+            setLoading(false);
+          }
           return;
         } else {
           // No refresh token available
@@ -171,7 +190,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     handleTokenValidation();
   }, [user, isLoadingUser, accessToken]);
 
-  const login = (loginResponse: LoginResponse) => {
+  const login = useCallback((loginResponse: LoginResponse) => {
     // Store tokens securely
     tokenStorage.save({
       accessToken: loginResponse.accessToken,
@@ -184,27 +203,40 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setAccessToken(loginResponse.accessToken);
     setRequiresTosAcceptance(loginResponse.requiresTosAcceptance);
     setLatestTosVersion(loginResponse.latestTosVersion);
-  };
+  }, []);
 
-  const updateTosAcceptance = (accepted: boolean) => {
+  const updateTosAcceptance = useCallback((accepted: boolean) => {
     setRequiresTosAcceptance(!accepted);
     if (accepted) {
       navigate('/my-ruminations');
     }
-  };
+  }, [navigate]);
+
+  // Memoize the context value to prevent unnecessary re-renders
+  const contextValue = useMemo(() => ({
+    isAuthenticated, 
+    loading, 
+    user, 
+    token: accessToken, 
+    requiresTosAcceptance,
+    latestTosVersion,
+    login, 
+    logout,
+    updateTosAcceptance 
+  }), [
+    isAuthenticated, 
+    loading, 
+    user, 
+    accessToken, 
+    requiresTosAcceptance,
+    latestTosVersion,
+    login, 
+    logout,
+    updateTosAcceptance
+  ]);
 
   return (
-    <AuthContext.Provider value={{ 
-      isAuthenticated, 
-      loading, 
-      user, 
-      token: accessToken, 
-      requiresTosAcceptance,
-      latestTosVersion,
-      login, 
-      logout,
-      updateTosAcceptance 
-    }}>
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );

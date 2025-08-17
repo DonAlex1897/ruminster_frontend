@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { UserRelationType } from '../types/rumination';
 import { useCreateRumination } from '../hooks/useRuminations';
+import { useDraftPersistence } from '../hooks/useDraftPersistence';
 
 interface NewRuminationDialogProps {
   isOpen: boolean;
@@ -9,10 +10,18 @@ interface NewRuminationDialogProps {
 }
 
 export default function NewRuminationDialog({ isOpen, onClose, onSuccess }: NewRuminationDialogProps) {
-  const [content, setContent] = useState('');
-  const [selectedAudiences, setSelectedAudiences] = useState<UserRelationType[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const createRuminationMutation = useCreateRumination();
+  
+  const {
+    content,
+    setContent,
+    selectedAudiences,
+    setSelectedAudiences,
+    clearDraft,
+    hasDraft,
+    isDraftRestored
+  } = useDraftPersistence('new-rumination');
 
   const handleNewRumination = async (content: string, audiences: UserRelationType[], publish: boolean) => {
     await createRuminationMutation.mutateAsync({
@@ -45,8 +54,7 @@ export default function NewRuminationDialog({ isOpen, onClose, onSuccess }: NewR
     setIsSubmitting(true);
     try {
       await handleNewRumination(content, selectedAudiences, publish);
-      setContent('');
-      setSelectedAudiences([]);
+      clearDraft(); // Clear the saved draft after successful submission
       onSuccess();
     } catch (error) {
       console.error('Failed to create rumination:', error);
@@ -56,8 +64,7 @@ export default function NewRuminationDialog({ isOpen, onClose, onSuccess }: NewR
   };
 
   const handleClose = () => {
-    setContent('');
-    setSelectedAudiences([]);
+    // Don't clear draft when closing, let it persist
     onClose();
   };
 
@@ -88,6 +95,26 @@ export default function NewRuminationDialog({ isOpen, onClose, onSuccess }: NewR
 
         {/* Content */}
         <div className="p-6 space-y-6">
+          {/* Draft Restored Indicator */}
+          {isDraftRestored && hasDraft() && (
+            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+              <div className="flex items-center gap-2">
+                <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+                <span className="text-sm text-blue-700 dark:text-blue-300">
+                  Draft restored - your previous work has been saved
+                </span>
+                <button
+                  onClick={clearDraft}
+                  className="ml-auto text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 underline"
+                >
+                  Clear draft
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* Text Input */}
           <div>
             <textarea
